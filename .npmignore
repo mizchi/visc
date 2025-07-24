@@ -1,0 +1,10 @@
+src/
+configs/
+snapshots/
+diffs/
+.git/
+.gitignore
+tsconfig.json
+*.log
+.DS_Store
+node_modules/

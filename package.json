@@ -1,0 +1,44 @@
+{
+  "name": "visual-checker",
+  "version": "0.1.0",
+  "description": "Visual regression testing framework for web applications",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mizchi/visual-checker.git"
+  },
+  "main": "dist/index.js",
+  "bin": {
+    "visual-checker": "dist/cli.js"
+  },
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "npm run build && node dist/cli.js test",
+    "update-snapshots": "npm run build && node dist/cli.js update",
+    "compare": "npm run build && node dist/cli.js compare"
+  },
+  "keywords": [
+    "visual-regression",
+    "testing",
+    "playwright",
+    "snapshot"
+  ],
+  "author": "mizchi",
+  "license": "MIT",
+  "dependencies": {
+    "@playwright/test": "^1.41.0",
+    "commander": "^11.1.0",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.4",
+    "typescript": "^5.3.3"
+  }
+}
