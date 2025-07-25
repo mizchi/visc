@@ -1,25 +1,31 @@
+WIP: not published yet
+
+---
+
 # Visual Checker
 
 A visual regression testing framework for web applications with layout analysis capabilities. This tool reduces AI image processing costs by extracting and comparing structured layout data instead of raw images.
 
-指定されたURLリストに対してビジュアルリグレッションテストを実行し、レイアウト構造を抽出・比較することで、AIの画像入力コストを削減するツールです。
+指定された URL リストに対してビジュアルリグレッションテストを実行し、レイアウト構造を抽出・比較することで、AI の画像入力コストを削減するツールです。
 
 ## なぜ Visual Checker を使うのか
 
-### AIコスト削減
-- **画像入力は高価**: AIモデルへの画像入力は、テキストと比較して処理コストが高い
-- **構造化データで代替**: レイアウトの意味的な構造をJSON形式で抽出し、画像の代わりに使用
-- **効率的な差分検出**: ピクセル単位の比較ではなく、DOM要素の構造的な変化を検出
+### AI コスト削減
+
+- **画像入力は高価**: AI モデルへの画像入力は、テキストと比較して処理コストが高い
+- **構造化データで代替**: レイアウトの意味的な構造を JSON 形式で抽出し、画像の代わりに使用
+- **効率的な差分検出**: ピクセル単位の比較ではなく、DOM 要素の構造的な変化を検出
 
 ### レイアウト分析機能
-- セマンティックグループの自動検出（navigation, section, container等）
+
+- セマンティックグループの自動検出（navigation, section, container 等）
 - 要素の重要度スコアリング
 - アクセシビリティ情報の保持
 - レスポンシブデザインの変化追跡
 
 ## 特徴
 
-- 🔍 複数URLの一括テスト
+- 🔍 複数 URL の一括テスト
 - 📸 スナップショットの自動比較
 - 🎨 差分画像の生成
 - 📱 デバイスエミュレーション対応
@@ -124,35 +130,35 @@ visual-checker compare baseline.png current.png -t 0.1 -o diff.png
 
 ### URLConfig
 
-| オプション | 説明 | デフォルト |
-|---|---|---|
-| `name` | URL識別子（ファイル名に使用） | 必須 |
-| `url` | テスト対象のURL | 必須 |
-| `waitFor.timeout` | 待機時間（ミリ秒） | 30000 |
-| `waitFor.selector` | 待機するセレクタ | - |
-| `waitFor.networkIdle` | ネットワークアイドル待機 | false |
-| `beforeScreenshot.script` | 実行するJavaScript | - |
-| `beforeScreenshot.click` | クリックするセレクタ配列 | - |
-| `beforeScreenshot.hide` | 非表示にするセレクタ配列 | - |
-| `screenshot.fullPage` | フルページスクリーンショット | true |
-| `screenshot.selector` | 特定要素のスクリーンショット | - |
+| オプション                | 説明                           | デフォルト |
+| ------------------------- | ------------------------------ | ---------- |
+| `name`                    | URL 識別子（ファイル名に使用） | 必須       |
+| `url`                     | テスト対象の URL               | 必須       |
+| `waitFor.timeout`         | 待機時間（ミリ秒）             | 30000      |
+| `waitFor.selector`        | 待機するセレクタ               | -          |
+| `waitFor.networkIdle`     | ネットワークアイドル待機       | false      |
+| `beforeScreenshot.script` | 実行する JavaScript            | -          |
+| `beforeScreenshot.click`  | クリックするセレクタ配列       | -          |
+| `beforeScreenshot.hide`   | 非表示にするセレクタ配列       | -          |
+| `screenshot.fullPage`     | フルページスクリーンショット   | true       |
+| `screenshot.selector`     | 特定要素のスクリーンショット   | -          |
 
-### Playwright設定
+### Playwright 設定
 
-| オプション | 説明 | デフォルト |
-|---|---|---|
-| `browser` | ブラウザタイプ | chromium |
-| `headless` | ヘッドレスモード | true |
-| `viewport` | ビューポートサイズ | - |
-| `device` | デバイスプリセット | - |
+| オプション | 説明               | デフォルト |
+| ---------- | ------------------ | ---------- |
+| `browser`  | ブラウザタイプ     | chromium   |
+| `headless` | ヘッドレスモード   | true       |
+| `viewport` | ビューポートサイズ | -          |
+| `device`   | デバイスプリセット | -          |
 
 ### 比較設定
 
-| オプション | 説明 | デフォルト |
-|---|---|---|
-| `threshold` | 許容する差分のしきい値（0-1） | 0.1 |
-| `generateDiff` | 差分画像を生成するか | true |
-| `diffDir` | 差分画像の保存先 | ./diffs |
+| オプション     | 説明                          | デフォルト |
+| -------------- | ----------------------------- | ---------- |
+| `threshold`    | 許容する差分のしきい値（0-1） | 0.1        |
+| `generateDiff` | 差分画像を生成するか          | true       |
+| `diffDir`      | 差分画像の保存先              | ./diffs    |
 
 ## 高度な使い方
 
@@ -198,9 +204,9 @@ visual-checker compare baseline.png current.png -t 0.1 -o diff.png
 }
 ```
 
-## CI/CD統合
+## CI/CD 統合
 
-GitHub Actionsでの例:
+GitHub Actions での例:
 
 ```yaml
 - name: Run Visual Tests
@@ -230,7 +236,7 @@ npx playwright install-deps
 ### 基本的な使用方法
 
 ```typescript
-import { extractLayoutScript, compareLayouts } from 'visual-checker';
+import { extractLayoutScript, compareLayouts } from "visual-checker";
 
 // レイアウトの抽出
 const baseline = await page.evaluate(extractLayoutScript);
@@ -245,7 +251,7 @@ console.log(`Changes: ${comparison.differences.length}`);
 ### フレームワーク非依存のアサーション
 
 ```typescript
-import { assertLayoutsIdentical, assertLayoutsSimilar } from 'visual-checker';
+import { assertLayoutsIdentical, assertLayoutsSimilar } from "visual-checker";
 
 // 完全一致を検証
 assertLayoutsIdentical(baseline, current);
@@ -254,7 +260,7 @@ assertLayoutsIdentical(baseline, current);
 assertLayoutsSimilar(baseline, current, 95);
 
 // 特定の変更を禁止
-assertNoLayoutChanges(baseline, current, ['removed', 'added']);
+assertNoLayoutChanges(baseline, current, ["removed", "added"]);
 ```
 
 ### レイアウトの安定性チェック
@@ -289,7 +295,7 @@ interface LayoutAnalysisResult {
 
 ## プロキシ経由でのテスト
 
-Visual Checkerは、Cloudflare Workerプロキシ経由でのアクセスもサポートしています。これにより、プロキシ環境下でも正しくレイアウト情報を抽出できることを検証できます。
+Visual Checker は、Cloudflare Worker プロキシ経由でのアクセスもサポートしています。これにより、プロキシ環境下でも正しくレイアウト情報を抽出できることを検証できます。
 
 ### プロキシのセットアップ
 
@@ -313,33 +319,33 @@ PROXY_ENDPOINT=https://your-worker.workers.dev npm run test:proxy
 
 ### プロキシの仕組み
 
-1. Cloudflare Workerが任意のURLへのリクエストを転送
-2. CORSヘッダーの自動追加
-3. HTMLコンテンツの相対URL解決
+1. Cloudflare Worker が任意の URL へのリクエストを転送
+2. CORS ヘッダーの自動追加
+3. HTML コンテンツの相対 URL 解決
 4. レスポンスの透過的な転送
 
 詳細は `cloudflare-proxy/README.md` を参照してください。
 
-## AI分析によるエラー分類
+## AI 分析によるエラー分類
 
-Visual CheckerはAIを使用してレイアウトの変更を自動分析し、適切なアクションを実行できます。
+Visual Checker は AI を使用してレイアウトの変更を自動分析し、適切なアクションを実行できます。
 
-### Gemini APIの設定
+### Gemini API の設定
 
 ```bash
 # .envファイルにAPIキーを設定
 echo "GOOGLE_API_KEY=your-gemini-api-key" >> .env
 ```
 
-### AI分析の使用例
+### AI 分析の使用例
 
 ```typescript
-import { createGeminiWorkflowConfig, WorkflowEngine } from 'visual-checker';
+import { createGeminiWorkflowConfig, WorkflowEngine } from "visual-checker";
 
 // Geminiを使ったワークフロー設定
 const workflowConfig = createGeminiWorkflowConfig(
   process.env.GOOGLE_API_KEY,
-  'gemini-2.0-flash-exp' // 高速モデル
+  "gemini-2.0-flash-exp" // 高速モデル
 );
 
 // ワークフローエンジンの作成
@@ -356,7 +362,7 @@ console.log(`判断理由: ${result.errorAnalysis.reasoning}`);
 
 ### エラータイプ
 
-AIは以下の4つのタイプに変更を分類します：
+AI は以下の 4 つのタイプに変更を分類します：
 
 1. **BROKEN**: 明確に壊れているエラー（要素の消失、レイアウト崩壊）
 2. **MEANINGFUL_CHANGE**: 意味のある変更（デザイン更新、機能追加）
@@ -376,18 +382,14 @@ AIは以下の4つのタイプに変更を分類します：
 
 ### スクリーンショット分析
 
-Geminiの画像認識機能を使用してより精度の高い分析が可能です：
+Gemini の画像認識機能を使用してより精度の高い分析が可能です：
 
 ```typescript
 // スクリーンショットを含む分析
-const analysis = await aiProvider.analyzeLayoutChange(
-  comparison,
-  context,
-  {
-    baseline: 'path/to/baseline.png',
-    current: 'path/to/current.png'
-  }
-);
+const analysis = await aiProvider.analyzeLayoutChange(comparison, context, {
+  baseline: "path/to/baseline.png",
+  current: "path/to/current.png",
+});
 ```
 
 ## ライセンス
