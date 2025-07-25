@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
-    "lib": ["ES2022"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -14,8 +14,19 @@
     "declarationMap": true,
     "sourceMap": true,
     "resolveJsonModule": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "snapshots"]
+  "include": ["src/**/*", "examples/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "snapshots",
+    "src/layout/node_modules",
+    "src/layout/examples",
+    "src/layout/snippets",
+    "src/layout/**/*.test.ts",
+    "src/layout/demo.ts"
+  ]
 }

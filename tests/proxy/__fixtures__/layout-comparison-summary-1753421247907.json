@@ -1,0 +1,48 @@
+{
+  "testDate": "2025-07-25T05:27:27.907Z",
+  "proxyEndpoint": "http://localhost:8787",
+  "results": [
+    {
+      "name": "example-com",
+      "url": "https://example.com",
+      "direct": {
+        "elements": 7,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "semanticGroups": 6
+      },
+      "proxy": {
+        "elements": 7,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "semanticGroups": 6
+      },
+      "match": true
+    },
+    {
+      "name": "httpbin-html",
+      "url": "https://httpbin.org/html",
+      "direct": {
+        "elements": 5,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "semanticGroups": 4
+      },
+      "proxy": {
+        "elements": 5,
+        "viewport": {
+          "width": 1280,
+          "height": 720
+        },
+        "semanticGroups": 4
+      },
+      "match": true
+    }
+  ]
+}

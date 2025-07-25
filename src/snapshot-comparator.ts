@@ -1,8 +1,8 @@
-import { PNG } from 'pngjs';
-import pixelmatch from 'pixelmatch';
-import fs from 'fs/promises';
-import path from 'path';
-import { TestResult, UrlConfig, VisualCheckConfig } from './types.js';
+import { PNG } from "pngjs";
+import pixelmatch from "pixelmatch";
+import fs from "fs/promises";
+import path from "path";
+import { TestResult, UrlConfig, VisualCheckConfig } from "./types.ts";
 
 export class SnapshotComparator {
   constructor(private config: VisualCheckConfig) {}
@@ -21,7 +21,7 @@ export class SnapshotComparator {
         await fs.copyFile(currentImagePath, baselineImagePath);
         return {
           passed: true,
-          error: 'New baseline created',
+          error: "New baseline created",
         };
       }
 
@@ -43,9 +43,12 @@ export class SnapshotComparator {
       }
 
       // 差分を計算
-      const diff = new PNG({ width: currentImage.width, height: currentImage.height });
+      const diff = new PNG({
+        width: currentImage.width,
+        height: currentImage.height,
+      });
       const threshold = this.config.comparison?.threshold ?? 0.1;
-      
+
       const numDiffPixels = pixelmatch(
         baselineImage.data,
         currentImage.data,
@@ -68,14 +71,20 @@ export class SnapshotComparator {
         passed: diffPercentage <= threshold,
         diffPercentage,
         diffImagePath,
-        error: diffPercentage > threshold
-          ? `Visual difference detected: ${(diffPercentage * 100).toFixed(2)}% (threshold: ${(threshold * 100).toFixed(2)}%)`
-          : undefined,
+        error:
+          diffPercentage > threshold
+            ? `Visual difference detected: ${(diffPercentage * 100).toFixed(
+                2
+              )}% (threshold: ${(threshold * 100).toFixed(2)}%)`
+            : undefined,
       };
     } catch (error) {
       return {
         passed: false,
-        error: error instanceof Error ? error.message : 'Unknown error during comparison',
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error during comparison",
       };
     }
   }
@@ -92,13 +101,13 @@ export class SnapshotComparator {
    * 差分画像を保存
    */
   private async saveDiffImage(diff: PNG, name: string): Promise<string> {
-    const diffDir = this.config.comparison?.diffDir ?? './diffs';
+    const diffDir = this.config.comparison?.diffDir ?? "./diffs";
     await fs.mkdir(diffDir, { recursive: true });
-    
+
     const diffPath = path.join(diffDir, `${name}-diff.png`);
     const buffer = PNG.sync.write(diff);
     await fs.writeFile(diffPath, buffer);
-    
+
     return diffPath;
   }
 

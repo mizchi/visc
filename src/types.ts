@@ -61,6 +61,36 @@ export interface VisualCheckConfig {
      */
     diffDir?: string;
   };
+  
+  /**
+   * レイアウト分析設定
+   */
+  layoutAnalysis?: {
+    /**
+     * レイアウト分析を有効にするか
+     */
+    enabled?: boolean;
+    
+    /**
+     * 類似度閾値（0-1）
+     */
+    similarityThreshold?: number;
+    
+    /**
+     * グループ化閾値（0-1）
+     */
+    groupingThreshold?: number;
+    
+    /**
+     * 除外するタグ
+     */
+    excludeTags?: string[];
+    
+    /**
+     * レイアウト変更の許容閾値
+     */
+    layoutChangeThreshold?: number;
+  };
 }
 
 export interface UrlConfig {
@@ -183,4 +213,29 @@ export interface TestResult {
    * 実行時間（ミリ秒）
    */
   duration: number;
+  
+  /**
+   * レイアウト分析結果
+   */
+  layoutAnalysis?: {
+    /**
+     * レイアウトスナップショット
+     */
+    snapshot?: any;
+    
+    /**
+     * レイアウト差分
+     */
+    diff?: any;
+    
+    /**
+     * レイアウト変更数
+     */
+    layoutChanges?: number;
+    
+    /**
+     * アクセシビリティ問題
+     */
+    accessibilityIssues?: number;
+  };
 }

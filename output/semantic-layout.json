@@ -1,0 +1,2202 @@
+{
+  "url": "file:///home/mizchi/mizchi/visual-checker/examples/test-page.html",
+  "timestamp": "2025-07-24T15:06:13.491Z",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "semanticGroups": [
+    {
+      "id": "group-0",
+      "type": "container",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 1265,
+        "height": 1157.59375
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-1",
+          "type": "section",
+          "bounds": {
+            "x": 20,
+            "y": 20,
+            "width": 1225,
+            "height": 153.875
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-2",
+              "type": "content",
+              "bounds": {
+                "x": 40,
+                "y": 61.4375,
+                "width": 1185,
+                "height": 37
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 2,
+              "label": "H1",
+              "importance": 39.72064887152778
+            }
+          ],
+          "depth": 1,
+          "label": "HEADER.header",
+          "importance": 55.580410427517364
+        },
+        {
+          "id": "group-3",
+          "type": "navigation",
+          "bounds": {
+            "x": 20,
+            "y": 193.875,
+            "width": 1225,
+            "height": 18
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-4",
+              "type": "navigation",
+              "bounds": {
+                "x": 20,
+                "y": 193.875,
+                "width": 1225,
+                "height": 18
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 2,
+              "label": "UL.nav",
+              "importance": 15.332356770833332
+            }
+          ],
+          "depth": 1,
+          "label": "NAV",
+          "importance": 35.33235677083333
+        },
+        {
+          "id": "group-5",
+          "type": "container",
+          "bounds": {
+            "x": 32.5,
+            "y": 231.875,
+            "width": 1200,
+            "height": 733.71875
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-6",
+              "type": "section",
+              "bounds": {
+                "x": 32.5,
+                "y": 231.875,
+                "width": 1200,
+                "height": 174.90625
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-7",
+                  "type": "container",
+                  "bounds": {
+                    "x": 32.5,
+                    "y": 231.875,
+                    "width": 386.65625,
+                    "height": 174.90625
+                  },
+                  "elements": [
+                    "ref: <Node>",
+                    "ref: <Node>"
+                  ],
+                  "children": [
+                    {
+                      "id": "group-8",
+                      "type": "content",
+                      "bounds": {
+                        "x": 52.5,
+                        "y": 251.875,
+                        "width": 346.65625,
+                        "height": 28
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "H2",
+                      "importance": 33.31943495008681
+                    },
+                    {
+                      "id": "group-9",
+                      "type": "interactive",
+                      "bounds": {
+                        "x": 52.5,
+                        "y": 351.78125,
+                        "width": 108.171875,
+                        "height": 35
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "BUTTON.button",
+                      "importance": 35.35154130723741
+                    }
+                  ],
+                  "depth": 3,
+                  "label": "DIV.card",
+                  "importance": 25.760479429033065
+                },
+                {
+                  "id": "group-10",
+                  "type": "container",
+                  "bounds": {
+                    "x": 439.15625,
+                    "y": 231.875,
+                    "width": 386.671875,
+                    "height": 174.90625
+                  },
+                  "elements": [
+                    "ref: <Node>",
+                    "ref: <Node>"
+                  ],
+                  "children": [
+                    {
+                      "id": "group-11",
+                      "type": "content",
+                      "bounds": {
+                        "x": 459.15625,
+                        "y": 251.875,
+                        "width": 346.671875,
+                        "height": 28
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "H2",
+                      "importance": 33.319449191623264
+                    },
+                    {
+                      "id": "group-12",
+                      "type": "interactive",
+                      "bounds": {
+                        "x": 459.15625,
+                        "y": 351.78125,
+                        "width": 85.203125,
+                        "height": 35
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "BUTTON.button",
+                      "importance": 35.325372483995224
+                    }
+                  ],
+                  "depth": 3,
+                  "label": "DIV.card",
+                  "importance": 25.760568390952216
+                },
+                {
+                  "id": "group-13",
+                  "type": "container",
+                  "bounds": {
+                    "x": 845.828125,
+                    "y": 231.875,
+                    "width": 386.65625,
+                    "height": 174.90625
+                  },
+                  "elements": [
+                    "ref: <Node>",
+                    "ref: <Node>"
+                  ],
+                  "children": [
+                    {
+                      "id": "group-14",
+                      "type": "content",
+                      "bounds": {
+                        "x": 865.828125,
+                        "y": 251.875,
+                        "width": 346.65625,
+                        "height": 28
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "H2",
+                      "importance": 33.31943495008681
+                    },
+                    {
+                      "id": "group-15",
+                      "type": "interactive",
+                      "bounds": {
+                        "x": 865.828125,
+                        "y": 351.78125,
+                        "width": 91.84375,
+                        "height": 35
+                      },
+                      "elements": [
+                        "ref: <Node>"
+                      ],
+                      "children": [],
+                      "depth": 4,
+                      "label": "BUTTON.button",
+                      "importance": 35.332938300238716
+                    }
+                  ],
+                  "depth": 3,
+                  "label": "DIV.card",
+                  "importance": 25.760479429033065
+                }
+              ],
+              "depth": 2,
+              "label": "SECTION.card-grid",
+              "importance": 20.39130316840278
+            },
+            {
+              "id": "group-16",
+              "type": "section",
+              "bounds": {
+                "x": 32.5,
+                "y": 446.78125,
+                "width": 1200,
+                "height": 344.90625
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-17",
+                  "type": "container",
+                  "bounds": {
+                    "x": 32.5,
+                    "y": 494.6875,
+                    "width": 1200,
+                    "height": 297
+                  },
+                  "elements": [
+                    "ref: <Node>",
+                    "ref: <Node>",
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 3,
+                  "label": "FORM",
+                  "importance": 17.860243055555557
+                }
+              ],
+              "depth": 2,
+              "label": "SECTION.form-section",
+              "importance": 21.06231011284722
+            },
+            {
+              "id": "group-18",
+              "type": "section",
+              "bounds": {
+                "x": 32.5,
+                "y": 831.6875,
+                "width": 1200,
+                "height": 133.90625
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-19",
+                  "type": "navigation",
+                  "bounds": {
+                    "x": 32.5,
+                    "y": 879.59375,
+                    "width": 1200,
+                    "height": 18
+                  },
+                  "elements": [
+                    "ref: <Node>",
+                    "ref: <Node>",
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 3,
+                  "label": "DIV",
+                  "importance": -3.730034722222224
+                }
+              ],
+              "depth": 2,
+              "label": "SECTION.accessibility-section",
+              "importance": 2.1282823350694446
+            }
+          ],
+          "depth": 1,
+          "label": "DIV.container",
+          "importance": 42.21991644965278
+        },
+        {
+          "id": "group-20",
+          "type": "section",
+          "bounds": {
+            "x": 20,
+            "y": 1005.59375,
+            "width": 1225,
+            "height": 132
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-21",
+              "type": "navigation",
+              "bounds": {
+                "x": 40,
+                "y": 1079.59375,
+                "width": 1185,
+                "height": 18
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 2,
+              "label": "DIV.nav",
+              "importance": -9.294379340277779
+            }
+          ],
+          "depth": 1,
+          "label": "FOOTER.footer",
+          "importance": 7.3305121527777795
+        }
+      ],
+      "depth": 0,
+      "label": "BODY",
+      "importance": 77.66784159342447
+    },
+    {
+      "id": "group-1",
+      "type": "section",
+      "bounds": {
+        "x": 20,
+        "y": 20,
+        "width": 1225,
+        "height": 153.875
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-2",
+          "type": "content",
+          "bounds": {
+            "x": 40,
+            "y": 61.4375,
+            "width": 1185,
+            "height": 37
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 2,
+          "label": "H1",
+          "importance": 39.72064887152778
+        }
+      ],
+      "depth": 1,
+      "label": "HEADER.header",
+      "importance": 55.580410427517364
+    },
+    {
+      "id": "group-5",
+      "type": "container",
+      "bounds": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 1200,
+        "height": 733.71875
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-6",
+          "type": "section",
+          "bounds": {
+            "x": 32.5,
+            "y": 231.875,
+            "width": 1200,
+            "height": 174.90625
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-7",
+              "type": "container",
+              "bounds": {
+                "x": 32.5,
+                "y": 231.875,
+                "width": 386.65625,
+                "height": 174.90625
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-8",
+                  "type": "content",
+                  "bounds": {
+                    "x": 52.5,
+                    "y": 251.875,
+                    "width": 346.65625,
+                    "height": 28
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "H2",
+                  "importance": 33.31943495008681
+                },
+                {
+                  "id": "group-9",
+                  "type": "interactive",
+                  "bounds": {
+                    "x": 52.5,
+                    "y": 351.78125,
+                    "width": 108.171875,
+                    "height": 35
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "BUTTON.button",
+                  "importance": 35.35154130723741
+                }
+              ],
+              "depth": 3,
+              "label": "DIV.card",
+              "importance": 25.760479429033065
+            },
+            {
+              "id": "group-10",
+              "type": "container",
+              "bounds": {
+                "x": 439.15625,
+                "y": 231.875,
+                "width": 386.671875,
+                "height": 174.90625
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-11",
+                  "type": "content",
+                  "bounds": {
+                    "x": 459.15625,
+                    "y": 251.875,
+                    "width": 346.671875,
+                    "height": 28
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "H2",
+                  "importance": 33.319449191623264
+                },
+                {
+                  "id": "group-12",
+                  "type": "interactive",
+                  "bounds": {
+                    "x": 459.15625,
+                    "y": 351.78125,
+                    "width": 85.203125,
+                    "height": 35
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "BUTTON.button",
+                  "importance": 35.325372483995224
+                }
+              ],
+              "depth": 3,
+              "label": "DIV.card",
+              "importance": 25.760568390952216
+            },
+            {
+              "id": "group-13",
+              "type": "container",
+              "bounds": {
+                "x": 845.828125,
+                "y": 231.875,
+                "width": 386.65625,
+                "height": 174.90625
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [
+                {
+                  "id": "group-14",
+                  "type": "content",
+                  "bounds": {
+                    "x": 865.828125,
+                    "y": 251.875,
+                    "width": 346.65625,
+                    "height": 28
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "H2",
+                  "importance": 33.31943495008681
+                },
+                {
+                  "id": "group-15",
+                  "type": "interactive",
+                  "bounds": {
+                    "x": 865.828125,
+                    "y": 351.78125,
+                    "width": 91.84375,
+                    "height": 35
+                  },
+                  "elements": [
+                    "ref: <Node>"
+                  ],
+                  "children": [],
+                  "depth": 4,
+                  "label": "BUTTON.button",
+                  "importance": 35.332938300238716
+                }
+              ],
+              "depth": 3,
+              "label": "DIV.card",
+              "importance": 25.760479429033065
+            }
+          ],
+          "depth": 2,
+          "label": "SECTION.card-grid",
+          "importance": 20.39130316840278
+        },
+        {
+          "id": "group-16",
+          "type": "section",
+          "bounds": {
+            "x": 32.5,
+            "y": 446.78125,
+            "width": 1200,
+            "height": 344.90625
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-17",
+              "type": "container",
+              "bounds": {
+                "x": 32.5,
+                "y": 494.6875,
+                "width": 1200,
+                "height": 297
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 3,
+              "label": "FORM",
+              "importance": 17.860243055555557
+            }
+          ],
+          "depth": 2,
+          "label": "SECTION.form-section",
+          "importance": 21.06231011284722
+        },
+        {
+          "id": "group-18",
+          "type": "section",
+          "bounds": {
+            "x": 32.5,
+            "y": 831.6875,
+            "width": 1200,
+            "height": 133.90625
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-19",
+              "type": "navigation",
+              "bounds": {
+                "x": 32.5,
+                "y": 879.59375,
+                "width": 1200,
+                "height": 18
+              },
+              "elements": [
+                "ref: <Node>",
+                "ref: <Node>",
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 3,
+              "label": "DIV",
+              "importance": -3.730034722222224
+            }
+          ],
+          "depth": 2,
+          "label": "SECTION.accessibility-section",
+          "importance": 2.1282823350694446
+        }
+      ],
+      "depth": 1,
+      "label": "DIV.container",
+      "importance": 42.21991644965278
+    },
+    {
+      "id": "group-2",
+      "type": "content",
+      "bounds": {
+        "x": 40,
+        "y": 61.4375,
+        "width": 1185,
+        "height": 37
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 2,
+      "label": "H1",
+      "importance": 39.72064887152778
+    },
+    {
+      "id": "group-9",
+      "type": "interactive",
+      "bounds": {
+        "x": 52.5,
+        "y": 351.78125,
+        "width": 108.171875,
+        "height": 35
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "BUTTON.button",
+      "importance": 35.35154130723741
+    },
+    {
+      "id": "group-15",
+      "type": "interactive",
+      "bounds": {
+        "x": 865.828125,
+        "y": 351.78125,
+        "width": 91.84375,
+        "height": 35
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "BUTTON.button",
+      "importance": 35.332938300238716
+    },
+    {
+      "id": "group-3",
+      "type": "navigation",
+      "bounds": {
+        "x": 20,
+        "y": 193.875,
+        "width": 1225,
+        "height": 18
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-4",
+          "type": "navigation",
+          "bounds": {
+            "x": 20,
+            "y": 193.875,
+            "width": 1225,
+            "height": 18
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 2,
+          "label": "UL.nav",
+          "importance": 15.332356770833332
+        }
+      ],
+      "depth": 1,
+      "label": "NAV",
+      "importance": 35.33235677083333
+    },
+    {
+      "id": "group-12",
+      "type": "interactive",
+      "bounds": {
+        "x": 459.15625,
+        "y": 351.78125,
+        "width": 85.203125,
+        "height": 35
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "BUTTON.button",
+      "importance": 35.325372483995224
+    },
+    {
+      "id": "group-11",
+      "type": "content",
+      "bounds": {
+        "x": 459.15625,
+        "y": 251.875,
+        "width": 346.671875,
+        "height": 28
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "H2",
+      "importance": 33.319449191623264
+    },
+    {
+      "id": "group-8",
+      "type": "content",
+      "bounds": {
+        "x": 52.5,
+        "y": 251.875,
+        "width": 346.65625,
+        "height": 28
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "H2",
+      "importance": 33.31943495008681
+    },
+    {
+      "id": "group-14",
+      "type": "content",
+      "bounds": {
+        "x": 865.828125,
+        "y": 251.875,
+        "width": 346.65625,
+        "height": 28
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 4,
+      "label": "H2",
+      "importance": 33.31943495008681
+    },
+    {
+      "id": "group-10",
+      "type": "container",
+      "bounds": {
+        "x": 439.15625,
+        "y": 231.875,
+        "width": 386.671875,
+        "height": 174.90625
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-11",
+          "type": "content",
+          "bounds": {
+            "x": 459.15625,
+            "y": 251.875,
+            "width": 346.671875,
+            "height": 28
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "H2",
+          "importance": 33.319449191623264
+        },
+        {
+          "id": "group-12",
+          "type": "interactive",
+          "bounds": {
+            "x": 459.15625,
+            "y": 351.78125,
+            "width": 85.203125,
+            "height": 35
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "BUTTON.button",
+          "importance": 35.325372483995224
+        }
+      ],
+      "depth": 3,
+      "label": "DIV.card",
+      "importance": 25.760568390952216
+    },
+    {
+      "id": "group-7",
+      "type": "container",
+      "bounds": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 386.65625,
+        "height": 174.90625
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-8",
+          "type": "content",
+          "bounds": {
+            "x": 52.5,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "H2",
+          "importance": 33.31943495008681
+        },
+        {
+          "id": "group-9",
+          "type": "interactive",
+          "bounds": {
+            "x": 52.5,
+            "y": 351.78125,
+            "width": 108.171875,
+            "height": 35
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "BUTTON.button",
+          "importance": 35.35154130723741
+        }
+      ],
+      "depth": 3,
+      "label": "DIV.card",
+      "importance": 25.760479429033065
+    },
+    {
+      "id": "group-13",
+      "type": "container",
+      "bounds": {
+        "x": 845.828125,
+        "y": 231.875,
+        "width": 386.65625,
+        "height": 174.90625
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-14",
+          "type": "content",
+          "bounds": {
+            "x": 865.828125,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "H2",
+          "importance": 33.31943495008681
+        },
+        {
+          "id": "group-15",
+          "type": "interactive",
+          "bounds": {
+            "x": 865.828125,
+            "y": 351.78125,
+            "width": 91.84375,
+            "height": 35
+          },
+          "elements": [
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 4,
+          "label": "BUTTON.button",
+          "importance": 35.332938300238716
+        }
+      ],
+      "depth": 3,
+      "label": "DIV.card",
+      "importance": 25.760479429033065
+    },
+    {
+      "id": "group-16",
+      "type": "section",
+      "bounds": {
+        "x": 32.5,
+        "y": 446.78125,
+        "width": 1200,
+        "height": 344.90625
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-17",
+          "type": "container",
+          "bounds": {
+            "x": 32.5,
+            "y": 494.6875,
+            "width": 1200,
+            "height": 297
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 3,
+          "label": "FORM",
+          "importance": 17.860243055555557
+        }
+      ],
+      "depth": 2,
+      "label": "SECTION.form-section",
+      "importance": 21.06231011284722
+    },
+    {
+      "id": "group-6",
+      "type": "section",
+      "bounds": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 1200,
+        "height": 174.90625
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-7",
+          "type": "container",
+          "bounds": {
+            "x": 32.5,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-8",
+              "type": "content",
+              "bounds": {
+                "x": 52.5,
+                "y": 251.875,
+                "width": 346.65625,
+                "height": 28
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "H2",
+              "importance": 33.31943495008681
+            },
+            {
+              "id": "group-9",
+              "type": "interactive",
+              "bounds": {
+                "x": 52.5,
+                "y": 351.78125,
+                "width": 108.171875,
+                "height": 35
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "BUTTON.button",
+              "importance": 35.35154130723741
+            }
+          ],
+          "depth": 3,
+          "label": "DIV.card",
+          "importance": 25.760479429033065
+        },
+        {
+          "id": "group-10",
+          "type": "container",
+          "bounds": {
+            "x": 439.15625,
+            "y": 231.875,
+            "width": 386.671875,
+            "height": 174.90625
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-11",
+              "type": "content",
+              "bounds": {
+                "x": 459.15625,
+                "y": 251.875,
+                "width": 346.671875,
+                "height": 28
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "H2",
+              "importance": 33.319449191623264
+            },
+            {
+              "id": "group-12",
+              "type": "interactive",
+              "bounds": {
+                "x": 459.15625,
+                "y": 351.78125,
+                "width": 85.203125,
+                "height": 35
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "BUTTON.button",
+              "importance": 35.325372483995224
+            }
+          ],
+          "depth": 3,
+          "label": "DIV.card",
+          "importance": 25.760568390952216
+        },
+        {
+          "id": "group-13",
+          "type": "container",
+          "bounds": {
+            "x": 845.828125,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [
+            {
+              "id": "group-14",
+              "type": "content",
+              "bounds": {
+                "x": 865.828125,
+                "y": 251.875,
+                "width": 346.65625,
+                "height": 28
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "H2",
+              "importance": 33.31943495008681
+            },
+            {
+              "id": "group-15",
+              "type": "interactive",
+              "bounds": {
+                "x": 865.828125,
+                "y": 351.78125,
+                "width": 91.84375,
+                "height": 35
+              },
+              "elements": [
+                "ref: <Node>"
+              ],
+              "children": [],
+              "depth": 4,
+              "label": "BUTTON.button",
+              "importance": 35.332938300238716
+            }
+          ],
+          "depth": 3,
+          "label": "DIV.card",
+          "importance": 25.760479429033065
+        }
+      ],
+      "depth": 2,
+      "label": "SECTION.card-grid",
+      "importance": 20.39130316840278
+    },
+    {
+      "id": "group-17",
+      "type": "container",
+      "bounds": {
+        "x": 32.5,
+        "y": 494.6875,
+        "width": 1200,
+        "height": 297
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 3,
+      "label": "FORM",
+      "importance": 17.860243055555557
+    },
+    {
+      "id": "group-4",
+      "type": "navigation",
+      "bounds": {
+        "x": 20,
+        "y": 193.875,
+        "width": 1225,
+        "height": 18
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 2,
+      "label": "UL.nav",
+      "importance": 15.332356770833332
+    },
+    {
+      "id": "group-20",
+      "type": "section",
+      "bounds": {
+        "x": 20,
+        "y": 1005.59375,
+        "width": 1225,
+        "height": 132
+      },
+      "elements": [
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-21",
+          "type": "navigation",
+          "bounds": {
+            "x": 40,
+            "y": 1079.59375,
+            "width": 1185,
+            "height": 18
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 2,
+          "label": "DIV.nav",
+          "importance": -9.294379340277779
+        }
+      ],
+      "depth": 1,
+      "label": "FOOTER.footer",
+      "importance": 7.3305121527777795
+    },
+    {
+      "id": "group-18",
+      "type": "section",
+      "bounds": {
+        "x": 32.5,
+        "y": 831.6875,
+        "width": 1200,
+        "height": 133.90625
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [
+        {
+          "id": "group-19",
+          "type": "navigation",
+          "bounds": {
+            "x": 32.5,
+            "y": 879.59375,
+            "width": 1200,
+            "height": 18
+          },
+          "elements": [
+            "ref: <Node>",
+            "ref: <Node>",
+            "ref: <Node>"
+          ],
+          "children": [],
+          "depth": 3,
+          "label": "DIV",
+          "importance": -3.730034722222224
+        }
+      ],
+      "depth": 2,
+      "label": "SECTION.accessibility-section",
+      "importance": 2.1282823350694446
+    },
+    {
+      "id": "group-19",
+      "type": "navigation",
+      "bounds": {
+        "x": 32.5,
+        "y": 879.59375,
+        "width": 1200,
+        "height": 18
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 3,
+      "label": "DIV",
+      "importance": -3.730034722222224
+    },
+    {
+      "id": "group-21",
+      "type": "navigation",
+      "bounds": {
+        "x": 40,
+        "y": 1079.59375,
+        "width": 1185,
+        "height": 18
+      },
+      "elements": [
+        "ref: <Node>",
+        "ref: <Node>",
+        "ref: <Node>"
+      ],
+      "children": [],
+      "depth": 2,
+      "label": "DIV.nav",
+      "importance": -9.294379340277779
+    }
+  ],
+  "patterns": [
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 40,
+            "y": 119.875,
+            "width": 1185,
+            "height": 18,
+            "top": 119.875,
+            "right": 1225,
+            "bottom": 137.875,
+            "left": 40
+          },
+          "text": "A sample page with various elements for testing la"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 40,
+            "y": 1041.59375,
+            "width": 1185,
+            "height": 18,
+            "top": 1041.59375,
+            "right": 1225,
+            "bottom": 1059.59375,
+            "left": 40
+          },
+          "text": "© 2024 Layout Test Page. All rights reserved."
+        }
+      ],
+      "type": "P",
+      "className": "",
+      "averageSize": {
+        "width": 1185,
+        "height": 18
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 502,
+            "y": 193.875,
+            "width": 42.6875,
+            "height": 18,
+            "top": 193.875,
+            "right": 544.6875,
+            "bottom": 211.875,
+            "left": 502
+          },
+          "text": "Home"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 564.6875,
+            "y": 193.875,
+            "width": 41.8125,
+            "height": 18,
+            "top": 193.875,
+            "right": 606.5,
+            "bottom": 211.875,
+            "left": 564.6875
+          },
+          "text": "About"
+        }
+      ],
+      "type": "LI",
+      "className": "",
+      "averageSize": {
+        "width": 42.6875,
+        "height": 18
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 502,
+            "y": 193.875,
+            "width": 42.6875,
+            "height": 17,
+            "top": 193.875,
+            "right": 544.6875,
+            "bottom": 210.875,
+            "left": 502
+          },
+          "text": "Home"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 564.6875,
+            "y": 193.875,
+            "width": 41.8125,
+            "height": 17,
+            "top": 193.875,
+            "right": 606.5,
+            "bottom": 210.875,
+            "left": 564.6875
+          },
+          "text": "About"
+        }
+      ],
+      "type": "A",
+      "className": "",
+      "averageSize": {
+        "width": 42.6875,
+        "height": 17
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 626.5,
+            "y": 193.875,
+            "width": 61.359375,
+            "height": 18,
+            "top": 193.875,
+            "right": 687.859375,
+            "bottom": 211.875,
+            "left": 626.5
+          },
+          "text": "Services"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 707.859375,
+            "y": 193.875,
+            "width": 55.140625,
+            "height": 18,
+            "top": 193.875,
+            "right": 763,
+            "bottom": 211.875,
+            "left": 707.859375
+          },
+          "text": "Contact"
+        }
+      ],
+      "type": "LI",
+      "className": "",
+      "averageSize": {
+        "width": 61.359375,
+        "height": 18
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 626.5,
+            "y": 193.875,
+            "width": 61.359375,
+            "height": 17,
+            "top": 193.875,
+            "right": 687.859375,
+            "bottom": 210.875,
+            "left": 626.5
+          },
+          "text": "Services"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 707.859375,
+            "y": 193.875,
+            "width": 55.140625,
+            "height": 17,
+            "top": 193.875,
+            "right": 763,
+            "bottom": 210.875,
+            "left": 707.859375
+          },
+          "text": "Contact"
+        }
+      ],
+      "type": "A",
+      "className": "",
+      "averageSize": {
+        "width": 61.359375,
+        "height": 17
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 419.15625,
+            "bottom": 406.78125,
+            "left": 32.5
+          },
+          "text": "Card 1\n                This is the first card with"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 439.15625,
+            "y": 231.875,
+            "width": 386.671875,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 825.828125,
+            "bottom": 406.78125,
+            "left": 439.15625
+          },
+          "text": "Card 2\n                Another card with similar s"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 845.828125,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 1232.484375,
+            "bottom": 406.78125,
+            "left": 845.828125
+          },
+          "text": "Card 3\n                A third card to make the pa"
+        }
+      ],
+      "type": "DIV",
+      "className": "card",
+      "averageSize": {
+        "width": 386.65625,
+        "height": 174.90625
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 52.5,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28,
+            "top": 251.875,
+            "right": 399.15625,
+            "bottom": 279.875,
+            "left": 52.5
+          },
+          "text": "Card 1"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 251.875,
+            "width": 346.671875,
+            "height": 28,
+            "top": 251.875,
+            "right": 805.828125,
+            "bottom": 279.875,
+            "left": 459.15625
+          },
+          "text": "Card 2"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28,
+            "top": 251.875,
+            "right": 1212.484375,
+            "bottom": 279.875,
+            "left": 865.828125
+          },
+          "text": "Card 3"
+        }
+      ],
+      "type": "H2",
+      "className": "",
+      "averageSize": {
+        "width": 346.65625,
+        "height": 28
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 52.5,
+            "y": 299.78125,
+            "width": 346.65625,
+            "height": 36,
+            "top": 299.78125,
+            "right": 399.15625,
+            "bottom": 335.78125,
+            "left": 52.5
+          },
+          "text": "This is the first card with some sample content. I"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 299.78125,
+            "width": 346.671875,
+            "height": 36,
+            "top": 299.78125,
+            "right": 805.828125,
+            "bottom": 335.78125,
+            "left": 459.15625
+          },
+          "text": "Another card with similar structure but different "
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 299.78125,
+            "width": 346.65625,
+            "height": 36,
+            "top": 299.78125,
+            "right": 1212.484375,
+            "bottom": 335.78125,
+            "left": 865.828125
+          },
+          "text": "A third card to make the pattern more apparent for"
+        }
+      ],
+      "type": "P",
+      "className": "",
+      "averageSize": {
+        "width": 346.65625,
+        "height": 36
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 52.5,
+            "y": 351.78125,
+            "width": 108.171875,
+            "height": 35,
+            "top": 351.78125,
+            "right": 160.671875,
+            "bottom": 386.78125,
+            "left": 52.5
+          },
+          "text": "Learn More"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 351.78125,
+            "width": 91.84375,
+            "height": 35,
+            "top": 351.78125,
+            "right": 957.671875,
+            "bottom": 386.78125,
+            "left": 865.828125
+          },
+          "text": "Discover"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 756.6875,
+            "width": 128.921875,
+            "height": 35,
+            "top": 756.6875,
+            "right": 161.421875,
+            "bottom": 791.6875,
+            "left": 32.5
+          },
+          "text": "Send Message"
+        }
+      ],
+      "type": "BUTTON",
+      "className": "button",
+      "averageSize": {
+        "width": 108.171875,
+        "height": 35
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 351.78125,
+            "width": 85.203125,
+            "height": 35,
+            "top": 351.78125,
+            "right": 544.359375,
+            "bottom": 386.78125,
+            "left": 459.15625
+          },
+          "text": "Explore"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 175.875,
+            "y": 756.6875,
+            "width": 74.828125,
+            "height": 35,
+            "top": 756.6875,
+            "right": 250.703125,
+            "bottom": 791.6875,
+            "left": 175.875
+          },
+          "text": "Reset"
+        }
+      ],
+      "type": "BUTTON",
+      "className": "button",
+      "averageSize": {
+        "width": 85.203125,
+        "height": 35
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 446.78125,
+            "width": 1200,
+            "height": 28,
+            "top": 446.78125,
+            "right": 1232.5,
+            "bottom": 474.78125,
+            "left": 32.5
+          },
+          "text": "Contact Form"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 831.6875,
+            "width": 1200,
+            "height": 28,
+            "top": 831.6875,
+            "right": 1232.5,
+            "bottom": 859.6875,
+            "left": 32.5
+          },
+          "text": "Accessibility Features"
+        }
+      ],
+      "type": "H2",
+      "className": "",
+      "averageSize": {
+        "width": 1200,
+        "height": 28
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "DIV",
+          "className": "form-group",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 494.6875,
+            "width": 1200,
+            "height": 56,
+            "top": 494.6875,
+            "right": 1232.5,
+            "bottom": 550.6875,
+            "left": 32.5
+          },
+          "text": "Name:"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "DIV",
+          "className": "form-group",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 565.6875,
+            "width": 1200,
+            "height": 56,
+            "top": 565.6875,
+            "right": 1232.5,
+            "bottom": 621.6875,
+            "left": 32.5
+          },
+          "text": "Email:"
+        }
+      ],
+      "type": "DIV",
+      "className": "form-group",
+      "averageSize": {
+        "width": 1200,
+        "height": 56
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 494.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 494.6875,
+            "right": 1232.5,
+            "bottom": 512.6875,
+            "left": 32.5
+          },
+          "text": "Name:"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 565.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 565.6875,
+            "right": 1232.5,
+            "bottom": 583.6875,
+            "left": 32.5
+          },
+          "text": "Email:"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 636.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 636.6875,
+            "right": 1232.5,
+            "bottom": 654.6875,
+            "left": 32.5
+          },
+          "text": "Message:"
+        }
+      ],
+      "type": "LABEL",
+      "className": "",
+      "averageSize": {
+        "width": 1200,
+        "height": 18
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "INPUT",
+          "className": "",
+          "id": "name",
+          "rect": {
+            "x": 32.5,
+            "y": 517.6875,
+            "width": 1218,
+            "height": 33,
+            "top": 517.6875,
+            "right": 1250.5,
+            "bottom": 550.6875,
+            "left": 32.5
+          },
+          "text": ""
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "INPUT",
+          "className": "",
+          "id": "email",
+          "rect": {
+            "x": 32.5,
+            "y": 588.6875,
+            "width": 1218,
+            "height": 33,
+            "top": 588.6875,
+            "right": 1250.5,
+            "bottom": 621.6875,
+            "left": 32.5
+          },
+          "text": ""
+        }
+      ],
+      "type": "INPUT",
+      "className": "",
+      "averageSize": {
+        "width": 1218,
+        "height": 33
+      }
+    },
+    {
+      "elements": [
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 879.59375,
+            "width": 123.625,
+            "height": 17,
+            "top": 879.59375,
+            "right": 156.125,
+            "bottom": 896.59375,
+            "left": 32.5
+          },
+          "text": "Accessible Link 1"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 159.6875,
+            "y": 879.59375,
+            "width": 123.625,
+            "height": 17,
+            "top": 879.59375,
+            "right": 283.3125,
+            "bottom": 896.59375,
+            "left": 159.6875
+          },
+          "text": "Accessible Link 2"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 513.140625,
+            "y": 1079.59375,
+            "width": 99.578125,
+            "height": 18,
+            "top": 1079.59375,
+            "right": 612.71875,
+            "bottom": 1097.59375,
+            "left": 513.140625
+          },
+          "text": "Privacy Policy"
+        },
+        {
+          "element": "ref: <Node>",
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 632.71875,
+            "y": 1079.59375,
+            "width": 119.140625,
+            "height": 18,
+            "top": 1079.59375,
+            "right": 751.859375,
+            "bottom": 1097.59375,
+            "left": 632.71875
+          },
+          "text": "Terms of Service"
+        }
+      ],
+      "type": "A",
+      "className": "",
+      "averageSize": {
+        "width": 123.625,
+        "height": 17
+      }
+    }
+  ],
+  "totalElements": 54,
+  "statistics": {
+    "groupCount": 22,
+    "patternCount": 15,
+    "topLevelGroups": 1
+  }
+}

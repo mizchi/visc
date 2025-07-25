@@ -1,4 +1,4 @@
-import { chromium, firefox, webkit, Browser, Page, BrowserContext } from '@playwright/test';
+import { chromium, firefox, webkit, Browser, Page, BrowserContext, devices } from '@playwright/test';
 import { UrlConfig, VisualCheckConfig } from './types.js';
 import path from 'path';
 import fs from 'fs/promises';
@@ -35,12 +35,12 @@ export class BrowserController {
     
     if (this.config.playwright?.device) {
       // デバイスプリセットを使用（例: 'iPhone 12'）
-      const devices = {
-        'iPhone 12': chromium.devices['iPhone 12'],
-        'iPad': chromium.devices['iPad'],
-        'Pixel 5': chromium.devices['Pixel 5'],
+      const devicePresets = {
+        'iPhone 12': devices['iPhone 12'],
+        'iPad': devices['iPad'],
+        'Pixel 5': devices['Pixel 5'],
       };
-      const device = devices[this.config.playwright.device as keyof typeof devices];
+      const device = devicePresets[this.config.playwright.device as keyof typeof devicePresets];
       if (device) {
         Object.assign(contextOptions, device);
       }

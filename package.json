@@ -12,12 +12,46 @@
   },
   "types": "dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./layout/extractor": {
+      "types": "./dist/layout/extractor.d.ts",
+      "import": "./dist/layout/extractor.js"
+    },
+    "./layout/semantic-analyzer": {
+      "types": "./dist/layout/semantic-analyzer.d.ts",
+      "import": "./dist/layout/semantic-analyzer.js"
+    },
+    "./layout/comparator": {
+      "types": "./dist/layout/comparator.d.ts",
+      "import": "./dist/layout/comparator.js"
+    },
+    "./layout/assertions": {
+      "types": "./dist/layout/assertions.d.ts",
+      "import": "./dist/layout/assertions.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
+    "build": "tsdown",
+    "build:watch": "tsdown --watch",
+    "build:tsc": "tsc",
+    "dev": "tsdown --watch",
     "test": "npm run build && node dist/cli.js test",
     "update-snapshots": "npm run build && node dist/cli.js update",
-    "compare": "npm run build && node dist/cli.js compare"
+    "compare": "npm run build && node dist/cli.js compare",
+    "extract": "npm run build && tsx examples/layout/extract-layout-refactored.ts",
+    "viewer": "npx http-server examples -o fixtures/layout-viewer.html",
+    "test:unit": "vitest",
+    "test:layout": "npm run build && npx playwright test tests/layout/",
+    "test:layout:ui": "npm run build && npx playwright test tests/layout/ --ui",
+    "test:all": "npm run test:unit && npm run test:layout",
+    "stability-check": "npm run build && tsx examples/layout/layout-stability-check.ts",
+    "test:proxy": "npm run build && vitest tests/proxy/",
+    "proxy:dev": "cd cloudflare-proxy && npm run dev",
+    "proxy:setup": "cd cloudflare-proxy && npm install"
   },
   "keywords": [
     "visual-regression",
@@ -28,17 +62,28 @@
   "author": "mizchi",
   "license": "MIT",
   "dependencies": {
+    "@ai-sdk/google": "^1.2.22",
     "@playwright/test": "^1.41.0",
+    "ai": "^4.3.19",
+    "chalk": "^5.3.0",
     "commander": "^11.1.0",
+    "lighthouse": "^11.5.0",
+    "ora": "^8.0.1",
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0",
-    "chalk": "^5.3.0",
-    "ora": "^8.0.1"
+    "puppeteer": "^24.15.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.41.0",
     "@types/node": "^20.11.0",
     "@types/pixelmatch": "^5.2.6",
     "@types/pngjs": "^6.0.4",
-    "typescript": "^5.3.3"
+    "@vitest/ui": "^1.6.1",
+    "happy-dom": "^18.0.1",
+    "jsdom": "^23.2.0",
+    "tsdown": "^0.13.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.3.3",
+    "vitest": "^1.6.1"
   }
 }

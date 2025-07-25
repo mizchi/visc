@@ -1,0 +1,3640 @@
+{
+  "url": "file:///home/mizchi/mizchi/visual-checker/examples/test-page.html",
+  "timestamp": "2025-07-24T14:58:38.335Z",
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "scrollX": 0,
+    "scrollY": 0
+  },
+  "elements": [
+    {
+      "tagName": "HEADER",
+      "className": "header",
+      "id": "",
+      "rect": {
+        "x": 20,
+        "y": 20,
+        "width": 1225,
+        "height": 153.875,
+        "top": 20,
+        "right": 1245,
+        "bottom": 173.875,
+        "left": 20
+      },
+      "text": "Layout Extraction Test Page\n        A sample page with various elements for testing layout analysis",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(51, 51, 51)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H1",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 40,
+        "y": 61.4375,
+        "width": 1185,
+        "height": 37,
+        "top": 61.4375,
+        "right": 1225,
+        "bottom": 98.4375,
+        "left": 40
+      },
+      "text": "Layout Extraction Test Page",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "32px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 40,
+        "y": 119.875,
+        "width": 1185,
+        "height": 18,
+        "top": 119.875,
+        "right": 1225,
+        "bottom": 137.875,
+        "left": 40
+      },
+      "text": "A sample page with various elements for testing layout analysis",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "NAV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 20,
+        "y": 193.875,
+        "width": 1225,
+        "height": 18,
+        "top": 193.875,
+        "right": 1245,
+        "bottom": 211.875,
+        "left": 20
+      },
+      "text": "Home\n            About\n            Services\n            Contact",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "UL",
+      "className": "nav",
+      "id": "",
+      "rect": {
+        "x": 20,
+        "y": 193.875,
+        "width": 1225,
+        "height": 18,
+        "top": 193.875,
+        "right": 1245,
+        "bottom": 211.875,
+        "left": 20
+      },
+      "text": "Home\n            About\n            Services\n            Contact",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": true,
+      "computedStyle": {
+        "display": "flex",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "LI",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 502,
+        "y": 193.875,
+        "width": 42.6875,
+        "height": 18,
+        "top": 193.875,
+        "right": 544.6875,
+        "bottom": 211.875,
+        "left": 502
+      },
+      "text": "Home",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "list-item",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 502,
+        "y": 193.875,
+        "width": 42.6875,
+        "height": 17,
+        "top": 193.875,
+        "right": 544.6875,
+        "bottom": 210.875,
+        "left": 502
+      },
+      "text": "Home",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "LI",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 564.6875,
+        "y": 193.875,
+        "width": 41.8125,
+        "height": 18,
+        "top": 193.875,
+        "right": 606.5,
+        "bottom": 211.875,
+        "left": 564.6875
+      },
+      "text": "About",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "list-item",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 564.6875,
+        "y": 193.875,
+        "width": 41.8125,
+        "height": 17,
+        "top": 193.875,
+        "right": 606.5,
+        "bottom": 210.875,
+        "left": 564.6875
+      },
+      "text": "About",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "LI",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 626.5,
+        "y": 193.875,
+        "width": 61.359375,
+        "height": 18,
+        "top": 193.875,
+        "right": 687.859375,
+        "bottom": 211.875,
+        "left": 626.5
+      },
+      "text": "Services",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "list-item",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 626.5,
+        "y": 193.875,
+        "width": 61.359375,
+        "height": 17,
+        "top": 193.875,
+        "right": 687.859375,
+        "bottom": 210.875,
+        "left": 626.5
+      },
+      "text": "Services",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "LI",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 707.859375,
+        "y": 193.875,
+        "width": 55.140625,
+        "height": 18,
+        "top": 193.875,
+        "right": 763,
+        "bottom": 211.875,
+        "left": 707.859375
+      },
+      "text": "Contact",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "list-item",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 707.859375,
+        "y": 193.875,
+        "width": 55.140625,
+        "height": 17,
+        "top": 193.875,
+        "right": 763,
+        "bottom": 210.875,
+        "left": 707.859375
+      },
+      "text": "Contact",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "container",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 1200,
+        "height": 733.71875,
+        "top": 231.875,
+        "right": 1232.5,
+        "bottom": 965.59375,
+        "left": 32.5
+      },
+      "text": "Card 1\n                This is the first card with some sample content. It demonstrates a typical ca",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "SECTION",
+      "className": "card-grid",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 1200,
+        "height": 174.90625,
+        "top": 231.875,
+        "right": 1232.5,
+        "bottom": 406.78125,
+        "left": 32.5
+      },
+      "text": "Card 1\n                This is the first card with some sample content. It demonstrates a typical ca",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "grid",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "card",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 231.875,
+        "width": 386.65625,
+        "height": 174.90625,
+        "top": 231.875,
+        "right": 419.15625,
+        "bottom": 406.78125,
+        "left": 32.5
+      },
+      "text": "Card 1\n                This is the first card with some sample content. It demonstrates a typical ca",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H2",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 52.5,
+        "y": 251.875,
+        "width": 346.65625,
+        "height": 28,
+        "top": 251.875,
+        "right": 399.15625,
+        "bottom": 279.875,
+        "left": 52.5
+      },
+      "text": "Card 1",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(51, 51, 51)",
+        "fontSize": "24px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 52.5,
+        "y": 299.78125,
+        "width": 346.65625,
+        "height": 36,
+        "top": 299.78125,
+        "right": 399.15625,
+        "bottom": 335.78125,
+        "left": 52.5
+      },
+      "text": "This is the first card with some sample content. It demonstrates a typical card layout pattern.",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 52.5,
+        "y": 351.78125,
+        "width": 108.171875,
+        "height": 35,
+        "top": 351.78125,
+        "right": 160.671875,
+        "bottom": 386.78125,
+        "left": 52.5
+      },
+      "text": "Learn More",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "card",
+      "id": "",
+      "rect": {
+        "x": 439.15625,
+        "y": 231.875,
+        "width": 386.671875,
+        "height": 174.90625,
+        "top": 231.875,
+        "right": 825.828125,
+        "bottom": 406.78125,
+        "left": 439.15625
+      },
+      "text": "Card 2\n                Another card with similar structure but different content. This helps test gr",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H2",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 459.15625,
+        "y": 251.875,
+        "width": 346.671875,
+        "height": 28,
+        "top": 251.875,
+        "right": 805.828125,
+        "bottom": 279.875,
+        "left": 459.15625
+      },
+      "text": "Card 2",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(51, 51, 51)",
+        "fontSize": "24px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 459.15625,
+        "y": 299.78125,
+        "width": 346.671875,
+        "height": 36,
+        "top": 299.78125,
+        "right": 805.828125,
+        "bottom": 335.78125,
+        "left": 459.15625
+      },
+      "text": "Another card with similar structure but different content. This helps test grouping functionality.",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 459.15625,
+        "y": 351.78125,
+        "width": 85.203125,
+        "height": 35,
+        "top": 351.78125,
+        "right": 544.359375,
+        "bottom": 386.78125,
+        "left": 459.15625
+      },
+      "text": "Explore",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "card",
+      "id": "",
+      "rect": {
+        "x": 845.828125,
+        "y": 231.875,
+        "width": 386.65625,
+        "height": 174.90625,
+        "top": 231.875,
+        "right": 1232.484375,
+        "bottom": 406.78125,
+        "left": 845.828125
+      },
+      "text": "Card 3\n                A third card to make the pattern more apparent for the layout analysis algori",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H2",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 865.828125,
+        "y": 251.875,
+        "width": 346.65625,
+        "height": 28,
+        "top": 251.875,
+        "right": 1212.484375,
+        "bottom": 279.875,
+        "left": 865.828125
+      },
+      "text": "Card 3",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(51, 51, 51)",
+        "fontSize": "24px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 865.828125,
+        "y": 299.78125,
+        "width": 346.65625,
+        "height": 36,
+        "top": 299.78125,
+        "right": 1212.484375,
+        "bottom": 335.78125,
+        "left": 865.828125
+      },
+      "text": "A third card to make the pattern more apparent for the layout analysis algorithm.",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 865.828125,
+        "y": 351.78125,
+        "width": 91.84375,
+        "height": 35,
+        "top": 351.78125,
+        "right": 957.671875,
+        "bottom": 386.78125,
+        "left": 865.828125
+      },
+      "text": "Discover",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "SECTION",
+      "className": "form-section",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 446.78125,
+        "width": 1200,
+        "height": 344.90625,
+        "top": 446.78125,
+        "right": 1232.5,
+        "bottom": 791.6875,
+        "left": 32.5
+      },
+      "text": "Contact Form\n            \n                \n                    Name:\n                    \n          ",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H2",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 446.78125,
+        "width": 1200,
+        "height": 28,
+        "top": 446.78125,
+        "right": 1232.5,
+        "bottom": 474.78125,
+        "left": 32.5
+      },
+      "text": "Contact Form",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "24px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "FORM",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 494.6875,
+        "width": 1200,
+        "height": 297,
+        "top": 494.6875,
+        "right": 1232.5,
+        "bottom": 791.6875,
+        "left": 32.5
+      },
+      "text": "Name:\n                    \n                \n                \n                \n                    Em",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "form-group",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 494.6875,
+        "width": 1200,
+        "height": 56,
+        "top": 494.6875,
+        "right": 1232.5,
+        "bottom": 550.6875,
+        "left": 32.5
+      },
+      "text": "Name:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "LABEL",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 494.6875,
+        "width": 1200,
+        "height": 18,
+        "top": 494.6875,
+        "right": 1232.5,
+        "bottom": 512.6875,
+        "left": 32.5
+      },
+      "text": "Name:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "INPUT",
+      "className": "",
+      "id": "name",
+      "rect": {
+        "x": 32.5,
+        "y": 517.6875,
+        "width": 1218,
+        "height": 33,
+        "top": 517.6875,
+        "right": 1250.5,
+        "bottom": 550.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your name",
+      "ariaAttributes": {
+        "aria-label": "Your name"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "form-group",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 565.6875,
+        "width": 1200,
+        "height": 56,
+        "top": 565.6875,
+        "right": 1232.5,
+        "bottom": 621.6875,
+        "left": 32.5
+      },
+      "text": "Email:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "LABEL",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 565.6875,
+        "width": 1200,
+        "height": 18,
+        "top": 565.6875,
+        "right": 1232.5,
+        "bottom": 583.6875,
+        "left": 32.5
+      },
+      "text": "Email:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "INPUT",
+      "className": "",
+      "id": "email",
+      "rect": {
+        "x": 32.5,
+        "y": 588.6875,
+        "width": 1218,
+        "height": 33,
+        "top": 588.6875,
+        "right": 1250.5,
+        "bottom": 621.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your email",
+      "ariaAttributes": {
+        "aria-label": "Your email"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "form-group",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 636.6875,
+        "width": 1200,
+        "height": 105,
+        "top": 636.6875,
+        "right": 1232.5,
+        "bottom": 741.6875,
+        "left": 32.5
+      },
+      "text": "Message:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "LABEL",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 636.6875,
+        "width": 1200,
+        "height": 18,
+        "top": 636.6875,
+        "right": 1232.5,
+        "bottom": 654.6875,
+        "left": 32.5
+      },
+      "text": "Message:",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "TEXTAREA",
+      "className": "",
+      "id": "message",
+      "rect": {
+        "x": 32.5,
+        "y": 659.6875,
+        "width": 1218,
+        "height": 78,
+        "top": 659.6875,
+        "right": 1250.5,
+        "bottom": 737.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your message",
+      "ariaAttributes": {
+        "aria-label": "Your message"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 756.6875,
+        "width": 128.921875,
+        "height": 35,
+        "top": 756.6875,
+        "right": 161.421875,
+        "bottom": 791.6875,
+        "left": 32.5
+      },
+      "text": "Send Message",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 175.875,
+        "y": 756.6875,
+        "width": 74.828125,
+        "height": 35,
+        "top": 756.6875,
+        "right": 250.703125,
+        "bottom": 791.6875,
+        "left": 175.875
+      },
+      "text": "Reset",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(108, 117, 125)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "SECTION",
+      "className": "accessibility-section",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 831.6875,
+        "width": 1200,
+        "height": 133.90625,
+        "top": 831.6875,
+        "right": 1232.5,
+        "bottom": 965.59375,
+        "left": 32.5
+      },
+      "text": "Accessibility Features\n            \n                Accessible Link 1\n                Accessible Lin",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "H2",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 831.6875,
+        "width": 1200,
+        "height": 28,
+        "top": 831.6875,
+        "right": 1232.5,
+        "bottom": 859.6875,
+        "left": 32.5
+      },
+      "text": "Accessibility Features",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "24px",
+        "fontWeight": "700"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 879.59375,
+        "width": 1200,
+        "height": 18,
+        "top": 879.59375,
+        "right": 1232.5,
+        "bottom": 897.59375,
+        "left": 32.5
+      },
+      "text": "Accessible Link 1\n                Accessible Link 2",
+      "role": "navigation",
+      "ariaLabel": "Secondary navigation",
+      "ariaAttributes": {
+        "aria-label": "Secondary navigation"
+      },
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 879.59375,
+        "width": 123.625,
+        "height": 17,
+        "top": 879.59375,
+        "right": 156.125,
+        "bottom": 896.59375,
+        "left": 32.5
+      },
+      "text": "Accessible Link 1",
+      "role": "button",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 238)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 159.6875,
+        "y": 879.59375,
+        "width": 123.625,
+        "height": 17,
+        "top": 879.59375,
+        "right": 283.3125,
+        "bottom": 896.59375,
+        "left": 159.6875
+      },
+      "text": "Accessible Link 2",
+      "role": "button",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 238)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 917.59375,
+        "width": 1200,
+        "height": 48,
+        "top": 917.59375,
+        "right": 1232.5,
+        "bottom": 965.59375,
+        "left": 32.5
+      },
+      "text": "This is an alert message with ARIA role",
+      "role": "alert",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 243, 205)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "FOOTER",
+      "className": "footer",
+      "id": "",
+      "rect": {
+        "x": 20,
+        "y": 1005.59375,
+        "width": 1225,
+        "height": 132,
+        "top": 1005.59375,
+        "right": 1245,
+        "bottom": 1137.59375,
+        "left": 20
+      },
+      "text": "© 2024 Layout Test Page. All rights reserved.\n        \n            Privacy Policy\n            Terms ",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(248, 249, 250)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 40,
+        "y": 1041.59375,
+        "width": 1185,
+        "height": 18,
+        "top": 1041.59375,
+        "right": 1225,
+        "bottom": 1059.59375,
+        "left": 40
+      },
+      "text": "© 2024 Layout Test Page. All rights reserved.",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "nav",
+      "id": "",
+      "rect": {
+        "x": 40,
+        "y": 1079.59375,
+        "width": 1185,
+        "height": 18,
+        "top": 1079.59375,
+        "right": 1225,
+        "bottom": 1097.59375,
+        "left": 40
+      },
+      "text": "Privacy Policy\n            Terms of Service",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "flex",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 513.140625,
+        "y": 1079.59375,
+        "width": 99.578125,
+        "height": 18,
+        "top": 1079.59375,
+        "right": 612.71875,
+        "bottom": 1097.59375,
+        "left": 513.140625
+      },
+      "text": "Privacy Policy",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 632.71875,
+        "y": 1079.59375,
+        "width": 119.140625,
+        "height": 18,
+        "top": 1079.59375,
+        "right": 751.859375,
+        "bottom": 1097.59375,
+        "left": 632.71875
+      },
+      "text": "Terms of Service",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "elements": [
+        {
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 40,
+            "y": 119.875,
+            "width": 1185,
+            "height": 18,
+            "top": 119.875,
+            "right": 1225,
+            "bottom": 137.875,
+            "left": 40
+          },
+          "text": "A sample page with various elements for testing layout analysis",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(255, 255, 255)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 40,
+            "y": 1041.59375,
+            "width": 1185,
+            "height": 18,
+            "top": 1041.59375,
+            "right": 1225,
+            "bottom": 1059.59375,
+            "left": 40
+          },
+          "text": "© 2024 Layout Test Page. All rights reserved.",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "P",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 40,
+          "y": 119.875,
+          "width": 1185,
+          "height": 18,
+          "top": 119.875,
+          "right": 1225,
+          "bottom": 137.875,
+          "left": 40
+        },
+        "text": "A sample page with various elements for testing layout analysis",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(255, 255, 255)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 502,
+            "y": 193.875,
+            "width": 42.6875,
+            "height": 18,
+            "top": 193.875,
+            "right": 544.6875,
+            "bottom": 211.875,
+            "left": 502
+          },
+          "text": "Home",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "list-item",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 564.6875,
+            "y": 193.875,
+            "width": 41.8125,
+            "height": 18,
+            "top": 193.875,
+            "right": 606.5,
+            "bottom": 211.875,
+            "left": 564.6875
+          },
+          "text": "About",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "list-item",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "LI",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 502,
+          "y": 193.875,
+          "width": 42.6875,
+          "height": 18,
+          "top": 193.875,
+          "right": 544.6875,
+          "bottom": 211.875,
+          "left": 502
+        },
+        "text": "Home",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "list-item",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 502,
+            "y": 193.875,
+            "width": 42.6875,
+            "height": 17,
+            "top": 193.875,
+            "right": 544.6875,
+            "bottom": 210.875,
+            "left": 502
+          },
+          "text": "Home",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 123, 255)",
+            "fontSize": "16px",
+            "fontWeight": "500"
+          }
+        },
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 564.6875,
+            "y": 193.875,
+            "width": 41.8125,
+            "height": 17,
+            "top": 193.875,
+            "right": 606.5,
+            "bottom": 210.875,
+            "left": 564.6875
+          },
+          "text": "About",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 123, 255)",
+            "fontSize": "16px",
+            "fontWeight": "500"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "A",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 502,
+          "y": 193.875,
+          "width": 42.6875,
+          "height": 17,
+          "top": 193.875,
+          "right": 544.6875,
+          "bottom": 210.875,
+          "left": 502
+        },
+        "text": "Home",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": true,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "inline",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 123, 255)",
+          "fontSize": "16px",
+          "fontWeight": "500"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 626.5,
+            "y": 193.875,
+            "width": 61.359375,
+            "height": 18,
+            "top": 193.875,
+            "right": 687.859375,
+            "bottom": 211.875,
+            "left": 626.5
+          },
+          "text": "Services",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "list-item",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "LI",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 707.859375,
+            "y": 193.875,
+            "width": 55.140625,
+            "height": 18,
+            "top": 193.875,
+            "right": 763,
+            "bottom": 211.875,
+            "left": 707.859375
+          },
+          "text": "Contact",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "list-item",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "LI",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 626.5,
+          "y": 193.875,
+          "width": 61.359375,
+          "height": 18,
+          "top": 193.875,
+          "right": 687.859375,
+          "bottom": 211.875,
+          "left": 626.5
+        },
+        "text": "Services",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "list-item",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 626.5,
+            "y": 193.875,
+            "width": 61.359375,
+            "height": 17,
+            "top": 193.875,
+            "right": 687.859375,
+            "bottom": 210.875,
+            "left": 626.5
+          },
+          "text": "Services",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 123, 255)",
+            "fontSize": "16px",
+            "fontWeight": "500"
+          }
+        },
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 707.859375,
+            "y": 193.875,
+            "width": 55.140625,
+            "height": 17,
+            "top": 193.875,
+            "right": 763,
+            "bottom": 210.875,
+            "left": 707.859375
+          },
+          "text": "Contact",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 123, 255)",
+            "fontSize": "16px",
+            "fontWeight": "500"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "A",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 626.5,
+          "y": 193.875,
+          "width": 61.359375,
+          "height": 17,
+          "top": 193.875,
+          "right": 687.859375,
+          "bottom": 210.875,
+          "left": 626.5
+        },
+        "text": "Services",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": true,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "inline",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 123, 255)",
+          "fontSize": "16px",
+          "fontWeight": "500"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 419.15625,
+            "bottom": 406.78125,
+            "left": 32.5
+          },
+          "text": "Card 1\n                This is the first card with some sample content. It demonstrates a typical ca",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 439.15625,
+            "y": 231.875,
+            "width": 386.671875,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 825.828125,
+            "bottom": 406.78125,
+            "left": 439.15625
+          },
+          "text": "Card 2\n                Another card with similar structure but different content. This helps test gr",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "DIV",
+          "className": "card",
+          "id": "",
+          "rect": {
+            "x": 845.828125,
+            "y": 231.875,
+            "width": 386.65625,
+            "height": 174.90625,
+            "top": 231.875,
+            "right": 1232.484375,
+            "bottom": 406.78125,
+            "left": 845.828125
+          },
+          "text": "Card 3\n                A third card to make the pattern more apparent for the layout analysis algori",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "DIV",
+        "className": "card",
+        "id": "",
+        "rect": {
+          "x": 32.5,
+          "y": 231.875,
+          "width": 386.65625,
+          "height": 174.90625,
+          "top": 231.875,
+          "right": 419.15625,
+          "bottom": 406.78125,
+          "left": 32.5
+        },
+        "text": "Card 1\n                This is the first card with some sample content. It demonstrates a typical ca",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 52.5,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28,
+            "top": 251.875,
+            "right": 399.15625,
+            "bottom": 279.875,
+            "left": 52.5
+          },
+          "text": "Card 1",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(51, 51, 51)",
+            "fontSize": "24px",
+            "fontWeight": "700"
+          }
+        },
+        {
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 251.875,
+            "width": 346.671875,
+            "height": 28,
+            "top": 251.875,
+            "right": 805.828125,
+            "bottom": 279.875,
+            "left": 459.15625
+          },
+          "text": "Card 2",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(51, 51, 51)",
+            "fontSize": "24px",
+            "fontWeight": "700"
+          }
+        },
+        {
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 251.875,
+            "width": 346.65625,
+            "height": 28,
+            "top": 251.875,
+            "right": 1212.484375,
+            "bottom": 279.875,
+            "left": 865.828125
+          },
+          "text": "Card 3",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(51, 51, 51)",
+            "fontSize": "24px",
+            "fontWeight": "700"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "H2",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 52.5,
+          "y": 251.875,
+          "width": 346.65625,
+          "height": 28,
+          "top": 251.875,
+          "right": 399.15625,
+          "bottom": 279.875,
+          "left": 52.5
+        },
+        "text": "Card 1",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(51, 51, 51)",
+          "fontSize": "24px",
+          "fontWeight": "700"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 52.5,
+            "y": 299.78125,
+            "width": 346.65625,
+            "height": 36,
+            "top": 299.78125,
+            "right": 399.15625,
+            "bottom": 335.78125,
+            "left": 52.5
+          },
+          "text": "This is the first card with some sample content. It demonstrates a typical card layout pattern.",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 299.78125,
+            "width": 346.671875,
+            "height": 36,
+            "top": 299.78125,
+            "right": 805.828125,
+            "bottom": 335.78125,
+            "left": 459.15625
+          },
+          "text": "Another card with similar structure but different content. This helps test grouping functionality.",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "P",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 299.78125,
+            "width": 346.65625,
+            "height": 36,
+            "top": 299.78125,
+            "right": 1212.484375,
+            "bottom": 335.78125,
+            "left": 865.828125
+          },
+          "text": "A third card to make the pattern more apparent for the layout analysis algorithm.",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "P",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 52.5,
+          "y": 299.78125,
+          "width": 346.65625,
+          "height": 36,
+          "top": 299.78125,
+          "right": 399.15625,
+          "bottom": 335.78125,
+          "left": 52.5
+        },
+        "text": "This is the first card with some sample content. It demonstrates a typical card layout pattern.",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 459.15625,
+            "y": 351.78125,
+            "width": 85.203125,
+            "height": 35,
+            "top": 351.78125,
+            "right": 544.359375,
+            "bottom": 386.78125,
+            "left": 459.15625
+          },
+          "text": "Explore",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline-block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(0, 123, 255)",
+            "color": "rgb(255, 255, 255)",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "BUTTON",
+          "className": "button",
+          "id": "",
+          "rect": {
+            "x": 865.828125,
+            "y": 351.78125,
+            "width": 91.84375,
+            "height": 35,
+            "top": 351.78125,
+            "right": 957.671875,
+            "bottom": 386.78125,
+            "left": 865.828125
+          },
+          "text": "Discover",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline-block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(0, 123, 255)",
+            "color": "rgb(255, 255, 255)",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "BUTTON",
+        "className": "button",
+        "id": "",
+        "rect": {
+          "x": 459.15625,
+          "y": 351.78125,
+          "width": 85.203125,
+          "height": 35,
+          "top": 351.78125,
+          "right": 544.359375,
+          "bottom": 386.78125,
+          "left": 459.15625
+        },
+        "text": "Explore",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": true,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "inline-block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "color": "rgb(255, 255, 255)",
+          "fontSize": "13.3333px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 446.78125,
+            "width": 1200,
+            "height": 28,
+            "top": 446.78125,
+            "right": 1232.5,
+            "bottom": 474.78125,
+            "left": 32.5
+          },
+          "text": "Contact Form",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "24px",
+            "fontWeight": "700"
+          }
+        },
+        {
+          "tagName": "H2",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 831.6875,
+            "width": 1200,
+            "height": 28,
+            "top": 831.6875,
+            "right": 1232.5,
+            "bottom": 859.6875,
+            "left": 32.5
+          },
+          "text": "Accessibility Features",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "24px",
+            "fontWeight": "700"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "H2",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 32.5,
+          "y": 446.78125,
+          "width": 1200,
+          "height": 28,
+          "top": 446.78125,
+          "right": 1232.5,
+          "bottom": 474.78125,
+          "left": 32.5
+        },
+        "text": "Contact Form",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "24px",
+          "fontWeight": "700"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "DIV",
+          "className": "form-group",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 494.6875,
+            "width": 1200,
+            "height": 56,
+            "top": 494.6875,
+            "right": 1232.5,
+            "bottom": 550.6875,
+            "left": 32.5
+          },
+          "text": "Name:",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "DIV",
+          "className": "form-group",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 565.6875,
+            "width": 1200,
+            "height": 56,
+            "top": 565.6875,
+            "right": 1232.5,
+            "bottom": 621.6875,
+            "left": 32.5
+          },
+          "text": "Email:",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "DIV",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 917.59375,
+            "width": 1200,
+            "height": 48,
+            "top": 917.59375,
+            "right": 1232.5,
+            "bottom": 965.59375,
+            "left": 32.5
+          },
+          "text": "This is an alert message with ARIA role",
+          "role": "alert",
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 243, 205)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "DIV",
+        "className": "form-group",
+        "id": "",
+        "rect": {
+          "x": 32.5,
+          "y": 494.6875,
+          "width": 1200,
+          "height": 56,
+          "top": 494.6875,
+          "right": 1232.5,
+          "bottom": 550.6875,
+          "left": 32.5
+        },
+        "text": "Name:",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 494.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 494.6875,
+            "right": 1232.5,
+            "bottom": 512.6875,
+            "left": 32.5
+          },
+          "text": "Name:",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "700"
+          }
+        },
+        {
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 565.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 565.6875,
+            "right": 1232.5,
+            "bottom": 583.6875,
+            "left": 32.5
+          },
+          "text": "Email:",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "700"
+          }
+        },
+        {
+          "tagName": "LABEL",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 636.6875,
+            "width": 1200,
+            "height": 18,
+            "top": 636.6875,
+            "right": 1232.5,
+            "bottom": 654.6875,
+            "left": 32.5
+          },
+          "text": "Message:",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": false,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "16px",
+            "fontWeight": "700"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "LABEL",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 32.5,
+          "y": 494.6875,
+          "width": 1200,
+          "height": 18,
+          "top": 494.6875,
+          "right": 1232.5,
+          "bottom": 512.6875,
+          "left": 32.5
+        },
+        "text": "Name:",
+        "role": null,
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": false,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "16px",
+          "fontWeight": "700"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "INPUT",
+          "className": "",
+          "id": "name",
+          "rect": {
+            "x": 32.5,
+            "y": 517.6875,
+            "width": 1218,
+            "height": 33,
+            "top": 517.6875,
+            "right": 1250.5,
+            "bottom": 550.6875,
+            "left": 32.5
+          },
+          "text": "",
+          "role": null,
+          "ariaLabel": "Your name",
+          "ariaAttributes": {
+            "aria-label": "Your name"
+          },
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline-block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "INPUT",
+          "className": "",
+          "id": "email",
+          "rect": {
+            "x": 32.5,
+            "y": 588.6875,
+            "width": 1218,
+            "height": 33,
+            "top": 588.6875,
+            "right": 1250.5,
+            "bottom": 621.6875,
+            "left": 32.5
+          },
+          "text": "",
+          "role": null,
+          "ariaLabel": "Your email",
+          "ariaAttributes": {
+            "aria-label": "Your email"
+          },
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline-block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "color": "rgb(0, 0, 0)",
+            "fontSize": "13.3333px",
+            "fontWeight": "400"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "INPUT",
+        "className": "",
+        "id": "name",
+        "rect": {
+          "x": 32.5,
+          "y": 517.6875,
+          "width": 1218,
+          "height": 33,
+          "top": 517.6875,
+          "right": 1250.5,
+          "bottom": 550.6875,
+          "left": 32.5
+        },
+        "text": "",
+        "role": null,
+        "ariaLabel": "Your name",
+        "ariaAttributes": {
+          "aria-label": "Your name"
+        },
+        "isInteractive": true,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "inline-block",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgb(0, 0, 0)",
+          "fontSize": "13.3333px",
+          "fontWeight": "400"
+        }
+      }
+    },
+    {
+      "elements": [
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 32.5,
+            "y": 879.59375,
+            "width": 123.625,
+            "height": 17,
+            "top": 879.59375,
+            "right": 156.125,
+            "bottom": 896.59375,
+            "left": 32.5
+          },
+          "text": "Accessible Link 1",
+          "role": "button",
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 238)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 159.6875,
+            "y": 879.59375,
+            "width": 123.625,
+            "height": 17,
+            "top": 879.59375,
+            "right": 283.3125,
+            "bottom": 896.59375,
+            "left": 159.6875
+          },
+          "text": "Accessible Link 2",
+          "role": "button",
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "inline",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 0, 238)",
+            "fontSize": "16px",
+            "fontWeight": "400"
+          }
+        },
+        {
+          "tagName": "A",
+          "className": "",
+          "id": "",
+          "rect": {
+            "x": 632.71875,
+            "y": 1079.59375,
+            "width": 119.140625,
+            "height": 18,
+            "top": 1079.59375,
+            "right": 751.859375,
+            "bottom": 1097.59375,
+            "left": 632.71875
+          },
+          "text": "Terms of Service",
+          "role": null,
+          "ariaLabel": null,
+          "ariaAttributes": {},
+          "isInteractive": true,
+          "hasParentWithSameSize": false,
+          "computedStyle": {
+            "display": "block",
+            "position": "static",
+            "zIndex": "auto",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "color": "rgb(0, 123, 255)",
+            "fontSize": "16px",
+            "fontWeight": "500"
+          }
+        }
+      ],
+      "representative": {
+        "tagName": "A",
+        "className": "",
+        "id": "",
+        "rect": {
+          "x": 32.5,
+          "y": 879.59375,
+          "width": 123.625,
+          "height": 17,
+          "top": 879.59375,
+          "right": 156.125,
+          "bottom": 896.59375,
+          "left": 32.5
+        },
+        "text": "Accessible Link 1",
+        "role": "button",
+        "ariaLabel": null,
+        "ariaAttributes": {},
+        "isInteractive": true,
+        "hasParentWithSameSize": false,
+        "computedStyle": {
+          "display": "inline",
+          "position": "static",
+          "zIndex": "auto",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "color": "rgb(0, 0, 238)",
+          "fontSize": "16px",
+          "fontWeight": "400"
+        }
+      }
+    }
+  ],
+  "accessibilityElements": [
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 502,
+        "y": 193.875,
+        "width": 42.6875,
+        "height": 17,
+        "top": 193.875,
+        "right": 544.6875,
+        "bottom": 210.875,
+        "left": 502
+      },
+      "text": "Home",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 564.6875,
+        "y": 193.875,
+        "width": 41.8125,
+        "height": 17,
+        "top": 193.875,
+        "right": 606.5,
+        "bottom": 210.875,
+        "left": 564.6875
+      },
+      "text": "About",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 626.5,
+        "y": 193.875,
+        "width": 61.359375,
+        "height": 17,
+        "top": 193.875,
+        "right": 687.859375,
+        "bottom": 210.875,
+        "left": 626.5
+      },
+      "text": "Services",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 707.859375,
+        "y": 193.875,
+        "width": 55.140625,
+        "height": 17,
+        "top": 193.875,
+        "right": 763,
+        "bottom": 210.875,
+        "left": 707.859375
+      },
+      "text": "Contact",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 52.5,
+        "y": 351.78125,
+        "width": 108.171875,
+        "height": 35,
+        "top": 351.78125,
+        "right": 160.671875,
+        "bottom": 386.78125,
+        "left": 52.5
+      },
+      "text": "Learn More",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 459.15625,
+        "y": 351.78125,
+        "width": 85.203125,
+        "height": 35,
+        "top": 351.78125,
+        "right": 544.359375,
+        "bottom": 386.78125,
+        "left": 459.15625
+      },
+      "text": "Explore",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 865.828125,
+        "y": 351.78125,
+        "width": 91.84375,
+        "height": 35,
+        "top": 351.78125,
+        "right": 957.671875,
+        "bottom": 386.78125,
+        "left": 865.828125
+      },
+      "text": "Discover",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "INPUT",
+      "className": "",
+      "id": "name",
+      "rect": {
+        "x": 32.5,
+        "y": 517.6875,
+        "width": 1218,
+        "height": 33,
+        "top": 517.6875,
+        "right": 1250.5,
+        "bottom": 550.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your name",
+      "ariaAttributes": {
+        "aria-label": "Your name"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "INPUT",
+      "className": "",
+      "id": "email",
+      "rect": {
+        "x": 32.5,
+        "y": 588.6875,
+        "width": 1218,
+        "height": 33,
+        "top": 588.6875,
+        "right": 1250.5,
+        "bottom": 621.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your email",
+      "ariaAttributes": {
+        "aria-label": "Your email"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "TEXTAREA",
+      "className": "",
+      "id": "message",
+      "rect": {
+        "x": 32.5,
+        "y": 659.6875,
+        "width": 1218,
+        "height": 78,
+        "top": 659.6875,
+        "right": 1250.5,
+        "bottom": 737.6875,
+        "left": 32.5
+      },
+      "text": "",
+      "role": null,
+      "ariaLabel": "Your message",
+      "ariaAttributes": {
+        "aria-label": "Your message"
+      },
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 255, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 756.6875,
+        "width": 128.921875,
+        "height": 35,
+        "top": 756.6875,
+        "right": 161.421875,
+        "bottom": 791.6875,
+        "left": 32.5
+      },
+      "text": "Send Message",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(0, 123, 255)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "BUTTON",
+      "className": "button",
+      "id": "",
+      "rect": {
+        "x": 175.875,
+        "y": 756.6875,
+        "width": 74.828125,
+        "height": 35,
+        "top": 756.6875,
+        "right": 250.703125,
+        "bottom": 791.6875,
+        "left": 175.875
+      },
+      "text": "Reset",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline-block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(108, 117, 125)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 879.59375,
+        "width": 1200,
+        "height": 18,
+        "top": 879.59375,
+        "right": 1232.5,
+        "bottom": 897.59375,
+        "left": 32.5
+      },
+      "text": "Accessible Link 1\n                Accessible Link 2",
+      "role": "navigation",
+      "ariaLabel": "Secondary navigation",
+      "ariaAttributes": {
+        "aria-label": "Secondary navigation"
+      },
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 879.59375,
+        "width": 123.625,
+        "height": 17,
+        "top": 879.59375,
+        "right": 156.125,
+        "bottom": 896.59375,
+        "left": 32.5
+      },
+      "text": "Accessible Link 1",
+      "role": "button",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 238)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 159.6875,
+        "y": 879.59375,
+        "width": 123.625,
+        "height": 17,
+        "top": 879.59375,
+        "right": 283.3125,
+        "bottom": 896.59375,
+        "left": 159.6875
+      },
+      "text": "Accessible Link 2",
+      "role": "button",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 238)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "DIV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 32.5,
+        "y": 917.59375,
+        "width": 1200,
+        "height": 48,
+        "top": 917.59375,
+        "right": 1232.5,
+        "bottom": 965.59375,
+        "left": 32.5
+      },
+      "text": "This is an alert message with ARIA role",
+      "role": "alert",
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(255, 243, 205)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 513.140625,
+        "y": 1079.59375,
+        "width": 99.578125,
+        "height": 18,
+        "top": 1079.59375,
+        "right": 612.71875,
+        "bottom": 1097.59375,
+        "left": 513.140625
+      },
+      "text": "Privacy Policy",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 632.71875,
+        "y": 1079.59375,
+        "width": 119.140625,
+        "height": 18,
+        "top": 1079.59375,
+        "right": 751.859375,
+        "bottom": 1097.59375,
+        "left": 632.71875
+      },
+      "text": "Terms of Service",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 123, 255)",
+        "fontSize": "16px",
+        "fontWeight": "500"
+      }
+    }
+  ],
+  "statistics": {
+    "totalElements": 52,
+    "interactiveElements": 16,
+    "groupCount": 14,
+    "accessibilityCount": 18
+  }
+}

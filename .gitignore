@@ -4,3 +4,6 @@ snapshots/
 diffs/
 *.log
 .DS_Store
+playwright-report
+test-results/
+tmp/
