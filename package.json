@@ -1,5 +1,5 @@
 {
-  "name": "visual-checker",
+  "name": "@mizchi/visual-checker",
   "version": "0.1.0",
   "description": "Visual regression testing framework for web applications",
   "repository": {
@@ -81,6 +81,10 @@
   ],
   "author": "mizchi",
   "license": "MIT",
+  "homepage": "https://github.com/mizchi/visual-checker#readme",
+  "bugs": {
+    "url": "https://github.com/mizchi/visual-checker/issues"
+  },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
     "@mizchi/readability": "^0.7.7",
@@ -93,6 +97,9 @@
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0",
     "puppeteer": "^24.15.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.0",

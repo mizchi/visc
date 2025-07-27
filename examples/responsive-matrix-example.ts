@@ -36,10 +36,7 @@ async function runResponsiveMatrixTest() {
   };
 
   // ブラウザコントローラーの初期化
-  const browserController = new BrowserController({
-    browser: 'chromium',
-    headless: true
-  });
+  const browserController = new BrowserController(config);
 
   try {
     await browserController.launch();
@@ -113,12 +110,12 @@ async function runResponsiveMatrixTest() {
 
 // プログラム的な使用例
 async function programmaticExample() {
-  const browserController = new BrowserController({
-    browser: 'chromium',
-    headless: true
-  });
-  
   const config: VisualCheckConfig = {
+    urls: [],  // URLは後で個別に指定
+    playwright: {
+      browser: 'chromium',
+      headless: true
+    },
     responsiveMatrix: {
       enabled: true,
       viewports: [
@@ -127,6 +124,8 @@ async function programmaticExample() {
       ]
     }
   };
+  
+  const browserController = new BrowserController(config);
   
   await browserController.launch();
   const tester = new ResponsiveMatrixTester(browserController, config);

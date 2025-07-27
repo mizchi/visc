@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-07-27T08:52:10.136Z",
+  "configuration": {
+    "targetUrl": "https://example.com",
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "threshold": 0.01,
+    "proxyServer": "http://localhost:8080",
+    "overrideRules": 1
+  },
+  "summary": {
+    "totalScenarios": 1,
+    "passed": 0,
+    "failed": 1,
+    "overallPassed": false
+  },
+  "results": [
+    {
+      "scenario": "homepage",
+      "url": "https://example.com/",
+      "difference": 0.03309895833333333,
+      "differencePercentage": "3.3099%",
+      "diffPixels": 30504,
+      "passed": false,
+      "diffImage": "./css-refactor-diffs/homepage-diff.png"
+    }
+  ]
+}

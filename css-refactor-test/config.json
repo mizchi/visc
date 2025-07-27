@@ -1,0 +1,25 @@
+{
+  "baseUrl": "https://example.com",
+  "proxy": {
+    "enabled": true,
+    "url": "http://localhost:8080",
+    "overrides": [
+      {
+        "pattern": "*.css",
+        "replacement": "./refactored/application.css",
+        "mimeType": "text/css"
+      }
+    ]
+  },
+  "urls": [
+    {
+      "name": "home",
+      "url": "/"
+    }
+  ],
+  "comparison": {
+    "threshold": 0.01,
+    "generateDiff": true,
+    "diffDir": "./css-refactor-diffs"
+  }
+}

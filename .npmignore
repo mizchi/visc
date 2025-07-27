@@ -1,10 +1,51 @@
+# Source files
 src/
-configs/
+tests/
+examples/
+docs/
+
+# Config files
+vitest.config.ts
+tsdown.config.ts
+tsconfig.json
+.prettierrc
+
+# Development files
 snapshots/
 diffs/
-.git/
-.gitignore
-tsconfig.json
-*.log
-.DS_Store
+configs/
 node_modules/
+*.log
+.env
+.env.local
+
+# CI/CD
+.github/
+.gitignore
+.git/
+
+# Editor
+.vscode/
+.idea/
+
+# Build artifacts
+*.map
+*.tsbuildinfo
+
+# Cloudflare proxy (separate package)
+cloudflare-proxy/
+
+# Test fixtures
+__fixtures__/
+fixtures/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*~
+REFACTORING_PLAN.md

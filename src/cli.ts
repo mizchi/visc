@@ -433,9 +433,10 @@ program
       const { ResponsiveMatrixReportGenerator } = await import('./responsive-matrix/report-generator.js');
       const { BrowserController } = await import('./browser-controller.js');
       
-      const browserController = new BrowserController(
-        config.playwright || { browser: 'chromium', headless: true }
-      );
+      const browserController = new BrowserController({
+        ...config,
+        urls: config.urls || []
+      });
       
       await browserController.launch();
       
@@ -548,7 +549,7 @@ program
         await runner.goto(page2, url2, { waitUntil: 'networkidle' });
         await runner.wait(1000);
         
-        const comparisonResult = await compareLayoutsWithContentExclusion(page1, page2, {
+        const comparisonResult = await compareLayoutsWithContentExclusion(page1 as any, page2 as any, {
           excludeContent: true,
           excludeMethod: options.excludeMethod as 'hide' | 'remove',
           similarityThreshold: parseFloat(options.threshold)

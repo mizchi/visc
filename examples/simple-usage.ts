@@ -51,9 +51,12 @@ async function basicExample() {
   
   // ブラウザ制御
   const browser = new BrowserController({
-    headless: true,
-    viewport: { width: 1920, height: 1080 }
-  });
+    urls: [],  // 個別にURLを指定
+    playwright: {
+      headless: true,
+      viewport: { width: 1920, height: 1080 }
+    }
+  } as any);
   
   await browser.launch();
   
@@ -127,11 +130,7 @@ async function configExample() {
   
   // すべてのURLをテスト
   const screenshots = await browser.captureMultipleScreenshots(
-    config.urls!.map(u => ({
-      url: u.url,
-      name: u.name,
-      ...u
-    }))
+    config.urls!
   );
   
   // バッチ比較
@@ -177,7 +176,7 @@ async function convenientExample() {
   
   // 初回実行：ベースライン作成
   const result1 = await vc.compare('home', '/');
-  console.log('First run:', result1.firstRun ? 'Baseline created' : 'Compared');
+  console.log('First run:', 'firstRun' in result1 && result1.firstRun ? 'Baseline created' : 'Compared');
   
   // 2回目実行：比較
   const result2 = await vc.compare('home', '/');

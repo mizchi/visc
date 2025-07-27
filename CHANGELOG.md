@@ -12,13 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Media query tracking and consistency validation
 - CSS fingerprinting for detecting style changes between viewports
 - Multi-format report generation (HTML, JSON, Markdown) for matrix test results
-- New CLI command `visual-checker matrix` for running responsive tests
+- New CLI command `@mizchi/visual-checker matrix` for running responsive tests
 - Support for custom viewport configurations with device scale factors and user agents
 
 ## [0.1.0] - 2025-01-24
 
 ### Added
-- Initial release of visual-checker
+- Initial release of @mizchi/visual-checker
 - Multiple URL testing support
 - Configurable wait strategies (selector, network idle, timeout)
 - Pre-screenshot actions (JavaScript execution, element clicks, hiding elements)

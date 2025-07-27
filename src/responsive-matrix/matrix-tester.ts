@@ -86,7 +86,13 @@ export class ResponsiveMatrixTester {
     urlConfig: UrlConfig, 
     viewport: ViewportSize
   ): Promise<ViewportTestResult> {
-    const page = await this.browserController.newPage();
+    // BrowserControllerからcontextを取得して新しいページを作成
+    const browser = (this.browserController as any).browser;
+    if (!browser) {
+      throw new Error('Browser not launched');
+    }
+    const context = (this.browserController as any).context || await browser.newContext();
+    const page = await context.newPage();
     
     try {
       // ビューポートを設定
@@ -96,7 +102,7 @@ export class ResponsiveMatrixTester {
       });
       
       if (viewport.deviceScaleFactor) {
-        await page.evaluate((dpr) => {
+        await page.evaluate((dpr: number) => {
           (window as any).devicePixelRatio = dpr;
         }, viewport.deviceScaleFactor);
       }

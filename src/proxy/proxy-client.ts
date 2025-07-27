@@ -71,7 +71,7 @@ export class ProxyClient {
  * プロキシ設定からクライアントを作成
  */
 export function createProxyClient(
-  config: { proxy?: { url?: string; overrides?: ProxyOverride[] } }
+  config: { proxy?: { enabled?: boolean; url?: string; overrides?: ProxyOverride[] } }
 ): ProxyClient | null {
   if (!config.proxy?.enabled || !config.proxy?.url) {
     return null;

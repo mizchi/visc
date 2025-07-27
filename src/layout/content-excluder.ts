@@ -1,4 +1,4 @@
-import { Readability } from '@mizchi/readability';
+import { readable } from '@mizchi/readability';
 
 /**
  * Readabilityを使用して本文を抽出し、レイアウト比較のために除外する

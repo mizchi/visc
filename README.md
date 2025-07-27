@@ -1,14 +1,11 @@
-WIP: not published yet
 
----
-
-# Visual Checker
+# @mizchi/visual-checker
 
 A visual regression testing framework for web applications with layout analysis capabilities. This tool reduces AI image processing costs by extracting and comparing structured layout data instead of raw images.
 
 指定された URL リストに対してビジュアルリグレッションテストを実行し、レイアウト構造を抽出・比較することで、AI の画像入力コストを削減するツールです。
 
-## なぜ Visual Checker を使うのか
+## なぜ @mizchi/visual-checker を使うのか
 
 ### AI コスト削減
 
@@ -37,13 +34,13 @@ A visual regression testing framework for web applications with layout analysis 
 ### npm (グローバル)
 
 ```bash
-npm install -g visual-checker
+npm install -g @mizchi/visual-checker
 ```
 
 ### npm (ローカル)
 
 ```bash
-npm install --save-dev visual-checker
+npm install --save-dev @mizchi/visual-checker
 ```
 
 ### ソースからビルド
@@ -62,7 +59,7 @@ npm run build
 プロジェクトディレクトリで初期化:
 
 ```bash
-visual-checker init
+npx @mizchi/visual-checker init
 ```
 
 ### 2. 設定ファイルの編集
@@ -111,19 +108,19 @@ visual-checker init
 初回実行時やベースラインを更新する場合:
 
 ```bash
-visual-checker update -c configs/visual-check.config.json
+npx @mizchi/visual-checker update -c configs/visual-check.config.json
 ```
 
 ### 4. テストの実行
 
 ```bash
-visual-checker test -c configs/visual-check.config.json
+npx @mizchi/visual-checker test -c configs/visual-check.config.json
 ```
 
 ### 5. 画像の直接比較
 
 ```bash
-visual-checker compare baseline.png current.png -t 0.1 -o diff.png
+npx @mizchi/visual-checker compare baseline.png current.png -t 0.1 -o diff.png
 ```
 
 ## 設定オプション
@@ -236,7 +233,7 @@ npx playwright install-deps
 ### 基本的な使用方法
 
 ```typescript
-import { extractLayoutScript, compareLayouts } from "visual-checker";
+import { extractLayoutScript, compareLayouts } from "@mizchi/visual-checker";
 
 // レイアウトの抽出
 const baseline = await page.evaluate(extractLayoutScript);
@@ -251,7 +248,7 @@ console.log(`Changes: ${comparison.differences.length}`);
 ### フレームワーク非依存のアサーション
 
 ```typescript
-import { assertLayoutsIdentical, assertLayoutsSimilar } from "visual-checker";
+import { assertLayoutsIdentical, assertLayoutsSimilar } from "@mizchi/visual-checker";
 
 // 完全一致を検証
 assertLayoutsIdentical(baseline, current);
@@ -334,16 +331,16 @@ PROXY_ENDPOINT=https://your-worker.workers.dev npm run test:proxy
 
 ```bash
 # レスポンシブマトリクステストの実行
-visual-checker matrix -c configs/responsive-matrix.config.json
+npx @mizchi/visual-checker matrix -c configs/responsive-matrix.config.json
 
 # HTMLレポートを生成
-visual-checker matrix -c configs/responsive-matrix.config.json --report-html reports/matrix.html
+npx @mizchi/visual-checker matrix -c configs/responsive-matrix.config.json --report-html reports/matrix.html
 
 # 特定のURLのみテスト
-visual-checker matrix -c configs/responsive-matrix.config.json -u home
+npx @mizchi/visual-checker matrix -c configs/responsive-matrix.config.json -u home
 
 # カスタムビューポートサイズでテスト
-visual-checker matrix -c configs/responsive-matrix.config.json --viewport "320x568,768x1024,1920x1080"
+npx @mizchi/visual-checker matrix -c configs/responsive-matrix.config.json --viewport "320x568,768x1024,1920x1080"
 ```
 
 ### 設定例
@@ -410,7 +407,7 @@ visual-checker matrix -c configs/responsive-matrix.config.json --viewport "320x5
 ### プログラムでの使用
 
 ```typescript
-import { ResponsiveMatrixTester, ResponsiveMatrixReportGenerator } from "visual-checker";
+import { ResponsiveMatrixTester, ResponsiveMatrixReportGenerator } from "@mizchi/visual-checker";
 
 // テスターの初期化
 const tester = new ResponsiveMatrixTester(browserController, config);
@@ -556,16 +553,16 @@ const importantSelectors = [
 
 ```bash
 # 本文を除外してレイアウトを比較
-visual-checker compare https://example.com/article1 https://example.com/article2 --exclude-content
+npx @mizchi/visual-checker compare https://example.com/article1 https://example.com/article2 --exclude-content
 
 # 除外方法を指定（hide: 非表示にする, remove: 削除する）
-visual-checker compare https://example.com/article1 https://example.com/article2 --exclude-content --exclude-method hide
+npx @mizchi/visual-checker compare https://example.com/article1 https://example.com/article2 --exclude-content --exclude-method hide
 ```
 
 ### プログラム的な使用
 
 ```typescript
-import { compareLayoutsWithContentExclusion } from "visual-checker";
+import { compareLayoutsWithContentExclusion } from "@mizchi/visual-checker";
 
 // 本文を除外してレイアウトを比較
 const result = await compareLayoutsWithContentExclusion(page1, page2, {
@@ -811,7 +808,7 @@ interface ProxyOverride {
 #### 5. 動的な書き換え（プログラム使用時）
 
 ```typescript
-import { ProxyOverrideHandler, commonOverrides } from "visual-checker";
+import { ProxyOverrideHandler, commonOverrides } from "@mizchi/visual-checker";
 
 // 共通のオーバーライドプリセット
 const overrides = [
@@ -894,7 +891,7 @@ echo "GOOGLE_API_KEY=your-gemini-api-key" >> .env
 ### AI 分析の使用例
 
 ```typescript
-import { createGeminiWorkflowConfig, WorkflowEngine } from "visual-checker";
+import { createGeminiWorkflowConfig, WorkflowEngine } from "@mizchi/visual-checker";
 
 // Geminiを使ったワークフロー設定
 const workflowConfig = createGeminiWorkflowConfig(

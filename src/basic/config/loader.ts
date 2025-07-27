@@ -93,9 +93,10 @@ export class ConfigLoader {
     }
     
     // THRESHOLD
-    if (process.env[`${prefix}THRESHOLD`]) {
+    const thresholdEnv = process.env[`${prefix}THRESHOLD`];
+    if (thresholdEnv) {
       config.comparison = config.comparison || {};
-      config.comparison.threshold = parseFloat(process.env[`${prefix}THRESHOLD`]);
+      config.comparison.threshold = parseFloat(thresholdEnv);
     }
     
     return config;
@@ -111,7 +112,7 @@ export class ConfigLoader {
       browser: {
         browser: 'chromium',
         headless: true,
-        viewport: { width: 1280, height: 720 },
+        viewport: { name: 'default', width: 1280, height: 720 },
         timeout: 30000
       },
       comparison: {

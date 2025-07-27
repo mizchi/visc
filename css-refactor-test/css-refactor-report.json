@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-07-27T08:51:20.863Z",
+  "configuration": {
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    },
+    "threshold": 0.01
+  },
+  "result": {
+    "match": false,
+    "difference": 0.98369140625,
+    "differencePercentage": "98.3691%",
+    "diffPixels": 906570,
+    "passed": false
+  },
+  "files": {
+    "original": "./snapshots/css-original.png",
+    "refactored": "./snapshots/css-refactored.png",
+    "diff": "./css-refactor-diffs/comparison.png"
+  }
+}

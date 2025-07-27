@@ -27,12 +27,34 @@
 // ========================================
 // Level 1: Core API - 最も基本的な機能
 // ========================================
-export * from './core/index.js';
+export { 
+  captureScreenshot, 
+  captureMultipleScreenshots,
+  compareImages,
+  compareMultipleImages
+} from './core/index.js';
+
+export type {
+  // ScreenshotOptionsはbasicからエクスポートするため除外
+  ScreenshotResult,
+  CompareOptions,
+  CompareResult
+} from './core/index.js';
 
 // ========================================
 // Level 2: Basic API - よく使う機能
 // ========================================
-export * from './basic/index.js';
+export { 
+  BrowserController,
+  SnapshotManager,
+  ConfigLoader
+} from './basic/index.js';
+
+export type {
+  BrowserConfig,
+  PageOptions,
+  BasicConfig
+} from './basic/index.js';
 
 // ========================================
 // Level 3: Advanced API - 高度な機能（名前空間付き）
