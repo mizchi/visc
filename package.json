@@ -17,6 +17,26 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./basic": {
+      "types": "./dist/basic/index.d.ts",
+      "import": "./dist/basic/index.js"
+    },
+    "./advanced": {
+      "types": "./dist/advanced/index.d.ts",
+      "import": "./dist/advanced/index.js"
+    },
+    "./expert": {
+      "types": "./dist/expert/index.d.ts",
+      "import": "./dist/expert/index.js"
+    },
+    "./experimental": {
+      "types": "./dist/experimental/index.d.ts",
+      "import": "./dist/experimental/index.js"
+    },
     "./layout/extractor": {
       "types": "./dist/layout/extractor.d.ts",
       "import": "./dist/layout/extractor.js"
@@ -63,6 +83,7 @@
   "license": "MIT",
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
+    "@mizchi/readability": "^0.7.7",
     "@playwright/test": "^1.41.0",
     "ai": "^4.3.19",
     "chalk": "^5.3.0",

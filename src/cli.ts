@@ -385,6 +385,118 @@ program
     );
   });
 
+// matrixコマンド - レスポンシブマトリクステスト
+program
+  .command("matrix")
+  .description("Run responsive matrix tests across multiple viewports")
+  .requiredOption("-c, --config <path>", "Path to configuration file")
+  .option("-u, --url <name>", "Test specific URL by name")
+  .option("--report-html <path>", "Generate HTML report at specified path")
+  .option("--report-json <path>", "Generate JSON report at specified path")
+  .option("--report-markdown <path>", "Generate Markdown report at specified path")
+  .option("--viewport <sizes>", "Override viewport sizes (e.g., '375x667,768x1024,1920x1080')")
+  .action(async (options) => {
+    console.log(chalk.blue.bold("Responsive Matrix Testing"));
+    console.log(chalk.gray(`Config: ${options.config}\n`));
+
+    try {
+      const config = await loadConfig(options.config);
+      
+      // レスポンシブマトリクステストが有効かチェック
+      if (!config.responsiveMatrix?.enabled) {
+        console.log(chalk.yellow("⚠ Responsive matrix testing is not enabled in config"));
+        console.log(chalk.gray("Add 'responsiveMatrix: { enabled: true }' to your config"));
+        process.exit(1);
+      }
+
+      // ビューポートのオーバーライド
+      if (options.viewport) {
+        const viewports = options.viewport.split(',').map((size: string) => {
+          const [width, height] = size.trim().split('x').map(Number);
+          return { name: `${width}x${height}`, width, height };
+        });
+        config.responsiveMatrix.viewports = viewports;
+      }
+
+      // URLをフィルタリング
+      const urls = options.url 
+        ? config.urls.filter(u => u.name === options.url)
+        : config.urls;
+
+      if (urls.length === 0) {
+        console.error(chalk.red(`No URLs found${options.url ? ` with name "${options.url}"` : ''}`));
+        process.exit(1);
+      }
+
+      // 動的インポート
+      const { ResponsiveMatrixTester } = await import('./responsive-matrix/matrix-tester.js');
+      const { ResponsiveMatrixReportGenerator } = await import('./responsive-matrix/report-generator.js');
+      const { BrowserController } = await import('./browser-controller.js');
+      
+      const browserController = new BrowserController(
+        config.playwright || { browser: 'chromium', headless: true }
+      );
+      
+      await browserController.launch();
+      
+      const tester = new ResponsiveMatrixTester(browserController, config);
+      const reportGenerator = new ResponsiveMatrixReportGenerator();
+      const results = [];
+
+      // 各URLでマトリクステストを実行
+      for (const urlConfig of urls) {
+        console.log(chalk.cyan(`\nTesting: ${urlConfig.name}`));
+        const result = await tester.testUrl(urlConfig);
+        results.push(result);
+        
+        // 結果サマリーを表示
+        const { summary } = result;
+        console.log(chalk.gray(`  Viewports: ${summary.passedViewports}/${summary.totalViewports} passed`));
+        
+        if (summary.mediaQueryIssues > 0) {
+          console.log(chalk.yellow(`  Media query issues: ${summary.mediaQueryIssues}`));
+        }
+        
+        if (summary.layoutInconsistencies > 0) {
+          console.log(chalk.yellow(`  Layout inconsistencies: ${summary.layoutInconsistencies}`));
+        }
+        
+        console.log(result.passed ? chalk.green('  ✓ Passed') : chalk.red('  ✗ Failed'));
+      }
+
+      // レポート生成
+      if (options.reportHtml) {
+        await reportGenerator.generateHTMLReport(results, options.reportHtml);
+        console.log(chalk.green(`\nHTML report saved to: ${options.reportHtml}`));
+      }
+      
+      if (options.reportJson) {
+        await reportGenerator.generateJSONReport(results, options.reportJson);
+        console.log(chalk.green(`JSON report saved to: ${options.reportJson}`));
+      }
+      
+      if (options.reportMarkdown) {
+        await reportGenerator.generateMarkdownReport(results, options.reportMarkdown);
+        console.log(chalk.green(`Markdown report saved to: ${options.reportMarkdown}`));
+      }
+
+      // 全体サマリー
+      const totalPassed = results.filter(r => r.passed).length;
+      console.log(chalk.blue('\n=== Overall Summary ==='));
+      console.log(`Total URLs tested: ${results.length}`);
+      console.log(`Passed: ${chalk.green(totalPassed)}`);
+      console.log(`Failed: ${chalk.red(results.length - totalPassed)}`);
+
+      await browserController.close();
+      process.exit(totalPassed === results.length ? 0 : 1);
+
+    } catch (error) {
+      console.error(chalk.red("Matrix testing failed:"));
+      console.error(error);
+      process.exit(1);
+    }
+  });
+
 // compareコマンド - レイアウト比較
 program
   .command("compare <url1> <url2>")
@@ -395,6 +507,8 @@ program
   .option("--position-weight <number>", "Weight for position comparison (0-1)", "0.4")
   .option("--size-weight <number>", "Weight for size comparison (0-1)", "0.4")
   .option("--aspect-ratio-weight <number>", "Weight for aspect ratio comparison (0-1)", "0.2")
+  .option("--exclude-content", "Exclude main content using Readability")
+  .option("--exclude-method <method>", "Content exclusion method (hide|remove)", "hide")
   .action(async (url1, url2, options) => {
     console.log(chalk.blue.bold("Layout Comparison"));
     console.log(chalk.gray(`URL1: ${url1}`));
@@ -420,17 +534,62 @@ program
       // レイアウトを抽出
       console.log(chalk.cyan("Extracting layouts..."));
       
-      const page1 = await runner.newPage(browserContext, { viewport });
-      await runner.goto(page1, url1, { waitUntil: 'networkidle' });
-      await runner.wait(1000);
-      const layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
-      await runner.closePage(page1);
+      let layout1, layout2;
+      
+      if (options.excludeContent) {
+        // 本文除外モードの場合
+        const { compareLayoutsWithContentExclusion } = await import('./layout/content-aware-comparator.js');
+        
+        const page1 = await runner.newPage(browserContext, { viewport });
+        await runner.goto(page1, url1, { waitUntil: 'networkidle' });
+        await runner.wait(1000);
+        
+        const page2 = await runner.newPage(browserContext, { viewport });
+        await runner.goto(page2, url2, { waitUntil: 'networkidle' });
+        await runner.wait(1000);
+        
+        const comparisonResult = await compareLayoutsWithContentExclusion(page1, page2, {
+          excludeContent: true,
+          excludeMethod: options.excludeMethod as 'hide' | 'remove',
+          similarityThreshold: parseFloat(options.threshold)
+        });
+        
+        // 本文除外後のレイアウトを使用
+        if (comparisonResult.excludedContentComparison) {
+          layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
+          layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+          
+          console.log(chalk.yellow("\n📄 Content Extraction:"));
+          if (comparisonResult.contentExtraction?.baseline.success) {
+            console.log(`URL1: ${comparisonResult.contentExtraction.baseline.title || 'No title'}`);
+            console.log(`  Text length: ${comparisonResult.contentExtraction.baseline.textLength || 0} chars`);
+          }
+          if (comparisonResult.contentExtraction?.current.success) {
+            console.log(`URL2: ${comparisonResult.contentExtraction.current.title || 'No title'}`);
+            console.log(`  Text length: ${comparisonResult.contentExtraction.current.textLength || 0} chars`);
+          }
+        } else {
+          // フォールバック
+          layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
+          layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+        }
+        
+        await runner.closePage(page1);
+        await runner.closePage(page2);
+      } else {
+        // 通常モード
+        const page1 = await runner.newPage(browserContext, { viewport });
+        await runner.goto(page1, url1, { waitUntil: 'networkidle' });
+        await runner.wait(1000);
+        layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
+        await runner.closePage(page1);
 
-      const page2 = await runner.newPage(browserContext, { viewport });
-      await runner.goto(page2, url2, { waitUntil: 'networkidle' });
-      await runner.wait(1000);
-      const layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
-      await runner.closePage(page2);
+        const page2 = await runner.newPage(browserContext, { viewport });
+        await runner.goto(page2, url2, { waitUntil: 'networkidle' });
+        await runner.wait(1000);
+        layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+        await runner.closePage(page2);
+      }
 
       if (!layout1.semanticGroups || !layout2.semanticGroups) {
         throw new Error('Failed to extract layout information');

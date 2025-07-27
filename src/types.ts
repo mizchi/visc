@@ -90,7 +90,133 @@ export interface VisualCheckConfig {
      * レイアウト変更の許容閾値
      */
     layoutChangeThreshold?: number;
+    
+    /**
+     * 本文除外設定
+     */
+    excludeContent?: {
+      /**
+       * 本文除外を有効にするか
+       */
+      enabled?: boolean;
+      
+      /**
+       * Readabilityのオプション
+       */
+      readabilityOptions?: {
+        /**
+         * ログレベル
+         */
+        debug?: boolean;
+        
+        /**
+         * 最大Eagerサイズ
+         */
+        maxEagerCacheSize?: number;
+        
+        /**
+         * nbTopCandidates
+         */
+        nbTopCandidates?: number;
+        
+        /**
+         * charThreshold
+         */
+        charThreshold?: number;
+        
+        /**
+         * classesToPreserve
+         */
+        classesToPreserve?: string[];
+      };
+      
+      /**
+       * 本文要素を非表示にするか、削除するか
+       */
+      method?: 'hide' | 'remove';
+    };
   };
+  
+  /**
+   * プロキシ設定
+   */
+  proxy?: {
+    /**
+     * プロキシを有効にするか
+     */
+    enabled?: boolean;
+    
+    /**
+     * プロキシURL
+     */
+    url?: string;
+    
+    /**
+     * リクエスト/レスポンスのオーバーライド設定
+     */
+    overrides?: ProxyOverride[];
+  };
+  
+  /**
+   * レスポンシブマトリクステスト設定
+   */
+  responsiveMatrix?: {
+    /**
+     * マトリクステストを有効にするか
+     */
+    enabled?: boolean;
+    
+    /**
+     * テストするビューポート幅のリスト
+     */
+    viewports?: ViewportSize[];
+    
+    /**
+     * メディアクエリのブレークポイント
+     */
+    breakpoints?: {
+      name: string;
+      minWidth?: number;
+      maxWidth?: number;
+    }[];
+    
+    /**
+     * レスポンシブ検証の厳密度
+     */
+    strictness?: 'loose' | 'normal' | 'strict';
+    
+    /**
+     * CSS類似度の閾値（0-1）
+     */
+    cssSimilarityThreshold?: number;
+  };
+}
+
+export interface ViewportSize {
+  /**
+   * ビューポート名（例: mobile, tablet, desktop）
+   */
+  name: string;
+  
+  /**
+   * 幅
+   */
+  width: number;
+  
+  /**
+   * 高さ
+   */
+  height: number;
+  
+  /**
+   * デバイスピクセル比
+   */
+  deviceScaleFactor?: number;
+  
+  /**
+   * ユーザーエージェント（オプション）
+   */
+  userAgent?: string;
 }
 
 export interface UrlConfig {
@@ -238,4 +364,185 @@ export interface TestResult {
      */
     accessibilityIssues?: number;
   };
+}
+
+export interface ResponsiveMatrixResult {
+  /**
+   * URL設定
+   */
+  url: UrlConfig;
+  
+  /**
+   * テスト実行時刻
+   */
+  timestamp: string;
+  
+  /**
+   * ビューポートごとの結果
+   */
+  viewportResults: ViewportTestResult[];
+  
+  /**
+   * メディアクエリの一貫性
+   */
+  mediaQueryConsistency: MediaQueryConsistency[];
+  
+  /**
+   * 全体的な成功フラグ
+   */
+  passed: boolean;
+  
+  /**
+   * サマリー
+   */
+  summary: {
+    totalViewports: number;
+    passedViewports: number;
+    failedViewports: number;
+    mediaQueryIssues: number;
+    layoutInconsistencies: number;
+  };
+}
+
+export interface ViewportTestResult {
+  /**
+   * ビューポート設定
+   */
+  viewport: ViewportSize;
+  
+  /**
+   * スナップショットパス
+   */
+  snapshotPath: string;
+  
+  /**
+   * 適用されたメディアクエリ
+   */
+  appliedMediaQueries: string[];
+  
+  /**
+   * CSS計算値のハッシュ
+   */
+  cssFingerprint: string;
+  
+  /**
+   * レイアウト構造
+   */
+  layoutStructure: any;
+  
+  /**
+   * エラー情報
+   */
+  error?: string;
+}
+
+export interface MediaQueryConsistency {
+  /**
+   * メディアクエリ
+   */
+  query: string;
+  
+  /**
+   * 期待されるビューポート
+   */
+  expectedViewports: string[];
+  
+  /**
+   * 実際に適用されたビューポート
+   */
+  actualViewports: string[];
+  
+  /**
+   * 一貫性があるか
+   */
+  isConsistent: boolean;
+  
+  /**
+   * 不整合の詳細
+   */
+  inconsistencies?: string[];
+}
+
+/**
+ * プロキシオーバーライド設定
+ */
+export interface ProxyOverride {
+  /**
+   * マッチング条件
+   */
+  match: {
+    /**
+     * URLパターン（正規表現または文字列）
+     */
+    url?: string | RegExp;
+    
+    /**
+     * HTTPメソッド
+     */
+    method?: string | string[];
+    
+    /**
+     * ヘッダー条件
+     */
+    headers?: Record<string, string | RegExp>;
+  };
+  
+  /**
+   * リクエストの書き換え
+   */
+  request?: {
+    /**
+     * URLの書き換え
+     */
+    url?: string | ((originalUrl: string) => string);
+    
+    /**
+     * ヘッダーの追加/変更
+     */
+    headers?: Record<string, string | ((originalValue?: string) => string)>;
+    
+    /**
+     * ボディの書き換え
+     */
+    body?: string | Buffer | ((originalBody: string | Buffer) => string | Buffer);
+  };
+  
+  /**
+   * レスポンスの書き換え
+   */
+  response?: {
+    /**
+     * ステータスコード
+     */
+    status?: number;
+    
+    /**
+     * ヘッダーの追加/変更
+     */
+    headers?: Record<string, string | ((originalValue?: string) => string)>;
+    
+    /**
+     * ボディの書き換え
+     */
+    body?: string | Buffer | ((originalBody: string | Buffer) => string | Buffer);
+    
+    /**
+     * レスポンス全体を置き換える
+     */
+    replace?: {
+      status: number;
+      headers: Record<string, string>;
+      body: string | Buffer;
+    };
+  };
+  
+  /**
+   * オーバーライドを有効にする条件
+   */
+  enabled?: boolean | (() => boolean);
+  
+  /**
+   * 優先度（大きい数値が優先）
+   */
+  priority?: number;
 }

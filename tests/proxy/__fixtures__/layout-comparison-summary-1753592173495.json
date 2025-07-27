@@ -1,0 +1,16 @@
+{
+  "testDate": "2025-07-27T04:56:13.495Z",
+  "proxyEndpoint": "http://localhost:8787",
+  "results": [
+    {
+      "name": "example-com",
+      "url": "https://example.com",
+      "error": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8787/?url=https%3A%2F%2Fexample.com\", waiting until \"load\"\u001b[22m\n"
+    },
+    {
+      "name": "httpbin-html",
+      "url": "https://httpbin.org/html",
+      "error": "page.goto: net::ERR_ABORTED; maybe frame was detached?\nCall log:\n\u001b[2m  - navigating to \"http://localhost:8787/?url=https%3A%2F%2Fhttpbin.org%2Fhtml\", waiting until \"load\"\u001b[22m\n"
+    }
+  ]
+}

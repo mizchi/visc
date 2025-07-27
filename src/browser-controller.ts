@@ -1,5 +1,6 @@
 import { chromium, firefox, webkit, Browser, Page, BrowserContext, devices } from '@playwright/test';
 import { UrlConfig, VisualCheckConfig } from './types.js';
+import { createProxyClient } from './proxy/proxy-client.js';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -46,6 +47,12 @@ export class BrowserController {
       }
     }
 
+    // プロキシ設定がある場合は追加
+    const proxyClient = createProxyClient(this.config);
+    if (proxyClient) {
+      Object.assign(contextOptions, proxyClient.getPlaywrightContext());
+    }
+
     this.context = await this.browser.newContext(contextOptions);
   }
 
@@ -61,7 +68,14 @@ export class BrowserController {
     
     try {
       // URLに移動
-      const fullUrl = this.buildFullUrl(urlConfig.url);
+      let fullUrl = this.buildFullUrl(urlConfig.url);
+      
+      // プロキシ設定がある場合はプロキシURLを使用
+      const proxyClient = createProxyClient(this.config);
+      if (proxyClient && this.config.proxy?.enabled) {
+        fullUrl = proxyClient.getProxiedUrl(fullUrl);
+      }
+      
       await page.goto(fullUrl, {
         waitUntil: urlConfig.waitFor?.networkIdle ? 'networkidle' : 'load',
         timeout: urlConfig.waitFor?.timeout ?? 30000,

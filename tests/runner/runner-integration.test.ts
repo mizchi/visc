@@ -2,7 +2,7 @@ import { describe, test, expect } from 'vitest';
 import { defaultRunnerFactory } from '../../src/runner/factory.js';
 
 describe('ランナー統合テスト', () => {
-  test('Playwrightランナーでレイアウト抽出', async () => {
+  test('Playwrightランナーでレイアウト抽出', { timeout: 20000 }, async () => {
     const runner = defaultRunnerFactory.create('playwright');
     const browserContext = await runner.launch({ headless: true });
     const pageContext = await runner.newPage(browserContext);

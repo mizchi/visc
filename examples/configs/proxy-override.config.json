@@ -1,0 +1,82 @@
+{
+  "baseUrl": "https://example.com",
+  "snapshotDir": "./snapshots",
+  "proxy": {
+    "enabled": true,
+    "url": "http://localhost:8787",
+    "overrides": [
+      {
+        "match": {
+          "url": "/api/",
+          "method": ["GET", "POST"]
+        },
+        "request": {
+          "headers": {
+            "Authorization": "Bearer test-token-12345"
+          }
+        }
+      },
+      {
+        "match": {
+          "url": "/(google-analytics|facebook|tracking)/"
+        },
+        "response": {
+          "replace": {
+            "status": 204,
+            "headers": {},
+            "body": ""
+          }
+        },
+        "priority": 10
+      },
+      {
+        "match": {
+          "url": "/api/users",
+          "method": "GET"
+        },
+        "response": {
+          "replace": {
+            "status": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": "[{\"id\":1,\"name\":\"Test User\",\"email\":\"test@example.com\"}]"
+          }
+        }
+      },
+      {
+        "match": {
+          "url": ".css$"
+        },
+        "response": {
+          "headers": {
+            "Cache-Control": "public, max-age=31536000"
+          }
+        }
+      },
+      {
+        "match": {},
+        "request": {
+          "headers": {
+            "X-Test-Header": "visual-checker-test"
+          }
+        },
+        "response": {
+          "headers": {
+            "X-Proxy-Timestamp": "2025-01-27T12:00:00Z"
+          }
+        }
+      }
+    ]
+  },
+  "urls": [
+    {
+      "name": "home",
+      "url": "/"
+    },
+    {
+      "name": "api-test",
+      "url": "/api/users"
+    }
+  ]
+}

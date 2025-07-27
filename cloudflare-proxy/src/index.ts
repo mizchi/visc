@@ -8,6 +8,7 @@
 
 export interface Env {
   ENVIRONMENT?: string;
+  OVERRIDE_CONFIG?: string; // JSON形式のオーバーライド設定
 }
 
 // CORSヘッダーを追加
@@ -24,6 +25,53 @@ function corsHeaders(origin: string): Headers {
   );
   headers.set("Access-Control-Max-Age", "86400");
   return headers;
+}
+
+// オーバーライドのマッチング関数
+function findMatchingOverride(
+  overrides: any[],
+  url: string,
+  method: string,
+  headers: Headers
+): any {
+  for (const override of overrides) {
+    // URLマッチング
+    if (override.match?.url) {
+      const pattern = override.match.url;
+      if (typeof pattern === 'string' && !url.includes(pattern)) {
+        continue;
+      }
+      // 正規表現パターンの場合（文字列として渡される）
+      if (pattern.startsWith('/') && pattern.endsWith('/')) {
+        const regex = new RegExp(pattern.slice(1, -1));
+        if (!regex.test(url)) continue;
+      }
+    }
+
+    // メソッドマッチング
+    if (override.match?.method) {
+      const methods = Array.isArray(override.match.method) 
+        ? override.match.method 
+        : [override.match.method];
+      if (!methods.includes(method.toUpperCase())) continue;
+    }
+
+    // ヘッダーマッチング
+    if (override.match?.headers) {
+      let headerMatches = true;
+      for (const [key, pattern] of Object.entries(override.match.headers)) {
+        const headerValue = headers.get(key);
+        if (!headerValue || headerValue !== pattern) {
+          headerMatches = false;
+          break;
+        }
+      }
+      if (!headerMatches) continue;
+    }
+
+    return override;
+  }
+  return null;
 }
 
 export default {
@@ -96,20 +144,93 @@ export default {
 
       // User-Agentを設定（visual-checkerであることを示す）
       headers.set("User-Agent", "Visual-Checker-Proxy/1.0 (Cloudflare Worker)");
+      
+      // オーバーライド設定をヘッダーから取得
+      const overrideConfig = request.headers.get("X-Override-Config");
+      let requestUrl = targetUrl;
+      let requestHeaders = headers;
+      let requestBody = request.body;
+      
+      // オーバーライド設定がある場合は適用
+      if (overrideConfig) {
+        try {
+          const overrides = JSON.parse(overrideConfig);
+          const override = findMatchingOverride(overrides, targetUrl, request.method, headers);
+          
+          if (override?.request) {
+            // URL書き換え
+            if (override.request.url) {
+              requestUrl = override.request.url;
+            }
+            
+            // ヘッダー書き換え
+            if (override.request.headers) {
+              for (const [key, value] of Object.entries(override.request.headers)) {
+                requestHeaders.set(key, value as string);
+              }
+            }
+            
+            // ボディ書き換え
+            if (override.request.body) {
+              requestBody = override.request.body as BodyInit;
+            }
+          }
+        } catch (e) {
+          console.error("Failed to parse override config:", e);
+        }
+      }
 
       // ターゲットへのリクエストを作成
-      const targetRequest = new Request(targetUrl, {
+      const targetRequest = new Request(requestUrl, {
         method: request.method,
-        headers,
-        body: request.body,
+        headers: requestHeaders,
+        body: requestBody,
         redirect: "follow",
       });
 
       // リクエストを転送
       const response = await fetch(targetRequest);
-
-      // レスポンスヘッダーの準備
-      const responseHeaders = new Headers(response.headers);
+      
+      // レスポンスのオーバーライド処理
+      let responseStatus = response.status;
+      let responseStatusText = response.statusText;
+      let responseBody = response.body;
+      let responseHeaders = new Headers(response.headers);
+      
+      // オーバーライド設定がある場合はレスポンスも処理
+      if (overrideConfig) {
+        try {
+          const overrides = JSON.parse(overrideConfig);
+          const override = findMatchingOverride(overrides, targetUrl, request.method, headers);
+          
+          if (override?.response) {
+            // 完全置き換えの場合
+            if (override.response.replace) {
+              responseStatus = override.response.replace.status;
+              responseStatusText = '';
+              responseHeaders = new Headers(override.response.replace.headers);
+              responseBody = override.response.replace.body;
+            } else {
+              // 部分的な書き換え
+              if (override.response.status !== undefined) {
+                responseStatus = override.response.status;
+              }
+              
+              if (override.response.headers) {
+                for (const [key, value] of Object.entries(override.response.headers)) {
+                  responseHeaders.set(key, value as string);
+                }
+              }
+              
+              if (override.response.body !== undefined) {
+                responseBody = override.response.body as BodyInit;
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Failed to apply response override:", e);
+        }
+      }
 
       // CORSヘッダーを追加
       for (const [key, value] of corsHeaders(origin)) {
@@ -126,9 +247,11 @@ export default {
       }
 
       // HTMLコンテンツの場合、ベースURLを注入
-      const contentType = response.headers.get("Content-Type") || "";
-      if (contentType.includes("text/html")) {
-        let body = await response.text();
+      const contentType = responseHeaders.get("Content-Type") || "";
+      if (contentType.includes("text/html") && !override?.response?.replace) {
+        let body = typeof responseBody === 'string' 
+          ? responseBody 
+          : await response.text();
 
         // <base>タグが存在しない場合は追加
         if (!body.includes("<base")) {
@@ -143,16 +266,16 @@ export default {
           .replace(/href="\/([^"]+)"/g, `href="${targetOrigin}/$1"`);
 
         return new Response(body, {
-          status: response.status,
-          statusText: response.statusText,
+          status: responseStatus,
+          statusText: responseStatusText,
           headers: responseHeaders,
         });
       }
 
       // その他のコンテンツはそのまま返す
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
+      return new Response(responseBody, {
+        status: responseStatus,
+        statusText: responseStatusText,
         headers: responseHeaders,
       });
     } catch (error) {

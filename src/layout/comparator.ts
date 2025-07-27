@@ -10,6 +10,9 @@ import type {
   SemanticGroup,
   LayoutAnalysisResult,
 } from "./extractor.js";
+
+// Re-export LayoutAnalysisResult for external modules
+export type { LayoutAnalysisResult } from "./extractor.js";
 import { normalizedTextSimilarity, normalizeText } from "./text-utils.js";
 
 export interface LayoutDifference {
