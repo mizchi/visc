@@ -26,6 +26,21 @@ export default defineConfig({
     'layout/semantic-analyzer': './src/layout/semantic-analyzer.ts',
     'layout/comparator': './src/layout/comparator.ts',
     'layout/assertions': './src/layout/assertions.ts',
+    // Assertion API
+    'assertion/index': './src/assertion/index.ts',
+    'assertion/visual': './src/assertion/visual.ts',
+    'assertion/semantic-svg': './src/assertion/semantic-svg.ts',
+    // Driver API
+    'driver/index': './src/driver/index.ts',
+    'driver/types': './src/driver/types.ts',
+    'driver/playwright-driver': './src/driver/playwright-driver.ts',
+    // Layout API
+    'layout/semantic-layout': './src/layout/semantic-layout.ts',
+    // I/O API
+    'io/index': './src/io/index.ts',
+    'io/file': './src/io/file.ts',
+    'io/image': './src/io/image.ts',
+    'io/browser': './src/io/browser.ts',
   },
   format: ['esm'],
   platform: 'node',
@@ -47,6 +62,8 @@ export default defineConfig({
       'layout/semantic-analyzer': './src/layout/semantic-analyzer.ts',
       'layout/comparator': './src/layout/comparator.ts',
       'layout/assertions': './src/layout/assertions.ts',
+      // Assertion API
+      'assertion/index': './src/assertion/index.ts',
     }
   },
   sourcemap: true,
