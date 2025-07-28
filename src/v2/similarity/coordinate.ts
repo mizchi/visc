@@ -112,7 +112,8 @@ function calculateNodeMatchScore(node1: SummarizedNode, node2: SummarizedNode): 
   }
   
   // クラス名の類似度
-  if (node1.className && node2.className) {
+  if (node1.className && node2.className && 
+      typeof node1.className === 'string' && typeof node2.className === 'string') {
     const classes1 = new Set(node1.className.split(' '));
     const classes2 = new Set(node2.className.split(' '));
     const intersection = new Set([...classes1].filter(x => classes2.has(x)));

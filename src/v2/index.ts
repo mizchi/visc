@@ -24,3 +24,18 @@ export {
 // SVGレンダリング
 export { renderLayoutToSVG } from './renderer/index.js';
 export type { SVGRenderOptions } from './renderer/index.js';
+
+// 安定性分析
+export {
+  analyzeLayoutStability,
+  checkAdaptiveStability,
+  generateStabilityReport
+} from './stability/index.js';
+export type {
+  StabilityAnalysisOptions,
+  StabilityProgress,
+  StabilityAnalysisResult,
+  StabilityRecommendations,
+  AdaptiveStabilityConfig,
+  FinalStabilityConfig
+} from './stability/index.js';

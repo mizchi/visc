@@ -226,7 +226,7 @@ function createLabel(node: SummarizedNode): string {
     return label.length > 20 ? label.substring(0, 17) + '...' : label;
   }
   
-  if (node.className) {
+  if (node.className && typeof node.className === 'string') {
     const className = node.className.split(' ')[0];
     return `.${className}`;
   }
@@ -244,7 +244,7 @@ function createTooltip(node: SummarizedNode): string {
   lines.push(`Tag: ${node.tagName}`);
   
   if (node.id) lines.push(`ID: ${node.id}`);
-  if (node.className) lines.push(`Class: ${node.className}`);
+  if (node.className && typeof node.className === 'string') lines.push(`Class: ${node.className}`);
   if (node.text) lines.push(`Text: ${node.text.substring(0, 50)}`);
   
   lines.push(`Position: ${node.position.x}, ${node.position.y}`);

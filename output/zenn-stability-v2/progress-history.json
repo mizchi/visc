@@ -1,0 +1,11 @@
+[
+  {
+    "iteration": 3,
+    "currentStability": 99.70841047751429,
+    "unstableNodeCount": 0,
+    "totalNodeCount": 1391,
+    "confidence": 1,
+    "shouldContinue": false,
+    "reason": "優れた安定性 (99.7%) と高い信頼度 (100%) を達成"
+  }
+]

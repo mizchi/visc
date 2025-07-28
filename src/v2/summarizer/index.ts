@@ -84,8 +84,10 @@ function determineSemanticType(element: ExtractedElement): SemanticType {
   
   // ナビゲーション
   if (tag === 'nav' || role === 'navigation' || 
-      element.className?.includes('nav') || 
-      element.className?.includes('menu')) {
+      (typeof element.className === 'string' && (
+        element.className.includes('nav') || 
+        element.className.includes('menu')
+      ))) {
     return 'navigation';
   }
   
