@@ -1,0 +1,36 @@
+{
+  "name": "zenn-visual-tests",
+  "description": "Zenn.devの視覚的回帰テストスイート",
+  "configPath": "./output/zenn-stability-v2/recommended-config.json",
+  "tests": [
+    {
+      "name": "zenn-homepage",
+      "type": "url",
+      "urls": {
+        "original": "https://zenn.dev",
+        "refactored": "https://zenn.dev"
+      }
+    },
+    {
+      "name": "zenn-articles",
+      "type": "url",
+      "urls": {
+        "original": "https://zenn.dev/articles",
+        "refactored": "https://zenn.dev/articles"
+      }
+    },
+    {
+      "name": "zenn-books",
+      "type": "url", 
+      "urls": {
+        "original": "https://zenn.dev/books",
+        "refactored": "https://zenn.dev/books"
+      }
+    },
+    {
+      "name": "main-layout-test",
+      "type": "convention",
+      "skip": false
+    }
+  ]
+}

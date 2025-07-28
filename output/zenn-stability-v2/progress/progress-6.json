@@ -1,0 +1,9 @@
+{
+  "iteration": 6,
+  "currentStability": 100,
+  "unstableNodeCount": 0,
+  "totalNodeCount": 127,
+  "confidence": 0.6,
+  "shouldContinue": false,
+  "reason": "安定性の改善が収束"
+}

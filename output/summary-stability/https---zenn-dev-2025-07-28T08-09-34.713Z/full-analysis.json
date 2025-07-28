@@ -1,0 +1,27 @@
+{
+  "overallStability": 100,
+  "nodeStability": 100,
+  "groupStability": 100,
+  "recommendations": {
+    "toleranceThreshold": 5,
+    "ignoreClasses": [],
+    "ignoreTypes": [],
+    "confidenceLevel": 0.3
+  },
+  "unstableNodes": [],
+  "statistics": {
+    "totalNodes": 312,
+    "stableNodes": 312,
+    "unstableNodes": 0,
+    "avgImportance": 57.608331043991335,
+    "stabilityByType": {
+      "heading": 100,
+      "navigation": 83.78378378378379,
+      "content": 54.054054054054056,
+      "interactive": 33.73231773667029,
+      "structural": 10.84070796460177,
+      "media": 10.3515625,
+      "list": 11.11111111111111
+    }
+  }
+}

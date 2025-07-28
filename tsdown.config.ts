@@ -30,17 +30,27 @@ export default defineConfig({
     'assertion/index': './src/assertion/index.ts',
     'assertion/visual': './src/assertion/visual.ts',
     'assertion/semantic-svg': './src/assertion/semantic-svg.ts',
+    'assertion/stable-visual': './src/assertion/stable-visual.ts',
+    'assertion/stability-analyzer': './src/assertion/stability-analyzer.ts',
     // Driver API
     'driver/index': './src/driver/index.ts',
     'driver/types': './src/driver/types.ts',
     'driver/playwright-driver': './src/driver/playwright-driver.ts',
+    'driver/puppeteer-driver': './src/driver/puppeteer-driver.ts',
     // Layout API
     'layout/semantic-layout': './src/layout/semantic-layout.ts',
+    'layout/semantic-summary': './src/layout/semantic-summary.ts',
     // I/O API
     'io/index': './src/io/index.ts',
     'io/file': './src/io/file.ts',
     'io/image': './src/io/image.ts',
     'io/browser': './src/io/browser.ts',
+    'io/puppeteer': './src/io/puppeteer.ts',
+    // Assertion API (coverage)
+    'assertion/coverage': './src/assertion/coverage.ts',
+    'assertion/summary-stability-analyzer': './src/assertion/summary-stability-analyzer.ts',
+    // V2 API
+    'v2/index': './src/v2/index.ts',
   },
   format: ['esm'],
   platform: 'node',
@@ -64,6 +74,8 @@ export default defineConfig({
       'layout/assertions': './src/layout/assertions.ts',
       // Assertion API
       'assertion/index': './src/assertion/index.ts',
+      // V2 API
+      'v2/index': './src/v2/index.ts',
     }
   },
   sourcemap: true,
@@ -75,6 +87,7 @@ export default defineConfig({
     'chalk',
     'ora',
     'lighthouse',
+    'puppeteer',
     'fs',
     'fs/promises',
     'path',

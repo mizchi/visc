@@ -1,0 +1,716 @@
+<svg width="1320" height="760" viewBox="0 0 1320 760" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .node-rect { fill-opacity: 0.3; stroke-opacity: 0.8; }
+    .node-label { font-family: Arial, sans-serif; font-size: 12px; }
+    .importance-label { font-size: 9.600000000000001px; fill: #666; }
+    .group-rect { fill: none; stroke-dasharray: 5,5; stroke-opacity: 0.5; }
+    .group-label { font-size: 10.8px; fill: #999; }
+  </style>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1320" height="760" fill="white"/>
+  <rect x="20" y="20" width="1280" height="720" fill="url(#grid)"/>
+
+  <!-- Groups -->
+  <g class="groups">
+    <g class="group" data-id="group_0">
+      <rect class="group-rect" x="20" y="20" width="1280" height="831.15625" stroke="#CCCCCC" stroke-width="2"/>
+      <text class="group-label" x="25" y="15">structural</text>
+    </g>
+    <g class="group" data-id="group_1">
+      <rect class="group-rect" x="20" y="148" width="1280" height="442.375" stroke="#CCCCCC" stroke-width="2"/>
+      <text class="group-label" x="25" y="143">structural</text>
+    </g>
+    <g class="group" data-id="group_2">
+      <rect class="group-rect" x="228.046875" y="256.1875" width="175.3125" height="22" stroke="#96CEB4" stroke-width="2"/>
+      <text class="group-label" x="233.046875" y="251.1875">interactive</text>
+    </g>
+    <g class="group" data-id="group_3">
+      <rect class="group-rect" x="110" y="480.375" width="1100" height="85" stroke="#CCCCCC" stroke-width="2"/>
+      <text class="group-label" x="115" y="475.375">structural</text>
+    </g>
+    <g class="group" data-id="group_4">
+      <rect class="group-rect" x="60" y="625.375" width="1200" height="190.78125" stroke="#CCCCCC" stroke-width="2"/>
+      <text class="group-label" x="65" y="620.375">structural</text>
+    </g>
+    <g class="group" data-id="group_5">
+      <rect class="group-rect" x="110" y="630.375" width="113.359375" height="98" stroke="#96CEB4" stroke-width="2"/>
+      <text class="group-label" x="115" y="625.375">interactive</text>
+    </g>
+    <g class="group" data-id="group_6">
+      <rect class="group-rect" x="110" y="743.375" width="1100" height="72.78125" stroke="#CCCCCC" stroke-width="2"/>
+      <text class="group-label" x="115" y="738.375">structural</text>
+    </g>
+    <g class="group" data-id="group_7">
+      <rect class="group-rect" x="632.03125" y="757.765625" width="284.359375" height="17" stroke="#96CEB4" stroke-width="2"/>
+      <text class="group-label" x="637.03125" y="752.765625">interactive</text>
+    </g>
+  </g>
+
+  <!-- Nodes -->
+  <g class="nodes">
+    <g class="node" data-id="node_30">
+      <rect class="node-rect" x="110" y="652.375" width="123.359375" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_30
+Class: section
+Position: 90, 632.375
+Size: 123.359375x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="171.6796875" y="665.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .section
+      </text>
+    </g>
+    <g class="node" data-id="node_32">
+      <rect class="node-rect" x="233.359375" y="652.375" width="385.921875" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_32
+Class: subsection
+Position: 213.359375, 632.375
+Size: 385.921875x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="426.3203125" y="665.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .subsection
+      </text>
+    </g>
+    <g class="node" data-id="node_34">
+      <rect class="node-rect" x="110" y="679.375" width="123.359375" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_34
+Class: section
+Position: 90, 659.375
+Size: 123.359375x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="171.6796875" y="692.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .section
+      </text>
+    </g>
+    <g class="node" data-id="node_36">
+      <rect class="node-rect" x="233.359375" y="679.375" width="385.921875" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_36
+Class: subsection
+Position: 213.359375, 659.375
+Size: 385.921875x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="426.3203125" y="692.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .subsection
+      </text>
+    </g>
+    <g class="node" data-id="node_38">
+      <rect class="node-rect" x="110" y="706.375" width="123.359375" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_38
+Class: section
+Position: 90, 686.375
+Size: 123.359375x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="171.6796875" y="719.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .section
+      </text>
+    </g>
+    <g class="node" data-id="node_40">
+      <rect class="node-rect" x="233.359375" y="706.375" width="385.921875" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_40
+Class: subsection
+Position: 213.359375, 686.375
+Size: 385.921875x27
+Importance: 39</title>
+      </rect>
+      <text class="node-label" x="426.3203125" y="719.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .subsection
+      </text>
+    </g>
+    <g class="node" data-id="node_26">
+      <rect class="node-rect" x="110" y="625.375" width="123.359375" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_26
+Class: section
+Position: 90, 605.375
+Size: 123.359375x27
+Importance: 40</title>
+      </rect>
+      <text class="node-label" x="171.6796875" y="638.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .section
+      </text>
+    </g>
+    <g class="node" data-id="node_28">
+      <rect class="node-rect" x="233.359375" y="625.375" width="385.921875" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: td
+ID: node_28
+Class: subsection
+Position: 213.359375, 605.375
+Size: 385.921875x27
+Importance: 40</title>
+      </rect>
+      <text class="node-label" x="426.3203125" y="638.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .subsection
+      </text>
+    </g>
+    <g class="node" data-id="node_33">
+      <rect class="node-rect" x="110" y="679.375" width="509.28125" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: tr
+ID: node_33
+Position: 90, 659.375
+Size: 509.28125x27
+Importance: 41</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="692.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        tr
+      </text>
+    </g>
+    <g class="node" data-id="node_37">
+      <rect class="node-rect" x="110" y="706.375" width="509.28125" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: tr
+ID: node_37
+Position: 90, 686.375
+Size: 509.28125x27
+Importance: 41</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="719.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        tr
+      </text>
+    </g>
+    <g class="node" data-id="node_18">
+      <rect class="node-rect" x="142" y="480.375" width="1068" height="22" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: li
+ID: node_18
+Position: 122, 460.375
+Size: 1068x22
+Importance: 42</title>
+      </rect>
+      <text class="node-label" x="676" y="491.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        li
+      </text>
+    </g>
+    <g class="node" data-id="node_25">
+      <rect class="node-rect" x="110" y="625.375" width="509.28125" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: tr
+ID: node_25
+Position: 90, 605.375
+Size: 509.28125x27
+Importance: 42</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="638.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        tr
+      </text>
+    </g>
+    <g class="node" data-id="node_29">
+      <rect class="node-rect" x="110" y="652.375" width="509.28125" height="27" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: tr
+ID: node_29
+Position: 90, 632.375
+Size: 509.28125x27
+Importance: 42</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="665.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        tr
+      </text>
+    </g>
+    <g class="node" data-id="node_45">
+      <rect class="node-rect" x="110" y="799.15625" width="1100" height="17" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_45
+Position: 90, 779.15625
+Size: 1100x17
+Importance: 44</title>
+      </rect>
+    </g>
+    <g class="node" data-id="node_24">
+      <rect class="node-rect" x="110" y="625.375" width="509.28125" height="108" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: tbody
+ID: node_24
+Position: 90, 605.375
+Size: 509.28125x108
+Importance: 45</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="679.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        tbody
+      </text>
+    </g>
+    <g class="node" data-id="node_41">
+      <rect class="node-rect" x="110" y="743.375" width="1100" height="45.78125" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_41
+Position: 90, 723.375
+Size: 1100x45.78125
+Importance: 45</title>
+      </rect>
+      <text class="node-label" x="660" y="766.265625" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+    </g>
+    <g class="node" data-id="node_20">
+      <rect class="node-rect" x="110" y="518.375" width="1100" height="47" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_20
+Class: last-updated
+Text: Last revised 2017-05-13.
+Position: 90, 498.375
+Size: 1100x47
+Importance: 47
+Label: Last revised 2017-05-13.</title>
+      </rect>
+      <text class="node-label" x="660" y="541.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        Last revised 2017...
+      </text>
+    </g>
+    <g class="node" data-id="node_17">
+      <rect class="node-rect" x="110" y="480.375" width="1100" height="22" fill="#FFD93D" stroke="#FFD93D" stroke-width="1" >
+        <title>Type: list
+Tag: ul
+ID: node_17
+Position: 90, 460.375
+Size: 1100x22
+Importance: 49</title>
+      </rect>
+      <text class="node-label" x="660" y="491.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        ul
+      </text>
+    </g>
+    <g class="node" data-id="node_39">
+      <rect class="node-rect" x="110" y="711.375" width="54.625" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_39
+Text: About Us
+Position: 90, 691.375
+Size: 54.625x17
+Importance: 52
+Label: About Us
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="159.625" y="723.375" text-anchor="end">52</text>
+    </g>
+    <g class="node" data-id="node_22">
+      <rect class="node-rect" x="60" y="625.375" width="1200" height="190.78125" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_22
+Position: 40, 605.375
+Size: 1200x190.78125
+Importance: 53</title>
+      </rect>
+      <text class="node-label" x="660" y="720.765625" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+      <text class="importance-label" x="1255" y="637.375" text-anchor="end">53</text>
+    </g>
+    <g class="node" data-id="node_35">
+      <rect class="node-rect" x="110" y="684.375" width="56.078125" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_35
+Text: Protocols
+Position: 90, 664.375
+Size: 56.078125x17
+Importance: 53
+Label: Protocols
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="161.078125" y="696.375" text-anchor="end">53</text>
+    </g>
+    <g class="node" data-id="node_3">
+      <rect class="node-rect" x="110" y="45" width="234" height="77" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_3
+Position: 90, 25
+Size: 234x77
+Importance: 54</title>
+      </rect>
+      <text class="node-label" x="227" y="83.5" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+      <text class="importance-label" x="339" y="57" text-anchor="end">54</text>
+    </g>
+    <g class="node" data-id="node_27">
+      <rect class="node-rect" x="110" y="630.375" width="91.515625" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_27
+Text: Domain Names
+Position: 90, 610.375
+Size: 91.515625x17
+Importance: 54
+Label: Domain Names
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="196.515625" y="642.375" text-anchor="end">54</text>
+    </g>
+    <g class="node" data-id="node_31">
+      <rect class="node-rect" x="110" y="657.375" width="113.359375" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_31
+Text: Number Resources
+Position: 90, 637.375
+Size: 113.359375x17
+Importance: 54
+Label: Number Resources
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="218.359375" y="669.375" text-anchor="end">54</text>
+    </g>
+    <g class="node" data-id="node_44">
+      <rect class="node-rect" x="876.1875" y="757.765625" width="40.203125" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_44
+Text: ICANN
+Position: 856.1875, 737.765625
+Size: 40.203125x17
+Importance: 56
+Label: ICANN
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="911.390625" y="769.765625" text-anchor="end">56</text>
+    </g>
+    <g class="node" data-id="node_21">
+      <rect class="node-rect" x="20" y="590.375" width="1280" height="260.78125" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: footer
+ID: node_21
+Position: 0, 570.375
+Size: 1280x260.78125
+Importance: 57</title>
+      </rect>
+      <text class="node-label" x="660" y="720.765625" text-anchor="middle" dominant-baseline="middle" fill="black">
+        footer
+      </text>
+      <text class="importance-label" x="1295" y="602.375" text-anchor="end">57</text>
+    </g>
+    <g class="node" data-id="node_10">
+      <rect class="node-rect" x="110" y="198" width="1100" height="367.375" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_10
+Class: help-article
+Position: 90, 178
+Size: 1100x367.375
+Importance: 58</title>
+      </rect>
+      <text class="node-label" x="660" y="381.6875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .help-article
+      </text>
+      <text class="importance-label" x="1205" y="210" text-anchor="end">58</text>
+    </g>
+    <g class="node" data-id="node_19">
+      <rect class="node-rect" x="142" y="480.375" width="259.25" height="22" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_19
+Text: IANA-managed Reserved Domains
+Position: 122, 460.375
+Size: 259.25x22
+Importance: 58
+Label: IANA-managed Reserved Domains
+Interactive: Yes</title>
+      </rect>
+      <text class="node-label" x="271.625" y="491.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        IANA-managed Rese...
+      </text>
+      <text class="importance-label" x="396.25" y="492.375" text-anchor="end">58</text>
+    </g>
+    <g class="node" data-id="node_43">
+      <rect class="node-rect" x="632.03125" y="757.765625" width="160.8125" height="17" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_43
+Text: Public Technical Identifiers
+Position: 612.03125, 737.765625
+Size: 160.8125x17
+Importance: 58
+Label: Public Technical Identifiers
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="787.84375" y="769.765625" text-anchor="end">58</text>
+    </g>
+    <g class="node" data-id="node_2">
+      <rect class="node-rect" x="60" y="20" width="1200" height="127" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_2
+Position: 40, 0
+Size: 1200x127
+Importance: 59</title>
+      </rect>
+      <text class="node-label" x="660" y="83.5" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+      <text class="importance-label" x="1255" y="32" text-anchor="end">59</text>
+    </g>
+    <g class="node" data-id="node_5">
+      <rect class="node-rect" x="110" y="45" width="234" height="72" fill="#DDA0DD" stroke="#DDA0DD" stroke-width="1" >
+        <title>Type: media
+Tag: img
+ID: node_5
+Position: 90, 25
+Size: 234x72
+Importance: 60</title>
+      </rect>
+      <text class="node-label" x="227" y="81" text-anchor="middle" dominant-baseline="middle" fill="black">
+        img
+      </text>
+      <text class="importance-label" x="339" y="57" text-anchor="end">60</text>
+    </g>
+    <g class="node" data-id="node_13">
+      <rect class="node-rect" x="228.046875" y="256.1875" width="69.140625" height="22" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_13
+Text: RFC 2606
+Position: 208.046875, 236.1875
+Size: 69.140625x22
+Importance: 61
+Label: RFC 2606
+Interactive: Yes</title>
+      </rect>
+      <text class="node-label" x="262.6171875" y="267.1875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        RFC 2606
+      </text>
+      <text class="importance-label" x="292.1875" y="268.1875" text-anchor="end">61</text>
+    </g>
+    <g class="node" data-id="node_14">
+      <rect class="node-rect" x="334.21875" y="256.1875" width="69.140625" height="22" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_14
+Text: RFC 6761
+Position: 314.21875, 236.1875
+Size: 69.140625x22
+Importance: 61
+Label: RFC 6761
+Interactive: Yes</title>
+      </rect>
+      <text class="node-label" x="368.7890625" y="267.1875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        RFC 6761
+      </text>
+      <text class="importance-label" x="398.359375" y="268.1875" text-anchor="end">61</text>
+    </g>
+    <g class="node" data-id="node_1">
+      <rect class="node-rect" x="20" y="20" width="1280" height="128" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: header
+ID: node_1
+Position: 0, 0
+Size: 1280x128
+Importance: 62</title>
+      </rect>
+      <text class="node-label" x="660" y="84" text-anchor="middle" dominant-baseline="middle" fill="black">
+        header
+      </text>
+      <text class="importance-label" x="1295" y="32" text-anchor="end">62</text>
+    </g>
+    <g class="node" data-id="node_42">
+      <rect class="node-rect" x="110" y="757.765625" width="1100" height="17" fill="#45B7D1" stroke="#45B7D1" stroke-width="1" >
+        <title>Type: content
+Tag: p
+ID: node_42
+Text: The IANA functions coordinate the Internet’s globa
+Position: 90, 737.765625
+Size: 1100x17
+Importance: 62
+Label: The IANA functions coordinate the Internet’s globally unique identifiers, and
+                are pr</title>
+      </rect>
+      <text class="importance-label" x="1205" y="769.765625" text-anchor="end">62</text>
+    </g>
+    <g class="node" data-id="node_4">
+      <rect class="node-rect" x="110" y="100" width="234" height="22" fill="#96CEB4" stroke="#96CEB4" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_4
+Position: 90, 80
+Size: 234x22
+Importance: 66
+Interactive: Yes</title>
+      </rect>
+      <text class="node-label" x="227" y="111" text-anchor="middle" dominant-baseline="middle" fill="black">
+        a
+      </text>
+      <text class="importance-label" x="339" y="112" text-anchor="end">66</text>
+    </g>
+    <g class="node" data-id="node_15">
+      <rect class="node-rect" x="110" y="341.375" width="1100" height="66" fill="#45B7D1" stroke="#45B7D1" stroke-width="1" >
+        <title>Type: content
+Tag: p
+ID: node_15
+Text: We provide a web service on the example domain hos
+Position: 90, 321.375
+Size: 1100x66
+Importance: 67
+Label: We provide a web service on the example domain hosts to provide basic
+information on the purpose of </title>
+      </rect>
+      <text class="node-label" x="660" y="374.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        We provide a web ...
+      </text>
+      <text class="importance-label" x="1205" y="353.375" text-anchor="end">67</text>
+    </g>
+    <g class="node" data-id="node_23">
+      <rect class="node-rect" x="110" y="625.375" width="509.28125" height="108" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="1" >
+        <title>Type: navigation
+Tag: table
+ID: node_23
+Class: navigation
+Position: 90, 605.375
+Size: 509.28125x108
+Importance: 67</title>
+      </rect>
+      <text class="node-label" x="364.640625" y="679.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .navigation
+      </text>
+      <text class="importance-label" x="614.28125" y="637.375" text-anchor="end">67</text>
+    </g>
+    <g class="node" data-id="node_12">
+      <rect class="node-rect" x="110" y="256.1875" width="1100" height="66" fill="#45B7D1" stroke="#45B7D1" stroke-width="1" >
+        <title>Type: content
+Tag: p
+ID: node_12
+Text: As described in and , a
+number of domains such as 
+Position: 90, 236.1875
+Size: 1100x66
+Importance: 68
+Label: As described in and , a
+number of domains such as example.com and example.org are maintained
+for doc</title>
+      </rect>
+      <text class="node-label" x="660" y="289.1875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        As described in a...
+      </text>
+      <text class="importance-label" x="1205" y="268.1875" text-anchor="end">68</text>
+    </g>
+    <g class="node" data-id="node_7">
+      <rect class="node-rect" x="20" y="148" width="1280" height="442.375" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_7
+Position: 0, 128
+Size: 1280x442.375
+Importance: 69</title>
+      </rect>
+      <text class="node-label" x="660" y="369.1875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+      <text class="importance-label" x="1295" y="160" text-anchor="end">69</text>
+    </g>
+    <g class="node" data-id="node_9">
+      <rect class="node-rect" x="110" y="198" width="1100" height="367.375" fill="#45B7D1" stroke="#45B7D1" stroke-width="1" >
+        <title>Type: content
+Tag: main
+ID: node_9
+Position: 90, 178
+Size: 1100x367.375
+Importance: 70</title>
+      </rect>
+      <text class="node-label" x="660" y="381.6875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        main
+      </text>
+      <text class="importance-label" x="1205" y="210" text-anchor="end">70</text>
+    </g>
+    <g class="node" data-id="node_6">
+      <rect class="node-rect" x="893.171875" y="45" width="316.828125" height="38" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="1" >
+        <title>Type: navigation
+Tag: div
+ID: node_6
+Class: navigation
+Position: 873.171875, 25
+Size: 316.828125x38
+Importance: 74</title>
+      </rect>
+      <text class="node-label" x="1051.5859375" y="64" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .navigation
+      </text>
+      <text class="importance-label" x="1205" y="57" text-anchor="end">74</text>
+    </g>
+    <g class="node" data-id="node_16">
+      <rect class="node-rect" x="110" y="431.375" width="1100" height="33" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="1" >
+        <title>Type: heading
+Tag: h2
+ID: node_16
+Text: Further Reading
+Position: 90, 411.375
+Size: 1100x33
+Importance: 77
+Label: Further Reading</title>
+      </rect>
+      <text class="node-label" x="660" y="447.875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        Further Reading
+      </text>
+      <text class="importance-label" x="1205" y="443.375" text-anchor="end">77</text>
+    </g>
+    <g class="node" data-id="node_0">
+      <rect class="node-rect" x="20" y="20" width="1280" height="831.15625" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="1" >
+        <title>Type: structural
+Tag: body
+ID: node_0
+Position: 0, 0
+Size: 1280x831.15625
+Importance: 80</title>
+      </rect>
+      <text class="node-label" x="660" y="435.578125" text-anchor="middle" dominant-baseline="middle" fill="black">
+        body
+      </text>
+      <text class="importance-label" x="1295" y="32" text-anchor="end">80</text>
+    </g>
+    <g class="node" data-id="node_11">
+      <rect class="node-rect" x="110" y="198" width="1100" height="39" fill="#FF6B6B" stroke="#FF6B6B" stroke-width="1" >
+        <title>Type: heading
+Tag: h1
+ID: node_11
+Text: Example Domains
+Position: 90, 178
+Size: 1100x39
+Importance: 80
+Label: Example Domains</title>
+      </rect>
+      <text class="node-label" x="660" y="217.5" text-anchor="middle" dominant-baseline="middle" fill="black">
+        Example Domains
+      </text>
+      <text class="importance-label" x="1205" y="210" text-anchor="end">80</text>
+    </g>
+    <g class="node" data-id="node_8">
+      <rect class="node-rect" x="60" y="148" width="1200" height="442.375" fill="#4ECDC4" stroke="#4ECDC4" stroke-width="1" >
+        <title>Type: navigation
+Tag: article
+ID: node_8
+Class: hemmed sidenav
+Position: 40, 128
+Size: 1200x442.375
+Importance: 86</title>
+      </rect>
+      <text class="node-label" x="660" y="369.1875" text-anchor="middle" dominant-baseline="middle" fill="black">
+        .hemmed
+      </text>
+      <text class="importance-label" x="1255" y="160" text-anchor="end">86</text>
+    </g>
+  </g>
+</svg>

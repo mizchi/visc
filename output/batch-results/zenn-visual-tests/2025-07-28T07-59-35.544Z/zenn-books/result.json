@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "difference": 0,
+  "differencePercentage": "0.0000%",
+  "diffPixels": 0,
+  "files": {
+    "original": "output/batch-results/zenn-visual-tests/2025-07-28T07-59-35.544Z/zenn-books/zenn-books/snapshots/original-1280x720.png",
+    "refactored": "output/batch-results/zenn-visual-tests/2025-07-28T07-59-35.544Z/zenn-books/zenn-books/snapshots/refactored-1280x720.png"
+  },
+  "stabilityAdjusted": true,
+  "ignoredDifferences": {
+    "nodes": 0,
+    "attributes": []
+  },
+  "testConfig": {
+    "name": "zenn-books",
+    "type": "url",
+    "urls": {
+      "original": "https://zenn.dev/books",
+      "refactored": "https://zenn.dev/books"
+    }
+  },
+  "duration": 4879
+}

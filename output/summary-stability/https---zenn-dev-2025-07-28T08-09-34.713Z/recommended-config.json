@@ -1,0 +1,25 @@
+{
+  "stability": {
+    "enabled": true,
+    "toleranceThreshold": 5,
+    "ignoreClasses": [],
+    "ignoreTypes": [],
+    "overallStability": 100,
+    "nodeStability": 100,
+    "groupStability": 100,
+    "analysisDate": "2025-07-28T08:09:43.717Z",
+    "confidenceLevel": 0.3,
+    "summaryBased": true
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "metadata": {
+    "url": "https://zenn.dev",
+    "iterations": 3,
+    "totalNodes": 312,
+    "unstableNodes": 0,
+    "analysisMethod": "summary-based"
+  }
+}

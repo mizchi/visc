@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coverage Test Page</title>
+  <link rel="stylesheet" href="original.css">
+</head>
+<body>
+  <header class="header">
+    <h1 class="title">Coverage Test</h1>
+    <nav class="nav">
+      <a href="#section1">Section 1</a>
+      <a href="#section2">Section 2</a>
+      <a href="#section3">Section 3</a>
+    </nav>
+  </header>
+  
+  <main class="main">
+    <section id="section1" class="section">
+      <h2>Section 1</h2>
+      <p>This is a test paragraph for coverage testing.</p>
+      <button onclick="handleClick()">Click Me</button>
+    </section>
+    
+    <section id="section2" class="section hidden">
+      <h2>Section 2</h2>
+      <p>This section is hidden by default.</p>
+    </section>
+    
+    <section id="section3" class="section">
+      <h2>Section 3</h2>
+      <div class="responsive-content">
+        <p class="desktop-only">Visible on desktop</p>
+        <p class="mobile-only">Visible on mobile</p>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="footer">
+    <p>&copy; 2025 Coverage Test</p>
+  </footer>
+  
+  <script>
+    function handleClick() {
+      console.log('Button clicked!');
+      const section2 = document.getElementById('section2');
+      section2.classList.toggle('hidden');
+    }
+    
+    // 使用されない関数（カバレッジテスト用）
+    function unusedFunction() {
+      console.log('This function is never called');
+    }
+    
+    // viewport幅に応じてコンテンツを調整
+    function adjustContent() {
+      const width = window.innerWidth;
+      if (width < 768) {
+        document.body.classList.add('mobile');
+      } else {
+        document.body.classList.remove('mobile');
+      }
+    }
+    
+    window.addEventListener('resize', adjustContent);
+    adjustContent();
+  </script>
+</body>
+</html>

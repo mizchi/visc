@@ -1,0 +1,120 @@
+<svg width="1320" height="760" viewBox="0 0 1320 760" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .node-rect { fill-opacity: 0.3; stroke-opacity: 0.8; }
+    .node-label { font-family: Arial, sans-serif; font-size: 12px; }
+    .importance-label { font-size: 9.600000000000001px; fill: #666; }
+    .group-rect { fill: none; stroke-dasharray: 5,5; stroke-opacity: 0.5; }
+    .group-label { font-size: 10.8px; fill: #999; }
+  </style>
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1320" height="760" fill="white"/>
+  <rect x="20" y="20" width="1280" height="720" fill="url(#grid)"/>
+
+  <!-- Nodes -->
+  <g class="nodes">
+    <g class="node" data-id="node_1">
+      <rect class="node-rect" x="328" y="100" width="664" height="252.875" fill="hsl(127.2, 70%, 50%)" stroke="hsl(127.2, 70%, 50%)" stroke-width="1" >
+        <title>Type: structural
+Tag: div
+ID: node_1
+Position: 308, 80
+Size: 664x252.875
+Importance: 47</title>
+      </rect>
+      <text class="node-label" x="660" y="226.4375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        div
+      </text>
+    </g>
+    <g class="node" data-id="node_0">
+      <rect class="node-rect" x="20" y="100" width="1280" height="252.875" fill="hsl(122.4, 70%, 50%)" stroke="hsl(122.4, 70%, 50%)" stroke-width="1" >
+        <title>Type: structural
+Tag: body
+ID: node_0
+Position: 0, 80
+Size: 1280x252.875
+Importance: 49</title>
+      </rect>
+      <text class="node-label" x="660" y="226.4375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        body
+      </text>
+    </g>
+    <g class="node" data-id="node_4">
+      <rect class="node-rect" x="360" y="285.875" width="600" height="19" fill="hsl(100.80000000000001, 70%, 50%)" stroke="hsl(100.80000000000001, 70%, 50%)" stroke-width="1" >
+        <title>Type: content
+Tag: p
+ID: node_4
+Position: 340, 265.875
+Size: 600x19
+Importance: 58</title>
+      </rect>
+      <text class="importance-label" x="955" y="297.875" text-anchor="end">58</text>
+    </g>
+    <g class="node" data-id="node_3">
+      <rect class="node-rect" x="360" y="212.875" width="600" height="57" fill="hsl(93.60000000000001, 70%, 50%)" stroke="hsl(93.60000000000001, 70%, 50%)" stroke-width="1" >
+        <title>Type: content
+Tag: p
+ID: node_3
+Text: This domain is for use in illustrative examples in
+Position: 340, 192.875
+Size: 600x57
+Importance: 61
+Label: This domain is for use in illustrative examples in documents. You may use this
+    domain in literat</title>
+      </rect>
+      <text class="node-label" x="660" y="241.375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        This domain is fo...
+      </text>
+      <text class="importance-label" x="955" y="224.875" text-anchor="end">61</text>
+    </g>
+    <g class="node" data-id="node_5">
+      <rect class="node-rect" x="360" y="285.875" width="152.359375" height="19" fill="hsl(67.2, 70%, 50%)" stroke="hsl(67.2, 70%, 50%)" stroke-width="1" >
+        <title>Type: interactive
+Tag: a
+ID: node_5
+Text: More information...
+Position: 340, 265.875
+Size: 152.359375x19
+Importance: 72
+Role: link
+Label: More information...
+Interactive: Yes</title>
+      </rect>
+      <text class="importance-label" x="507.359375" y="297.875" text-anchor="end">72</text>
+    </g>
+    <g class="node" data-id="node_2">
+      <rect class="node-rect" x="360" y="153.4375" width="600" height="38" fill="hsl(21.599999999999994, 70%, 50%)" stroke="hsl(21.599999999999994, 70%, 50%)" stroke-width="1" >
+        <title>Type: heading
+Tag: h1
+ID: node_2
+Text: Example Domain
+Position: 340, 133.4375
+Size: 600x38
+Importance: 91
+Label: Example Domain</title>
+      </rect>
+      <text class="node-label" x="660" y="172.4375" text-anchor="middle" dominant-baseline="middle" fill="black">
+        Example Domain
+      </text>
+      <text class="importance-label" x="955" y="165.4375" text-anchor="end">91</text>
+    </g>
+  </g>
+
+  <!-- Statistics -->
+  <g class="statistics" transform="translate(20, 640)">
+    <text y="0" font-size="14" font-weight="bold">Statistics</text>
+    <text y="20" font-size="12">Total Nodes: 6</text>
+    <text y="35" font-size="12">Average Importance: 63.0</text>
+    <rect x="0" y="45" width="10" height="10" fill="#FF6B6B"/>
+    <text x="15" y="55" font-size="11">heading: 1</text>
+    <rect x="0" y="60" width="10" height="10" fill="#96CEB4"/>
+    <text x="15" y="70" font-size="11">interactive: 1</text>
+    <rect x="0" y="75" width="10" height="10" fill="#45B7D1"/>
+    <text x="15" y="85" font-size="11">content: 2</text>
+    <rect x="0" y="90" width="10" height="10" fill="#CCCCCC"/>
+    <text x="15" y="100" font-size="11">structural: 2</text>
+  </g>
+</svg>

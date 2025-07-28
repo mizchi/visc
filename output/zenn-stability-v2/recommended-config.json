@@ -1,0 +1,45 @@
+{
+  "stability": {
+    "enabled": true,
+    "toleranceThreshold": 5,
+    "percentageThreshold": 0,
+    "ignoreSelectors": [],
+    "ignoreAttributes": [],
+    "overallStability": 100,
+    "analysisDate": "2025-07-28T07:53:37.018Z",
+    "confidenceLevel": 0.6,
+    "adaptiveAnalysis": {
+      "totalIterations": 6,
+      "convergenceReason": "安定性の改善が収束",
+      "stabilityProgression": [
+        {
+          "iteration": 3,
+          "stability": 100
+        },
+        {
+          "iteration": 4,
+          "stability": 100
+        },
+        {
+          "iteration": 5,
+          "stability": 100
+        },
+        {
+          "iteration": 6,
+          "stability": 100
+        }
+      ]
+    }
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "metadata": {
+    "url": "https://zenn.dev",
+    "iterations": 6,
+    "totalNodes": 127,
+    "unstableNodes": 0,
+    "analysisMethod": "adaptive"
+  }
+}

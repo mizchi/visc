@@ -1,0 +1,24 @@
+[
+  {
+    "iteration": 3,
+    "overallStability": 99.57831325301206,
+    "nodeStability": 99.3975903614458,
+    "groupStability": 100,
+    "unstableNodes": 1,
+    "statistics": {
+      "totalNodes": 166,
+      "stableNodes": 165,
+      "unstableNodes": 1,
+      "avgImportance": 50.73610289407627,
+      "stabilityByType": {
+        "heading": 100,
+        "content": 90.2439024390244,
+        "interactive": 63.34661354581673,
+        "navigation": 50,
+        "media": 4.451038575667656,
+        "structural": 43.51441241685144,
+        "list": 13.559322033898304
+      }
+    }
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "name": "zenn-visual-tests",
+  "timestamp": "2025-07-28T07:59:35.546Z",
+  "totalTests": 4,
+  "passed": 3,
+  "failed": 1,
+  "skipped": 0,
+  "duration": 14773,
+  "results": [
+    {
+      "name": "zenn-homepage",
+      "passed": true,
+      "difference": "0.0000%",
+      "duration": 5238
+    },
+    {
+      "name": "zenn-articles",
+      "passed": true,
+      "difference": "0.0000%",
+      "duration": 4323
+    },
+    {
+      "name": "zenn-books",
+      "passed": true,
+      "difference": "0.0000%",
+      "duration": 4879
+    },
+    {
+      "name": "main-layout-test",
+      "passed": false,
+      "error": "page.goto: net::ERR_FILE_NOT_FOUND at file:///home/mizchi/mizchi/visual-checker/assets/main-layout-test/index.html\nCall log:\n\u001b[2m  - navigating to \"file:///home/mizchi/mizchi/visual-checker/assets/main-layout-test/index.html\", waiting until \"networkidle\"\u001b[22m\n",
+      "duration": 124
+    }
+  ]
+}

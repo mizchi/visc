@@ -1,0 +1,14 @@
+{
+  "totalIterations": 10,
+  "totalNodes": 0,
+  "stableNodes": 0,
+  "unstableNodes": [],
+  "overallStabilityScore": null,
+  "recommendations": {
+    "pixelTolerance": 5,
+    "percentageTolerance": 0,
+    "ignoreSelectors": [],
+    "ignoreAttributes": [],
+    "confidenceLevel": 1
+  }
+}

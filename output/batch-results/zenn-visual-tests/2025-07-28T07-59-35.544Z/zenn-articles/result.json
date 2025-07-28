@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "difference": 0,
+  "differencePercentage": "0.0000%",
+  "diffPixels": 0,
+  "files": {
+    "original": "output/batch-results/zenn-visual-tests/2025-07-28T07-59-35.544Z/zenn-articles/zenn-articles/snapshots/original-1280x720.png",
+    "refactored": "output/batch-results/zenn-visual-tests/2025-07-28T07-59-35.544Z/zenn-articles/zenn-articles/snapshots/refactored-1280x720.png"
+  },
+  "stabilityAdjusted": true,
+  "ignoredDifferences": {
+    "nodes": 0,
+    "attributes": []
+  },
+  "testConfig": {
+    "name": "zenn-articles",
+    "type": "url",
+    "urls": {
+      "original": "https://zenn.dev/articles",
+      "refactored": "https://zenn.dev/articles"
+    }
+  },
+  "duration": 4323
+}

@@ -1,0 +1,158 @@
+[
+  {
+    "type": "header",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 768,
+      "height": 187.171875
+    },
+    "children": [
+      {
+        "type": "h1",
+        "bounds": {
+          "x": 16,
+          "y": 16,
+          "width": 736,
+          "height": 38.390625
+        },
+        "text": "Coverage Test"
+      },
+      {
+        "type": "nav",
+        "bounds": {
+          "x": 16,
+          "y": 70.390625,
+          "width": 736,
+          "height": 92.78125
+        },
+        "children": [
+          {
+            "type": "a",
+            "bounds": {
+              "x": 16,
+              "y": 70.390625,
+              "width": 720,
+              "height": 25.59375
+            },
+            "text": "Section 1"
+          },
+          {
+            "type": "a",
+            "bounds": {
+              "x": 16,
+              "y": 103.984375,
+              "width": 720,
+              "height": 25.59375
+            },
+            "text": "Section 2"
+          },
+          {
+            "type": "a",
+            "bounds": {
+              "x": 16,
+              "y": 137.578125,
+              "width": 720,
+              "height": 25.59375
+            },
+            "text": "Section 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "main",
+    "bounds": {
+      "x": 0,
+      "y": 187.171875,
+      "width": 768,
+      "height": 646.390625
+    },
+    "children": [
+      {
+        "type": "section",
+        "bounds": {
+          "x": 16,
+          "y": 203.171875,
+          "width": 736,
+          "height": 184.796875
+        },
+        "children": [
+          {
+            "type": "h2",
+            "bounds": {
+              "x": 33,
+              "y": 240.078125,
+              "width": 702,
+              "height": 38.390625
+            },
+            "text": "Section 1"
+          },
+          {
+            "type": "p",
+            "bounds": {
+              "x": 33,
+              "y": 298.375,
+              "width": 702,
+              "height": 25.59375
+            },
+            "text": "This is a test paragraph for coverage testing."
+          },
+          {
+            "type": "button",
+            "bounds": {
+              "x": 33,
+              "y": 339.96875,
+              "width": 83.09375,
+              "height": 31
+            },
+            "text": "Click Me"
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "bounds": {
+          "x": 16,
+          "y": 419.96875,
+          "width": 736,
+          "height": 201.796875
+        },
+        "children": [
+          {
+            "type": "h2",
+            "bounds": {
+              "x": 33,
+              "y": 456.875,
+              "width": 702,
+              "height": 38.390625
+            },
+            "text": "Section 3"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "footer",
+    "bounds": {
+      "x": 0,
+      "y": 833.5625,
+      "width": 768,
+      "height": 89.59375
+    },
+    "children": [
+      {
+        "type": "p",
+        "bounds": {
+          "x": 16,
+          "y": 865.5625,
+          "width": 736,
+          "height": 25.59375
+        },
+        "text": "© 2025 Coverage Test"
+      }
+    ]
+  }
+]

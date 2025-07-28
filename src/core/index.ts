@@ -38,6 +38,7 @@ export type {
 export { extractLayout } from './layout-extractor.js';
 export { summarizeLayout } from './layout-summarizer.js';
 export { calculateLayoutSimilarity, generateSimilarityReport } from './layout-similarity.js';
+export { renderLayoutToSVG, renderInteractiveSVG } from './layout-svg-renderer.js';
 
 export type {
   ExtractedLayout,
@@ -55,3 +56,7 @@ export type {
   SimilarityResult,
   NodeMatch
 } from './layout-similarity.js';
+
+export type {
+  SVGRenderOptions
+} from './layout-svg-renderer.js';

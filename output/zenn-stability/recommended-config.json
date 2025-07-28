@@ -1,0 +1,97 @@
+{
+  "stability": {
+    "enabled": true,
+    "toleranceThreshold": 5,
+    "percentageThreshold": 0,
+    "ignoreSelectors": [],
+    "ignoreAttributes": [],
+    "overallStability": null,
+    "analysisDate": "2025-07-28T07:51:50.246Z",
+    "confidenceLevel": 1,
+    "adaptiveAnalysis": {
+      "totalIterations": 19,
+      "convergenceReason": "最大反復回数に到達",
+      "stabilityProgression": [
+        {
+          "iteration": 3,
+          "stability": null
+        },
+        {
+          "iteration": 4,
+          "stability": null
+        },
+        {
+          "iteration": 5,
+          "stability": null
+        },
+        {
+          "iteration": 6,
+          "stability": null
+        },
+        {
+          "iteration": 7,
+          "stability": null
+        },
+        {
+          "iteration": 8,
+          "stability": null
+        },
+        {
+          "iteration": 9,
+          "stability": null
+        },
+        {
+          "iteration": 10,
+          "stability": null
+        },
+        {
+          "iteration": 11,
+          "stability": null
+        },
+        {
+          "iteration": 12,
+          "stability": null
+        },
+        {
+          "iteration": 13,
+          "stability": null
+        },
+        {
+          "iteration": 14,
+          "stability": null
+        },
+        {
+          "iteration": 15,
+          "stability": null
+        },
+        {
+          "iteration": 16,
+          "stability": null
+        },
+        {
+          "iteration": 17,
+          "stability": null
+        },
+        {
+          "iteration": 18,
+          "stability": null
+        },
+        {
+          "iteration": 19,
+          "stability": null
+        }
+      ]
+    }
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "metadata": {
+    "url": "https://zenn.dev",
+    "iterations": 19,
+    "totalNodes": 0,
+    "unstableNodes": 0,
+    "analysisMethod": "adaptive"
+  }
+}

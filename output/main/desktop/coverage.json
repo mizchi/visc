@@ -1,0 +1,116 @@
+{
+  "js": {
+    "usedBytes": 380,
+    "totalBytes": 636,
+    "percentage": 59.75,
+    "entries": [
+      {
+        "url": "file:///home/mizchi/mizchi/visual-checker/assets/main/index.html",
+        "ranges": [
+          {
+            "start": 0,
+            "end": 5
+          },
+          {
+            "start": 176,
+            "end": 213
+          },
+          {
+            "start": 298,
+            "end": 636
+          }
+        ],
+        "text": "\n    function handleClick() {\n      console.log('Button clicked!');\n      const section2 = document.getElementById('section2');\n      section2.classList.toggle('hidden');\n    }\n    \n    // 使用されない関数（カバレッジテスト用）\n    function unusedFunction() {\n      console.log('This function is never called');\n    }\n    \n    // viewport幅に応じてコンテンツを調整\n    function adjustContent() {\n      const width = window.innerWidth;\n      if (width < 768) {\n        document.body.classList.add('mobile');\n      } else {\n        document.body.classList.remove('mobile');\n      }\n    }\n    \n    window.addEventListener('resize', adjustContent);\n    adjustContent();\n  "
+      }
+    ]
+  },
+  "css": {
+    "usedBytes": 1060,
+    "totalBytes": 1801,
+    "percentage": 58.86,
+    "entries": [
+      {
+        "url": "file:///home/mizchi/mizchi/visual-checker/assets/main/original.css",
+        "ranges": [
+          {
+            "start": 18,
+            "end": 107
+          },
+          {
+            "start": 129,
+            "end": 199
+          },
+          {
+            "start": 201,
+            "end": 243
+          },
+          {
+            "start": 245,
+            "end": 273
+          },
+          {
+            "start": 275,
+            "end": 348
+          },
+          {
+            "start": 417,
+            "end": 463
+          },
+          {
+            "start": 465,
+            "end": 565
+          },
+          {
+            "start": 567,
+            "end": 595
+          },
+          {
+            "start": 622,
+            "end": 691
+          },
+          {
+            "start": 693,
+            "end": 728
+          },
+          {
+            "start": 730,
+            "end": 763
+          },
+          {
+            "start": 792,
+            "end": 811
+          },
+          {
+            "start": 815,
+            "end": 850
+          },
+          {
+            "start": 856,
+            "end": 886
+          },
+          {
+            "start": 892,
+            "end": 930
+          },
+          {
+            "start": 936,
+            "end": 974
+          },
+          {
+            "start": 980,
+            "end": 1039
+          },
+          {
+            "start": 1169,
+            "end": 1261
+          },
+          {
+            "start": 1439,
+            "end": 1575
+          }
+        ],
+        "text": "/* Base styles */\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: Arial, sans-serif;\n  line-height: 1.6;\n}\n\n/* Header styles */\n.header {\n  background-color: #333;\n  color: white;\n  padding: 1rem;\n}\n\n.title {\n  margin: 0;\n  font-size: 2rem;\n}\n\n.nav {\n  margin-top: 1rem;\n}\n\n.nav a {\n  color: white;\n  text-decoration: none;\n  margin-right: 1rem;\n}\n\n.nav a:hover {\n  text-decoration: underline;\n}\n\n/* Main content */\n.main {\n  padding: 2rem;\n  min-height: 60vh;\n}\n\n.section {\n  margin-bottom: 2rem;\n  padding: 1rem;\n  border: 1px solid #ddd;\n  border-radius: 4px;\n}\n\n.hidden {\n  display: none;\n}\n\n/* Responsive content */\n.responsive-content {\n  padding: 1rem;\n  background-color: #f4f4f4;\n}\n\n.desktop-only {\n  display: block;\n}\n\n.mobile-only {\n  display: none;\n}\n\n/* Mobile styles */\n@media (max-width: 768px) {\n  .title {\n    font-size: 1.5rem;\n  }\n  \n  .main {\n    padding: 1rem;\n  }\n  \n  .desktop-only {\n    display: none;\n  }\n  \n  .mobile-only {\n    display: block;\n  }\n  \n  .nav a {\n    display: block;\n    margin-bottom: 0.5rem;\n  }\n}\n\n/* Tablet styles */\n@media (min-width: 769px) and (max-width: 1024px) {\n  .section {\n    padding: 1.5rem;\n  }\n}\n\n/* Footer */\n.footer {\n  background-color: #333;\n  color: white;\n  padding: 1rem;\n  text-align: center;\n}\n\n/* 使用されないスタイル（カバレッジテスト用） */\n.unused-class {\n  color: red;\n  font-size: 3rem;\n}\n\n.another-unused {\n  background-color: yellow;\n  border: 5px solid green;\n}\n\n/* Button styles */\nbutton {\n  background-color: #007bff;\n  color: white;\n  border: none;\n  padding: 0.5rem 1rem;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background-color: #0056b3;\n}\n\n/* Utility classes */\n.text-center {\n  text-align: center;\n}\n\n.mt-1 { margin-top: 0.5rem; }\n.mt-2 { margin-top: 1rem; }\n.mt-3 { margin-top: 1.5rem; }\n.mt-4 { margin-top: 2rem; }"
+      }
+    ]
+  }
+}

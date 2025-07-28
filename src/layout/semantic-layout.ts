@@ -2,6 +2,7 @@ import { Driver } from '../driver/types.js';
 
 export interface SemanticElement {
   type: string;
+  tagName: string;
   text?: string;
   bounds: {
     x: number;
@@ -9,6 +10,13 @@ export interface SemanticElement {
     width: number;
     height: number;
   };
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  isVisible: boolean;
+  id?: string;
+  className?: string;
   children?: SemanticElement[];
 }
 
@@ -20,14 +28,42 @@ export async function getSemanticLayout(driver: Driver): Promise<SemanticElement
     const semanticTags = [
       'header', 'nav', 'main', 'article', 'section', 'aside', 'footer',
       'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'p', 'ul', 'ol', 'li', 'a', 'button', 'form', 'input', 'textarea', 'select'
+      'p', 'ul', 'ol', 'li', 'a', 'button', 'form', 'input', 'textarea', 'select',
+      'div', 'span', 'img', 'svg', 'table', 'thead', 'tbody', 'tr', 'td', 'th'
     ];
 
     function isSemanticElement(element: Element): boolean {
-      return semanticTags.includes(element.tagName.toLowerCase()) ||
-             element.getAttribute('role') !== null ||
-             element.classList.contains('container') ||
-             element.classList.contains('wrapper');
+      const tagName = element.tagName.toLowerCase();
+      
+      // セマンティックタグの場合
+      if (semanticTags.includes(tagName)) {
+        return true;
+      }
+      
+      // role属性がある場合
+      if (element.getAttribute('role') !== null) {
+        return true;
+      }
+      
+      // 重要なクラスを持つ要素
+      const importantClasses = [
+        'container', 'wrapper', 'content', 'card', 'list',
+        'header', 'footer', 'nav', 'menu', 'sidebar',
+        'article', 'post', 'item', 'row', 'col'
+      ];
+      
+      for (const className of importantClasses) {
+        if (element.className && element.className.toString().toLowerCase().includes(className)) {
+          return true;
+        }
+      }
+      
+      // ID属性がある重要な要素
+      if (element.id && (tagName === 'div' || tagName === 'section')) {
+        return true;
+      }
+      
+      return false;
     }
 
     function extractElement(element: Element): SemanticElement | null {
@@ -46,15 +82,33 @@ export async function getSemanticLayout(driver: Driver): Promise<SemanticElement
         return null;
       }
 
+      const tagName = element.tagName.toLowerCase();
+      const x = rect.left + window.scrollX;
+      const y = rect.top + window.scrollY;
+      
       const result: SemanticElement = {
-        type: element.tagName.toLowerCase(),
+        type: tagName,
+        tagName: tagName,
         bounds: {
-          x: rect.left + window.scrollX,
-          y: rect.top + window.scrollY,
+          x: x,
+          y: y,
           width: rect.width,
           height: rect.height
-        }
+        },
+        x: x,
+        y: y,
+        width: rect.width,
+        height: rect.height,
+        isVisible: true
       };
+      
+      // ID とクラス名を追加
+      if (element.id) {
+        result.id = element.id;
+      }
+      if (element.className) {
+        result.className = element.className;
+      }
 
       // テキストコンテンツを取得（子要素を除く）
       const textNodes = Array.from(element.childNodes)
@@ -86,16 +140,30 @@ export async function getSemanticLayout(driver: Driver): Promise<SemanticElement
 
     const elements: SemanticElement[] = [];
     
-    // body直下から開始
-    for (const element of document.body.children) {
-      if (isSemanticElement(element)) {
-        const extracted = extractElement(element);
-        if (extracted) {
-          elements.push(extracted);
+    // 全てのセマンティック要素を再帰的に探索
+    function collectElements(container: Element) {
+      for (const element of container.children) {
+        if (isSemanticElement(element)) {
+          const extracted = extractElement(element);
+          if (extracted) {
+            elements.push(extracted);
+            // 深さ制限を設けて子要素も探索（最大100要素）
+            if (elements.length < 100) {
+              collectElements(element);
+            }
+          }
+        } else {
+          // セマンティック要素でなくても子要素は探索
+          if (elements.length < 100) {
+            collectElements(element);
+          }
         }
       }
     }
-
+    
+    collectElements(document.body);
+    
+    console.log(`Extracted ${elements.length} semantic elements`);
     return elements;
   });
 }

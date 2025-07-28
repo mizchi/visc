@@ -1,0 +1,22 @@
+{
+  "stability": {
+    "enabled": true,
+    "toleranceThreshold": 5,
+    "percentageThreshold": 0,
+    "ignoreSelectors": [],
+    "ignoreAttributes": [],
+    "overallStability": null,
+    "analysisDate": "2025-07-28T07:46:09.673Z",
+    "confidenceLevel": 1
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "metadata": {
+    "url": "https://example.com",
+    "iterations": 10,
+    "totalNodes": 0,
+    "unstableNodes": 0
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "nodes": [
+    {
+      "id": "node_2",
+      "type": "h1",
+      "semanticType": "heading",
+      "tagName": "h1",
+      "text": "Example Domain",
+      "position": {
+        "x": 340,
+        "y": 133.4375,
+        "width": 600,
+        "height": 38
+      },
+      "accessibility": {
+        "label": "Example Domain",
+        "interactive": false,
+        "focusable": false,
+        "hidden": false
+      },
+      "importance": 91,
+      "childCount": 0
+    },
+    {
+      "id": "node_5",
+      "type": "a",
+      "semanticType": "interactive",
+      "tagName": "a",
+      "text": "More information...",
+      "position": {
+        "x": 340,
+        "y": 265.875,
+        "width": 152.359375,
+        "height": 19
+      },
+      "accessibility": {
+        "role": "link",
+        "label": "More information...",
+        "interactive": true,
+        "focusable": true,
+        "hidden": false
+      },
+      "importance": 72,
+      "childCount": 0
+    },
+    {
+      "id": "node_3",
+      "type": "p",
+      "semanticType": "content",
+      "tagName": "p",
+      "text": "This domain is for use in illustrative examples in documents. You may use this\n    domain in literature without prior coordination or asking for permission.",
+      "position": {
+        "x": 340,
+        "y": 192.875,
+        "width": 600,
+        "height": 57
+      },
+      "accessibility": {
+        "label": "This domain is for use in illustrative examples in documents. You may use this\n    domain in literat",
+        "interactive": false,
+        "focusable": false,
+        "hidden": false
+      },
+      "importance": 61,
+      "childCount": 0
+    },
+    {
+      "id": "node_4",
+      "type": "p",
+      "semanticType": "content",
+      "tagName": "p",
+      "position": {
+        "x": 340,
+        "y": 265.875,
+        "width": 600,
+        "height": 19
+      },
+      "accessibility": {
+        "interactive": false,
+        "focusable": false,
+        "hidden": false
+      },
+      "importance": 58,
+      "childCount": 1
+    },
+    {
+      "id": "node_0",
+      "type": "body",
+      "semanticType": "structural",
+      "tagName": "body",
+      "position": {
+        "x": 0,
+        "y": 80,
+        "width": 1280,
+        "height": 252.875
+      },
+      "accessibility": {
+        "interactive": false,
+        "focusable": false,
+        "hidden": false
+      },
+      "importance": 49,
+      "childCount": 1
+    },
+    {
+      "id": "node_1",
+      "type": "div",
+      "semanticType": "structural",
+      "tagName": "div",
+      "position": {
+        "x": 308,
+        "y": 80,
+        "width": 664,
+        "height": 252.875
+      },
+      "accessibility": {
+        "interactive": false,
+        "focusable": false,
+        "hidden": false
+      },
+      "importance": 47,
+      "childCount": 3
+    }
+  ],
+  "groups": [
+    {
+      "id": "group_0",
+      "type": "heading",
+      "semanticRole": "heading",
+      "nodeIds": [
+        "node_2"
+      ],
+      "bounds": {
+        "x": 340,
+        "y": 133.4375,
+        "width": 600,
+        "height": 38
+      }
+    },
+    {
+      "id": "group_1",
+      "type": "interactive",
+      "semanticRole": "link",
+      "nodeIds": [
+        "node_5"
+      ],
+      "bounds": {
+        "x": 340,
+        "y": 265.875,
+        "width": 152.359375,
+        "height": 19
+      }
+    },
+    {
+      "id": "group_2",
+      "type": "content",
+      "semanticRole": "content",
+      "nodeIds": [
+        "node_3",
+        "node_4"
+      ],
+      "bounds": {
+        "x": 340,
+        "y": 192.875,
+        "width": 600,
+        "height": 92
+      }
+    },
+    {
+      "id": "group_3",
+      "type": "structural",
+      "semanticRole": "structural",
+      "nodeIds": [
+        "node_0"
+      ],
+      "bounds": {
+        "x": 0,
+        "y": 80,
+        "width": 1280,
+        "height": 252.875
+      }
+    },
+    {
+      "id": "group_4",
+      "type": "structural",
+      "semanticRole": "structural",
+      "nodeIds": [
+        "node_1"
+      ],
+      "bounds": {
+        "x": 308,
+        "y": 80,
+        "width": 664,
+        "height": 252.875
+      }
+    }
+  ],
+  "statistics": {
+    "totalNodes": 6,
+    "bySemanticType": {
+      "heading": 1,
+      "interactive": 1,
+      "content": 2,
+      "structural": 2
+    },
+    "byRole": {
+      "link": 1
+    },
+    "averageImportance": 63
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  }
+}
