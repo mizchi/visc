@@ -308,70 +308,35 @@ export class WorkflowEngine {
   }
 }
 
+
 /**
- * ワークフロー定義を実行
+ * デフォルトのワークフロー設定を取得
  */
-export class WorkflowRunner {
-  private definitions: Map<string, WorkflowDefinition> = new Map();
-
-  /**
-   * ワークフロー定義を登録
-   */
-  register(definition: WorkflowDefinition): void {
-    this.definitions.set(definition.name, definition);
-  }
-
-  /**
-   * ワークフローを実行
-   */
-  async run(
-    workflowName: string,
-    testConfig: VisualCheckConfig
-  ): Promise<WorkflowResult[]> {
-    const definition = this.definitions.get(workflowName);
-    if (!definition) {
-      throw new Error(`Workflow '${workflowName}' not found`);
-    }
-
-    const engine = new WorkflowEngine(testConfig, definition.config);
-    const results: WorkflowResult[] = [];
-
-    // 各URLに対してワークフローを実行
-    for (const urlConfig of testConfig.urls) {
-      const result = await engine.execute(urlConfig);
-      results.push(result);
-    }
-
-    return results;
-  }
+export function getDefaultWorkflowConfig(): WorkflowConfig {
+  return {
+    aiProvider: new MockAIProvider(),
+    errorActions: {
+      BROKEN: WorkflowAction.STOP,
+      MEANINGFUL_CHANGE: WorkflowAction.UPDATE_BASELINE,
+      STOCHASTIC: WorkflowAction.IGNORE_ELEMENT,
+      UNKNOWN: WorkflowAction.MANUAL_REVIEW
+    },
+    retry: {
+      maxAttempts: 3,
+      delay: 1000,
+      stochasticRetries: 5
+    },
+    confidenceThreshold: 0.7,
+    verbose: true
+  };
 }
-
-/**
- * デフォルトのワークフロー設定
- */
-export const defaultWorkflowConfig: WorkflowConfig = {
-  aiProvider: new MockAIProvider(),
-  errorActions: {
-    BROKEN: WorkflowAction.STOP,
-    MEANINGFUL_CHANGE: WorkflowAction.UPDATE_BASELINE,
-    STOCHASTIC: WorkflowAction.IGNORE_ELEMENT,
-    UNKNOWN: WorkflowAction.MANUAL_REVIEW
-  },
-  retry: {
-    maxAttempts: 3,
-    delay: 1000,
-    stochasticRetries: 5
-  },
-  confidenceThreshold: 0.7,
-  verbose: true
-};
 
 /**
  * Geminiを使用するワークフロー設定を作成
  */
 export function createGeminiWorkflowConfig(apiKey: string, modelName?: string): WorkflowConfig {
   return {
-    ...defaultWorkflowConfig,
+    ...getDefaultWorkflowConfig(),
     aiProvider: createAIProvider({
       type: 'gemini',
       apiKey,

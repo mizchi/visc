@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConfigLoader, ConfigValidator } from '../../src/basic/config/index.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { ConfigLoader, ConfigValidator } from '../../src/config/index.js';
 import fs from 'fs/promises';
 
 // fs/promisesのモック

@@ -302,6 +302,8 @@ export class ValidatorFactory {
 }
 
 /**
- * デフォルトのバリデーターファクトリー
+ * デフォルトのバリデーターファクトリーを取得
  */
-export const defaultValidatorFactory = new ValidatorFactory();
+export function getDefaultValidatorFactory(): ValidatorFactory {
+  return new ValidatorFactory();
+}

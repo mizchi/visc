@@ -6,7 +6,7 @@
 
 import type { LayoutAnalysisResult } from "./extractor.js";
 import { detectFlakiness, type FlakinessAnalysis } from "./flakiness-detector.js";
-import type { BrowserRunner, BrowserContext, PageContext, ViewportSize } from "../runner/types.js";
+import type { BrowserRunner, BrowserContext, PageContext, ViewportSize } from "../browser/runners/types.js";
 
 export interface MultiCrawlOptions {
   /** クロール回数 */
@@ -353,7 +353,8 @@ export class MultiCrawlManager {
 /**
  * ヘルパー関数: 一般的なバリエーションセット
  */
-export const commonVariations = {
+export function getCommonVariations() {
+  return {
   /** ビューポートサイズのバリエーション */
   viewportSizes: (sizes: Array<{ width: number; height: number; name: string }>) =>
     sizes.map(size => ({
@@ -410,4 +411,5 @@ export const commonVariations = {
         });
       },
     })),
-};
+  };
+}

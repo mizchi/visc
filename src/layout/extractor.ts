@@ -2,80 +2,21 @@
  * レイアウト抽出のコア機能
  */
 
-export interface LayoutRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
+import type { 
+  LayoutRect, 
+  LayoutElement, 
+  SemanticGroup, 
+  LayoutPattern, 
+  LayoutAnalysisResult 
+} from '../pure/types/layout.types.js';
 
-export interface LayoutElement {
-  tagName: string;
-  className: string;
-  id: string;
-  rect: LayoutRect;
-  text?: string;
-  role: string | null;
-  ariaLabel: string | null;
-  ariaAttributes: Record<string, string>;
-  isInteractive: boolean;
-  hasParentWithSameSize: boolean;
-  computedStyle: {
-    display: string;
-    position: string;
-    zIndex: string;
-    backgroundColor: string;
-    color: string;
-    fontSize: string;
-    fontWeight: string;
-  };
-}
-
-export interface SemanticGroup {
-  id: string;
-  type: 'section' | 'navigation' | 'container' | 'group' | 'interactive' | 'content';
-  bounds: { x: number; y: number; width: number; height: number };
-  elements: any[];
-  children: SemanticGroup[];
-  depth: number;
-  label: string;
-  importance: number;
-}
-
-export interface LayoutPattern {
-  elements: any[];
-  type: string;
-  className: string;
-  averageSize?: { width: number; height: number };
-}
-
-export interface LayoutAnalysisResult {
-  url: string;
-  timestamp: string;
-  viewport: {
-    width: number;
-    height: number;
-    scrollX?: number;
-    scrollY?: number;
-  };
-  elements?: LayoutElement[];
-  semanticGroups?: SemanticGroup[];
-  patterns?: LayoutPattern[];
-  totalElements: number;
-  statistics: {
-    totalElements?: number;
-    interactiveElements?: number;
-    groupCount?: number;
-    patternCount?: number;
-    topLevelGroups?: number;
-    accessibilityCount?: number;
-    byType?: Record<string, number>;
-  };
-}
+export type {
+  LayoutRect,
+  LayoutElement,
+  SemanticGroup,
+  LayoutPattern,
+  LayoutAnalysisResult
+};
 
 /**
  * セマンティックタイプを判定
@@ -205,9 +146,10 @@ export function detectPatterns(elements: any[]): LayoutPattern[] {
 }
 
 /**
- * ブラウザで実行するレイアウト抽出コード
+ * ブラウザで実行するレイアウト抽出コードを取得
  */
-export const extractLayoutScript = `
+export function getExtractLayoutScript(): string {
+  return `
 (() => {
   const getSemanticType = ${getSemanticType.toString()};
   const calculateImportance = ${calculateImportance.toString()};
@@ -357,3 +299,4 @@ export const extractLayoutScript = `
   };
 })();
 `;
+}

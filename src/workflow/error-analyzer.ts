@@ -379,7 +379,3 @@ export interface AnalysisPattern {
   analyze(comparison: LayoutComparisonResult): ErrorAnalysis;
 }
 
-/**
- * デフォルトのエラー分析器インスタンス
- */
-export const defaultErrorAnalyzer = new ErrorAnalyzer();

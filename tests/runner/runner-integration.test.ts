@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { defaultRunnerFactory } from '../../src/runner/factory.js';
+import { defaultRunnerFactory } from '../../src/browser/runners/factory.js';
 
 describe('ランナー統合テスト', () => {
   test('Playwrightランナーでレイアウト抽出', { timeout: 20000 }, async () => {

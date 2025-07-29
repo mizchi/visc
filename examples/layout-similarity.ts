@@ -8,7 +8,7 @@
  */
 
 import { chromium } from 'playwright';
-import { extractSemanticLayoutScript } from '../src/layout/semantic-analyzer.js';
+import { getExtractSemanticLayoutScript } from '../src/layout/semantic-analyzer.js';
 import { 
   calculateLayoutSimilarity, 
   generateLayoutFingerprint,
@@ -105,7 +105,7 @@ async function extractLayout(browser: any, url: string): Promise<LayoutAnalysisR
   // 少し待機してレンダリングを完了させる
   await page.waitForTimeout(1000);
   
-  const layoutData = await page.evaluate(extractSemanticLayoutScript);
+  const layoutData = await page.evaluate(getExtractSemanticLayoutScript());
   await page.close();
   
   return layoutData;

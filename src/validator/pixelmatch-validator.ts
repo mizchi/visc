@@ -437,6 +437,6 @@ export function createSmartPixelmatchValidator(
 }
 
 // 以前のクラスベースAPIとの互換性のため
-export const PixelmatchValidator = createPixelmatchValidator;
-export const RegionPixelmatchValidator = createRegionPixelmatchValidator;
-export const AnimationDetectorValidator = createAnimationDetectorValidator;
+export { createPixelmatchValidator as PixelmatchValidator };
+export { createRegionPixelmatchValidator as RegionPixelmatchValidator };
+export { createAnimationDetectorValidator as AnimationDetectorValidator };

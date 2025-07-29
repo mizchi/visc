@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';
-import { defaultRunnerFactory } from '../../src/runner/factory.js';
+import { defaultRunnerFactory } from '../../src/browser/runners/factory.js';
 import { compareLayouts } from '../../src/layout/comparator.js';
-import type { BrowserRunner, BrowserContext, PageContext } from '../../src/runner/types.js';
+import type { BrowserRunner, BrowserContext, PageContext } from '../../src/browser/runners/types.js';
 
 // Cloudflare Workerのプロキシエンドポイント
 // 実際のデプロイ時はこのURLを更新する必要があります

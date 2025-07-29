@@ -1,80 +1,87 @@
 /**
- * Visual Checker
- * 
- * A visual regression testing framework with progressive API levels
- * 
- * @example
- * ```typescript
- * // Level 1: Core API - 最も簡単な使い方
- * import { captureScreenshot, compareImages } from 'visual-checker';
- * const screenshot = await captureScreenshot('https://example.com');
- * const result = await compareImages('before.png', 'after.png');
- * 
- * // Level 2: Basic API - 一般的な使い方
- * import { BrowserController, SnapshotManager } from 'visual-checker';
- * const browser = new BrowserController();
- * const manager = new SnapshotManager();
- * 
- * // Level 3: Advanced API - 高度な機能
- * import { layout, responsive } from 'visual-checker';
- * const analyzer = new layout.LayoutAnalyzer();
- * const tester = new responsive.MatrixTester();
- * ```
- * 
- * @packageDocumentation
+ * Visual Checker - Main Entry Point
  */
 
-// ========================================
-// Level 1: Core API - 最も基本的な機能
-// ========================================
-export { 
-  captureScreenshot, 
-  captureMultipleScreenshots,
+// Pure Types
+export * from "./pure/types/core.types.js";
+export * from "./pure/types/layout.types.js";
+export * from "./pure/types/visual.types.js";
+export * from "./pure/types/stability.types.js";
+export * from "./pure/types/config.types.js";
+
+// Pure Algorithms
+export {
+  calculateLayoutSimilarity,
+  generateSimilarityReport,
+} from "./pure/algorithms/similarity.js";
+
+// Domain Logic
+export { summarizeLayout } from "./domain/layout-summarizer.js";
+export { analyzeLayoutStability } from "./domain/stability-analyzer.js";
+export { renderLayoutToSVG } from "./domain/layout-svg-renderer.js";
+
+// Effects - Browser
+export {
+  createPuppeteerDriver,
+  type PuppeteerDriver,
+  type CoverageReport,
+} from "./effects/browser/puppeteer.js";
+export {
+  createPlaywrightDriver,
+  type PlaywrightDriver,
+} from "./effects/browser/playwright.js";
+export {
+  createLayoutExtractor,
+  type LayoutExtractor,
+} from "./effects/browser/layout-extractor.js";
+
+// Effects - File System
+export {
+  readFile,
+  writeFile,
+  writeBinaryFile,
+  readJSON,
+  writeJSON,
+  ensureDir,
+  fileExists,
+  dirExists,
+  removeFile,
+  removeDir,
+  copyFile,
+  listFiles,
+  getFileInfo,
+} from "./effects/fs/file-operations.js";
+export {
+  readPNG,
+  writePNG,
   compareImages,
-  compareMultipleImages
-} from './core/index.js';
+  saveScreenshot,
+  type ImageCompareResult,
+} from "./effects/fs/image-operations.js";
 
-export type {
-  // ScreenshotOptionsはbasicからエクスポートするため除外
-  ScreenshotResult,
-  CompareOptions,
-  CompareResult
-} from './core/index.js';
-
-// ========================================
-// Level 2: Basic API - よく使う機能
-// ========================================
-export { 
-  BrowserController,
-  SnapshotManager,
-  ConfigLoader
-} from './basic/index.js';
-
-export type {
-  BrowserConfig,
-  PageOptions,
-  BasicConfig
-} from './basic/index.js';
-
-// ========================================
-// Level 3: Advanced API - 高度な機能（名前空間付き）
-// ========================================
-// レイアウト分析
-// export * as layout from './advanced/layout/index.js';
-
-// レスポンシブテスト
-// export * as responsive from './advanced/responsive/index.js';
-
-// コンテンツ分析
-// export * as content from './advanced/content/index.js';
-
-// プロキシ機能
-// export * as proxy from './advanced/proxy/index.js';
+// Application Use Cases
+export { checkAdaptiveStability } from "./application/adaptive-stability-checker.js";
 
 // ========================================
 // 既存のエクスポート（後方互換性のため）
 // これらは将来的に非推奨になる予定
 // ========================================
+
+// Level 1: Core API
+export {
+  captureScreenshot,
+  captureMultipleScreenshots,
+  compareImages as compareCoreImages,
+  compareMultipleImages,
+} from "./core/index.js";
+
+export type {
+  ScreenshotResult,
+  CompareOptions,
+  CompareResult,
+} from "./core/index.js";
+
+// Legacy exports
 export { TestRunner } from "./test-runner.js";
 export { BrowserController as LegacyBrowserController } from "./browser-controller.js";
 export { SnapshotComparator } from "./snapshot-comparator.js";
@@ -85,12 +92,12 @@ export {
   getSemanticType,
   calculateImportance,
   detectPatterns,
-  extractLayoutScript,
+  getExtractLayoutScript,
 } from "./layout/extractor.js";
 
 export {
   detectSemanticGroups,
-  extractSemanticLayoutScript,
+  getExtractSemanticLayoutScript,
 } from "./layout/semantic-analyzer.js";
 
 export type {
@@ -137,7 +144,7 @@ export type {
 
 export {
   MultiCrawlManager,
-  commonVariations,
+  getCommonVariations,
 } from "./layout/multi-crawl-manager.js";
 
 export type {
@@ -146,14 +153,14 @@ export type {
 } from "./layout/multi-crawl-manager.js";
 
 // Browser runner exports
-export * from "./runner/index.js";
+export * from "./browser/runners/index.js";
 
 // Layout distance calculation exports
 export {
   extractRectFeatures,
   calculateRectDistance,
   calculateGroupSimilarity,
-  calculateLayoutSimilarity,
+  calculateLayoutSimilarity as calculateLegacyLayoutSimilarity,
   generateLayoutFingerprint,
   isSameLayoutStructure,
 } from "./layout/rect-distance.js";
@@ -176,7 +183,11 @@ export * from "./validator/index.js";
 
 // Workflow exports
 export * from "./workflow/types.js";
-export { WorkflowEngine, defaultWorkflowConfig, createGeminiWorkflowConfig } from "./workflow/workflow-engine.js";
+export {
+  WorkflowEngine,
+  getDefaultWorkflowConfig,
+  createGeminiWorkflowConfig,
+} from "./workflow/workflow-engine.js";
 export { createAIProvider } from "./workflow/ai-provider-factory.js";
 
 // Responsive Matrix Testing exports
@@ -186,82 +197,24 @@ export type {
   ResponsiveMatrixResult,
   ViewportTestResult,
   MediaQueryConsistency,
-  ViewportSize
+  ViewportSize,
 } from "./types.js";
 
 // Content-Aware Layout Comparison exports
 export {
   compareLayoutsWithContentExclusion,
-  analyzeLayoutWithContentAwareness
+  analyzeLayoutWithContentAwareness,
 } from "./layout/content-aware-comparator.js";
 export type {
   ContentAwareComparisonOptions,
   ContentAwareComparisonResult,
-  ContentExtractionResult
+  ContentExtractionResult,
 } from "./layout/content-aware-comparator.js";
 
 // ========================================
 // 便利な初期化関数
 // ========================================
 
-/**
- * Visual Checkerを簡単に始めるための初期化関数
- * 
- * @example
- * ```typescript
- * const vc = await createVisualChecker({
- *   baseUrl: 'https://example.com',
- *   snapshotDir: './snapshots'
- * });
- * 
- * await vc.capture('home', '/');
- * const result = await vc.compare('home', '/');
- * ```
- */
-export async function createVisualChecker(config?: any) {
-  const { BrowserController } = await import('./basic/browser/controller.js');
-  const { SnapshotManager } = await import('./basic/snapshot/manager.js');
-  
-  const browser = new BrowserController(config?.browser);
-  const snapshots = new SnapshotManager(config?.snapshotDir);
-  
-  return {
-    browser,
-    snapshots,
-    
-    async capture(name: string, url: string, options?: any) {
-      if (!browser.isLaunched()) {
-        await browser.launch();
-      }
-      const screenshot = await browser.captureScreenshot({
-        url: config?.baseUrl ? new URL(url, config.baseUrl).toString() : url,
-        name,
-        ...options
-      });
-      return screenshot;
-    },
-    
-    async compare(name: string, url: string, options?: any) {
-      const screenshot = await this.capture(name, url, options);
-      
-      if (!await snapshots.hasBaseline(name)) {
-        await snapshots.update(name, screenshot);
-        return { match: true, firstRun: true };
-      }
-      
-      return await snapshots.compare(name, screenshot, {
-        threshold: config?.comparison?.threshold,
-        generateDiff: config?.comparison?.generateDiff
-      });
-    },
-    
-    async update(name: string, url: string, options?: any) {
-      const screenshot = await this.capture(name, url, options);
-      await snapshots.update(name, screenshot);
-    },
-    
-    async close() {
-      await browser.close();
-    }
-  };
-}
+// BrowserControllerとSnapshotManagerを再エクスポート（ユーザーが直接使用できるように）
+export { BrowserController } from "./browser-controller.js";
+export { SnapshotManager } from "./snapshot/manager.js";

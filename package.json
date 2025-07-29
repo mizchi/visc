@@ -16,54 +16,18 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js"
-    },
-    "./basic": {
-      "types": "./dist/basic/index.d.ts",
-      "import": "./dist/basic/index.js"
-    },
-    "./advanced": {
-      "types": "./dist/advanced/index.d.ts",
-      "import": "./dist/advanced/index.js"
-    },
-    "./expert": {
-      "types": "./dist/expert/index.d.ts",
-      "import": "./dist/expert/index.js"
-    },
-    "./experimental": {
-      "types": "./dist/experimental/index.d.ts",
-      "import": "./dist/experimental/index.js"
-    },
-    "./layout/extractor": {
-      "types": "./dist/layout/extractor.d.ts",
-      "import": "./dist/layout/extractor.js"
-    },
-    "./layout/semantic-analyzer": {
-      "types": "./dist/layout/semantic-analyzer.d.ts",
-      "import": "./dist/layout/semantic-analyzer.js"
-    },
-    "./layout/comparator": {
-      "types": "./dist/layout/comparator.d.ts",
-      "import": "./dist/layout/comparator.js"
-    },
-    "./layout/assertions": {
-      "types": "./dist/layout/assertions.d.ts",
-      "import": "./dist/layout/assertions.js"
     }
   },
   "scripts": {
-    "build": "tsdown",
+    "build": "tsc --emitDeclarationOnly && tsdown",
     "build:watch": "tsdown --watch",
-    "build:tsc": "tsc",
     "dev": "tsdown --watch",
     "test": "npm run build && node dist/cli.js test",
     "update-snapshots": "npm run build && node dist/cli.js update",
     "compare": "npm run build && node dist/cli.js compare",
     "extract": "npm run build && tsx examples/layout/extract-layout-refactored.ts",
     "viewer": "npx http-server examples -o fixtures/layout-viewer.html",
+    "typecheck": "tsc --noEmit",
     "test:unit": "vitest",
     "test:layout": "npm run build && npx playwright test tests/layout/",
     "test:layout:ui": "npm run build && npx playwright test tests/layout/ --ui",
@@ -92,9 +56,9 @@
     "ai": "^4.3.19",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
-    "lighthouse": "^11.5.0",
     "ora": "^8.0.1",
     "pixelmatch": "^5.3.0",
+    "playwright": "^1.54.1",
     "pngjs": "^7.0.0",
     "puppeteer": "^24.15.0"
   },
@@ -109,6 +73,8 @@
     "@vitest/ui": "^1.6.1",
     "happy-dom": "^18.0.1",
     "jsdom": "^23.2.0",
+    "knip": "^5.62.0",
+    "rolldown-plugin-dts": "^0.14.2",
     "tsdown": "^0.13.0",
     "tsx": "^4.20.3",
     "typescript": "^5.3.3",

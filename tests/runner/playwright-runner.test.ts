@@ -1,6 +1,6 @@
 import { describe, test, expect, afterEach } from 'vitest';
-import { PlaywrightRunner } from '../../src/runner/playwright-runner.js';
-import type { BrowserContext, PageContext } from '../../src/runner/types.js';
+import { PlaywrightRunner } from '../../src/browser/runners/playwright.js';
+import type { BrowserContext, PageContext } from '../../src/browser/runners/types.js';
 
 describe('PlaywrightRunner', { timeout: 20000 }, () => {
   let runner: PlaywrightRunner;

@@ -131,9 +131,10 @@ export function detectSemanticGroups(elements: HTMLElement[]): SemanticGroup[] {
 }
 
 /**
- * ブラウザで実行するセマンティック分析コード
+ * ブラウザで実行するセマンティック分析コードを取得
  */
-export const extractSemanticLayoutScript = `
+export function getExtractSemanticLayoutScript(): string {
+  return `
 (() => {
   // getSemanticType関数をインライン化
   function getSemanticType(element) {
@@ -429,3 +430,4 @@ export const extractSemanticLayoutScript = `
   };
 })()
 `;
+}

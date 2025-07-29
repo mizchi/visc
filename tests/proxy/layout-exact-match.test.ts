@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';
-import { defaultRunnerFactory } from '../../src/runner/factory.js';
-import type { BrowserRunner, BrowserContext, PageContext } from '../../src/runner/types.js';
+import { defaultRunnerFactory } from '../../src/browser/runners/factory.js';
+import type { BrowserRunner, BrowserContext, PageContext } from '../../src/browser/runners/types.js';
 import type { LayoutAnalysisResult } from '../../src/layout/extractor.js';
 
 // プロキシエンドポイント

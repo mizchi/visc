@@ -13,7 +13,7 @@ import {
   type ValidationContext
 } from '../src/validator';
 import { compareLayouts } from '../src/layout/comparator';
-import { extractSemanticLayoutScript } from '../src/layout/semantic-analyzer';
+import { getExtractSemanticLayoutScript } from '../src/layout/semantic-analyzer';
 
 // サンプルデータ
 const sampleLayoutInput: LayoutValidatorInput = {

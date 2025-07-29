@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { BrowserController } from '../../src/basic/browser/controller.js';
+import { BrowserController } from '../../src/browser/controller.js';
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 
 // vi.mockはトップレベルで宣言し、ファクトリー関数内でモックを定義

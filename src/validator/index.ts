@@ -61,7 +61,7 @@ export {
 export {
   ValidatorFactory,
   ValidatorPreset,
-  defaultValidatorFactory
+  getDefaultValidatorFactory
 } from './validator-factory.js';
 
 // ユーティリティ関数

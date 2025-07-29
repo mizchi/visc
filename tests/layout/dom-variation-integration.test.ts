@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import { chromium, Browser, Page } from 'playwright';
-import { extractSemanticLayoutScript } from '../../src/layout/semantic-analyzer.js';
+import { getExtractSemanticLayoutScript } from '../../src/layout/semantic-analyzer.js';
 import { calculateVisualSimilarity, isVisuallyEqualLayout } from '../../src/layout/rect-distance-visual.js';
 import type { LayoutAnalysisResult } from '../../src/layout/extractor.js';
 
@@ -20,7 +20,7 @@ describe('DOM variation integration tests', () => {
     await page.setContent(html);
     await page.waitForLoadState('domcontentloaded');
     
-    const layout = await page.evaluate(extractSemanticLayoutScript);
+    const layout = await page.evaluate(getExtractSemanticLayoutScript());
     await page.close();
     
     return layout;

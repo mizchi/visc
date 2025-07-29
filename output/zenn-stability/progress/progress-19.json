@@ -1,9 +1,0 @@
-{
-  "iteration": 19,
-  "currentStability": null,
-  "unstableNodeCount": 0,
-  "totalNodeCount": 0,
-  "confidence": 1,
-  "shouldContinue": false,
-  "reason": "最大反復回数に到達"
-}

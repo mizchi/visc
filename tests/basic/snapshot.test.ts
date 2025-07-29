@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { SnapshotManager, SnapshotComparator } from '../../src/basic/snapshot/index.js';
+import { SnapshotManager, SnapshotComparator } from '../../src/snapshot/index.js';
 import fs from 'fs/promises';
 import path from 'path';
 

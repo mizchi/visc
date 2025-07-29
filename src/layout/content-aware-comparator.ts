@@ -1,6 +1,6 @@
 import { Page } from 'playwright';
 import { readable } from '@mizchi/readability';
-import { extractLayoutScript } from './extractor.js';
+import { getExtractLayoutScript } from './extractor.js';
 import { compareLayouts } from './comparator.js';
 import type { LayoutComparisonResult, LayoutAnalysisResult } from './comparator.js';
 
@@ -63,8 +63,8 @@ export async function compareLayoutsWithContentExclusion(
   options: ContentAwareComparisonOptions = {}
 ): Promise<ContentAwareComparisonResult> {
   // まず通常のレイアウトを抽出して比較
-  const baselineLayout = await page1.evaluate(extractLayoutScript) as LayoutAnalysisResult;
-  const currentLayout = await page2.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+  const baselineLayout = await page1.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
+  const currentLayout = await page2.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
   
   const normalComparison = compareLayouts(baselineLayout, currentLayout);
   
@@ -78,8 +78,8 @@ export async function compareLayoutsWithContentExclusion(
   const currentContent = await extractAndExcludeContent(page2, options);
   
   // 本文除外後のレイアウトを再抽出
-  const excludedBaselineLayout = await page1.evaluate(extractLayoutScript) as LayoutAnalysisResult;
-  const excludedCurrentLayout = await page2.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+  const excludedBaselineLayout = await page1.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
+  const excludedCurrentLayout = await page2.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
   
   // 本文除外後のレイアウトを比較
   const excludedComparison = compareLayouts(excludedBaselineLayout, excludedCurrentLayout);
@@ -300,7 +300,7 @@ export async function analyzeLayoutWithContentAwareness(
   layoutWithoutContent?: LayoutAnalysisResult;
 }> {
   // 通常のレイアウト分析
-  const normalLayout = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+  const normalLayout = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
   
   if (!options.excludeContent) {
     return { layout: normalLayout };
@@ -310,7 +310,7 @@ export async function analyzeLayoutWithContentAwareness(
   const contentExtraction = await extractAndExcludeContent(page, options);
   
   // 本文除外後のレイアウト分析
-  const layoutWithoutContent = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+  const layoutWithoutContent = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
   
   return {
     layout: normalLayout,

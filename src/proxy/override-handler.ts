@@ -184,7 +184,8 @@ export class ProxyOverrideHandler {
 /**
  * 一般的なオーバーライドのプリセット
  */
-export const commonOverrides = {
+export function getCommonOverrides() {
+  return {
   /**
    * 認証ヘッダーを追加
    */
@@ -268,4 +269,5 @@ export const commonOverrides = {
       }
     }
   })
-};
+  };
+}

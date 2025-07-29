@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { extractLayoutScript } from '../../dist/layout/extractor.js';
-import { extractSemanticLayoutScript } from '../../dist/layout/semantic-analyzer.js';
+import { getExtractLayoutScript } from '../../dist/layout/extractor.js';
+import { getExtractSemanticLayoutScript } from '../../dist/layout/semantic-analyzer.js';
 import type { LayoutAnalysisResult, LayoutElement, SemanticGroup } from '../../dist/layout/extractor.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,7 +12,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     expect(result).toHaveProperty('url');
     expect(result).toHaveProperty('timestamp');
@@ -25,11 +25,11 @@ test.describe('レイアウト抽出統合テスト', () => {
     expect(result.statistics.interactiveElements!).toBeGreaterThanOrEqual(0);
   });
 
-  test('extractSemanticLayoutScriptが正しく動作する', async ({ page }) => {
+  test('getExtractSemanticLayoutScriptが正しく動作する', async ({ page }) => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractSemanticLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractSemanticLayoutScript()) as LayoutAnalysisResult;
     
     expect(result).toHaveProperty('url');
     expect(result).toHaveProperty('timestamp');
@@ -46,7 +46,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractSemanticLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractSemanticLayoutScript()) as LayoutAnalysisResult;
     
     // トップレベルのグループを確認
     const topLevelGroups = result.semanticGroups!.filter((g) => g.depth === 0);
@@ -61,7 +61,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     // カード要素が存在する場合、パターンとして検出されるはず
     const cards = result.elements!.filter((el) => el.className.includes('card'));
@@ -76,7 +76,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     expect(result).toHaveProperty('accessibilityElements');
     expect((result as any).accessibilityElements.length).toBeGreaterThan(0);
@@ -116,7 +116,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     // 404ページでもレイアウト抽出が失敗しないことを確認
     await page.goto('https://example.com/404-page-not-found', { waitUntil: 'domcontentloaded' });
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     expect(result).toHaveProperty('url');
     expect(result).toHaveProperty('timestamp');
@@ -129,7 +129,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     // 空のHTMLページを作成
     await page.setContent('<html><body></body></html>');
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     expect(result).toHaveProperty('url');
     expect(result).toHaveProperty('timestamp');
@@ -142,7 +142,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     const testPagePath = path.join(__dirname, '../../examples/fixtures/test-page.html');
     await page.goto(`file://${testPagePath}`);
     
-    const result = await page.evaluate(extractSemanticLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractSemanticLayoutScript()) as LayoutAnalysisResult;
     
     // ヘッダーやメインコンテンツなど重要な要素の重要度をチェック
     const importantGroups = result.semanticGroups?.filter(g => g.importance > 70) || [];
@@ -170,7 +170,7 @@ test.describe('レイアウト抽出統合テスト', () => {
       </html>
     `);
     
-    const result = await page.evaluate(extractSemanticLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractSemanticLayoutScript()) as LayoutAnalysisResult;
     
     // 階層の深さを確認
     const depths = result.semanticGroups?.map(g => g.depth) || [];
@@ -195,7 +195,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     `);
     
     const startTime = Date.now();
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     const endTime = Date.now();
     
     expect(result.elements!.length).toBeGreaterThanOrEqual(1000);
@@ -216,7 +216,7 @@ test.describe('レイアウト抽出統合テスト', () => {
       </html>
     `);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     // aria-label が正しく抽出されているか
     const button = result.elements?.find(el => el.tagName === 'BUTTON');
@@ -253,7 +253,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     // 動的要素が追加されるまで待機
     await page.waitForTimeout(200);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     const staticElement = result.elements?.find(el => el.className === 'static-element');
     const dynamicElement = result.elements?.find(el => el.className === 'dynamic-element');
@@ -293,7 +293,7 @@ test.describe('レイアウト抽出統合テスト', () => {
       </html>
     `);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     const gridItems = result.elements?.filter(el => el.className === 'grid-item') || [];
     expect(gridItems).toHaveLength(6);
@@ -330,7 +330,7 @@ test.describe('レイアウト抽出統合テスト', () => {
       </html>
     `);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     const interactiveElements = result.elements?.filter(el => el.isInteractive) || [];
     const formInputs = interactiveElements.filter(el => 
@@ -359,7 +359,7 @@ test.describe('レイアウト抽出統合テスト', () => {
     await page.evaluate(() => window.scrollTo(0, 1000));
     await page.waitForTimeout(100);
     
-    const result = await page.evaluate(extractLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractLayoutScript()) as LayoutAnalysisResult;
     
     expect(result.viewport.scrollY).toBe(1000);
   });
@@ -384,7 +384,7 @@ test.describe('レイアウト抽出統合テスト', () => {
       </html>
     `);
     
-    const result = await page.evaluate(extractSemanticLayoutScript) as LayoutAnalysisResult;
+    const result = await page.evaluate(getExtractSemanticLayoutScript()) as LayoutAnalysisResult;
     
     // ナビゲーションのラベル
     const navGroup = result.semanticGroups?.find(g => g.type === 'navigation');

@@ -34,29 +34,14 @@ export type {
   CompareResult
 } from './types.js';
 
-// レイアウト抽出・分析関連
-export { extractLayout } from './layout-extractor.js';
-export { summarizeLayout } from './layout-summarizer.js';
-export { calculateLayoutSimilarity, generateSimilarityReport } from './layout-similarity.js';
-export { renderLayoutToSVG, renderInteractiveSVG } from './layout-svg-renderer.js';
-
+// 新しい統合された型をエクスポート
 export type {
-  ExtractedLayout,
-  ExtractedElement,
-  AccessibilityInfo
-} from './layout-extractor.js';
-
-export type {
-  LayoutSummary,
   SummarizedNode,
-  NodeGroup
-} from './layout-summarizer.js';
-
-export type {
-  SimilarityResult,
-  NodeMatch
-} from './layout-similarity.js';
-
-export type {
-  SVGRenderOptions
-} from './layout-svg-renderer.js';
+  NodeGroup,
+  Position,
+  SemanticType,
+  CoordinateSimilarityDetails,
+  AccessibilitySimilarityDetails,
+  TextSimilarityDetails,
+  TextLengthSimilarityDetails
+} from './types.js';

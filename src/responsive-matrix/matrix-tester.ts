@@ -8,7 +8,7 @@ import {
   MediaQueryConsistency 
 } from '../types.js';
 import { BrowserController } from '../browser-controller.js';
-import { extractLayoutScript } from '../layout/extractor.js';
+import { getExtractLayoutScript } from '../layout/extractor.js';
 import { compareLayouts } from '../layout/comparator.js';
 import path from 'path';
 import fs from 'fs/promises';
@@ -137,7 +137,7 @@ export class ResponsiveMatrixTester {
       const cssFingerprint = await this.generateCSSFingerprint(page);
       
       // レイアウト構造の抽出
-      const layoutStructure = await page.evaluate(extractLayoutScript);
+      const layoutStructure = await page.evaluate(getExtractLayoutScript());
       
       // スクリーンショットの保存
       const snapshotPath = await this.saveScreenshot(

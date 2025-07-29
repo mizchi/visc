@@ -1,9 +1,0 @@
-{
-  "iteration": 5,
-  "currentStability": 100,
-  "unstableNodeCount": 0,
-  "totalNodeCount": 127,
-  "confidence": 0.5,
-  "shouldContinue": true,
-  "reason": ""
-}

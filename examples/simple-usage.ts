@@ -44,7 +44,8 @@ async function coreExample() {
 // Level 2: Basic API - 一般的な使い方
 // ========================================
 
-import { BrowserController, SnapshotManager } from '../src/basic/index.js';
+import { LegacyBrowserController as BrowserController } from '../src/index.js';
+import { SnapshotManager } from '../src/snapshot/index.js';
 
 async function basicExample() {
   console.log('\n--- Level 2: Basic API Example ---');
@@ -100,8 +101,8 @@ async function basicExample() {
 // Level 3: 設定ファイルを使った使い方
 // ========================================
 
-import { ConfigLoader, ConfigValidator } from '../src/basic/config/index.js';
-import { SnapshotComparator } from '../src/basic/snapshot/index.js';
+import { ConfigLoader, ConfigValidator } from '../src/config/index.js';
+import { SnapshotComparator } from '../src/snapshot/index.js';
 
 async function configExample() {
   console.log('\n--- Level 3: Config-based Example ---');
@@ -123,19 +124,21 @@ async function configExample() {
   }
   
   // ブラウザとスナップショットの設定
-  const browser = new BrowserController(config.browser);
+  const browser = new BrowserController(config as any);
   const comparator = new SnapshotComparator(config.snapshotDir);
   
   await browser.launch();
   
   // すべてのURLをテスト
-  const screenshots = await browser.captureMultipleScreenshots(
-    config.urls!
-  );
+  const screenshots: string[] = [];
+  for (const urlConfig of config.urls!) {
+    const screenshotPath = await browser.captureScreenshot(urlConfig);
+    screenshots.push(screenshotPath);
+  }
   
   // バッチ比較
   const results = await comparator.batchCompare(
-    screenshots.map((path, i) => ({
+    screenshots.map((path: string, i: number) => ({
       name: config.urls![i].name,
       currentPath: path
     })),
@@ -156,7 +159,7 @@ async function configExample() {
 // 便利な初期化関数を使った例
 // ========================================
 
-import { createVisualChecker } from '../src/index.js';
+// import { createVisualChecker } from '../src/index.js'; // 削除されたためコメントアウト
 
 async function convenientExample() {
   console.log('\n--- Convenient API Example ---');
@@ -198,7 +201,7 @@ async function main() {
     await coreExample();
     await basicExample();
     // await configExample(); // 設定ファイルが必要
-    await convenientExample();
+    // await convenientExample(); // createVisualCheckerが削除されたためコメントアウト
   } catch (error) {
     console.error('Error:', error);
   }

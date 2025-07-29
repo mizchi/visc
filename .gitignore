@@ -7,3 +7,7 @@ diffs/
 playwright-report
 test-results/
 tmp/
+
+# Examples output
+examples/output/
+output/

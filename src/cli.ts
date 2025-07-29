@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import { TestRunner } from "./test-runner.ts";
 import { VisualCheckConfig } from "./types.ts";
-import { DefaultBrowserRunnerFactory } from "./runner/factory.js";
+import { DefaultBrowserRunnerFactory } from "./browser/runners/factory.js";
 import fs from "fs/promises";
 import path from "path";
 import chalk from "chalk";
@@ -173,7 +173,7 @@ program
     console.log(chalk.gray(`Iterations: ${options.iterations}\n`));
 
     try {
-      const { defaultRunnerFactory } = await import("./runner/factory.js");
+      const { getDefaultRunnerFactory } = await import("./browser/runners/factory.js");
       const { MultiCrawlManager } = await import("./layout/multi-crawl-manager.js");
       const { generateFlakinessReport } = await import("./layout/flakiness-detector.js");
 
@@ -187,7 +187,7 @@ program
       }
 
       // ランナーを作成
-      const runner = defaultRunnerFactory.create('playwright');
+      const runner = getDefaultRunnerFactory().create('playwright');
       const browserContext = await runner.launch({ headless: true });
       const pageContext = await runner.newPage(browserContext, { viewport });
 
@@ -241,7 +241,7 @@ program
       }
 
       await runner.close(browserContext);
-      await defaultRunnerFactory.cleanup();
+      await getDefaultRunnerFactory().cleanup();
 
       // フレーキーネスが閾値を超えていたら非ゼロで終了
       const exitCode = result.flakinessAnalysis.overallScore > parseFloat(options.threshold) ? 1 : 0;
@@ -270,11 +270,11 @@ program
     console.log(chalk.gray(`Stability threshold: ${options.stabilityThreshold}%\n`));
 
     try {
-      const { defaultRunnerFactory } = await import("./runner/factory.js");
+      const { getDefaultRunnerFactory } = await import("./browser/runners/factory.js");
       const { MultiCrawlManager } = await import("./layout/multi-crawl-manager.js");
       const { generateFlakinessReport } = await import("./layout/flakiness-detector.js");
 
-      const runner = defaultRunnerFactory.create('playwright');
+      const runner = getDefaultRunnerFactory().create('playwright');
       const browserContext = await runner.launch({ headless: true });
       const pageContext = await runner.newPage(browserContext);
 
@@ -327,7 +327,7 @@ program
       }
 
       await runner.close(browserContext);
-      await defaultRunnerFactory.cleanup();
+      await getDefaultRunnerFactory().cleanup();
       process.exit(isStable ? 0 : 1);
 
     } catch (error) {
@@ -517,7 +517,7 @@ program
 
     try {
       // Dynamically import the layout comparison functions
-      const { extractSemanticLayoutScript } = await import('./layout/semantic-analyzer.js');
+      const { getExtractSemanticLayoutScript } = await import('./layout/semantic-analyzer.js');
       const { 
         calculateLayoutSimilarity, 
         generateLayoutFingerprint,
@@ -557,8 +557,8 @@ program
         
         // 本文除外後のレイアウトを使用
         if (comparisonResult.excludedContentComparison) {
-          layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
-          layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+          layout1 = await runner.evaluate(page1, getExtractSemanticLayoutScript());
+          layout2 = await runner.evaluate(page2, getExtractSemanticLayoutScript());
           
           console.log(chalk.yellow("\n📄 Content Extraction:"));
           if (comparisonResult.contentExtraction?.baseline.success) {
@@ -571,8 +571,8 @@ program
           }
         } else {
           // フォールバック
-          layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
-          layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+          layout1 = await runner.evaluate(page1, getExtractSemanticLayoutScript());
+          layout2 = await runner.evaluate(page2, getExtractSemanticLayoutScript());
         }
         
         await runner.closePage(page1);
@@ -582,13 +582,13 @@ program
         const page1 = await runner.newPage(browserContext, { viewport });
         await runner.goto(page1, url1, { waitUntil: 'networkidle' });
         await runner.wait(1000);
-        layout1 = await runner.evaluate(page1, extractSemanticLayoutScript);
+        layout1 = await runner.evaluate(page1, getExtractSemanticLayoutScript());
         await runner.closePage(page1);
 
         const page2 = await runner.newPage(browserContext, { viewport });
         await runner.goto(page2, url2, { waitUntil: 'networkidle' });
         await runner.wait(1000);
-        layout2 = await runner.evaluate(page2, extractSemanticLayoutScript);
+        layout2 = await runner.evaluate(page2, getExtractSemanticLayoutScript());
         await runner.closePage(page2);
       }
 
