@@ -112,6 +112,17 @@ export function getExtractLayoutScript(): string {
     }
   }
   
+  // デバッグ: 高さ情報を確認
+  const maxY = Math.max(...elements.map(el => el.rect.y + el.rect.height));
+  const elementsBelow2000 = elements.filter(el => el.rect.y > 2000).length;
+  console.log('Layout extraction debug:', {
+    totalElements: elements.length,
+    maxY: maxY,
+    elementsBelow2000: elementsBelow2000,
+    bodyScrollHeight: document.body.scrollHeight,
+    documentHeight: document.documentElement.scrollHeight
+  });
+  
   return {
     url: window.location.href,
     timestamp: new Date().toISOString(),
@@ -141,7 +152,7 @@ export function organizeIntoSemanticGroups(
     importanceThreshold?: number; // 重要度の閾値
   } = {}
 ): SemanticGroup[] {
-  const { groupingThreshold = 20, importanceThreshold = 10 } = options;
+  const { groupingThreshold = 20, importanceThreshold = 3 } = options;
   const root: SemanticGroup = {
     type: 'root',
     label: 'Page Root',
@@ -245,6 +256,26 @@ export function organizeIntoSemanticGroups(
     }
   });
 
+  // デバッグ: セマンティックグループの統計情報
+  const groupStats = topLevelGroups.map(g => ({
+    type: g.type,
+    y: g.bounds.y,
+    height: g.bounds.height,
+    bottom: g.bounds.y + g.bounds.height,
+    childCount: g.children.length
+  }));
+  
+  const maxGroupY = Math.max(...groupStats.map(g => g.bottom));
+  const groupsBelow2000 = groupStats.filter(g => g.y > 2000).length;
+  
+  console.log('Semantic group debug:', {
+    totalTopLevelGroups: topLevelGroups.length,
+    totalGroups: groups.length,
+    maxGroupY: maxGroupY,
+    groupsBelow2000: groupsBelow2000,
+    groupsAbove2000: groupStats.filter(g => g.y <= 2000).length
+  });
+  
   return topLevelGroups;
 }
 
@@ -331,9 +362,10 @@ function calculateImportance(element, rect) {
   const viewportArea = window.innerWidth * window.innerHeight;
   importance += (area / viewportArea) * 30;
   
-  // 位置による重要度（上部ほど重要）
+  // 位置による重要度（上部ほど重要だが、下部も最低限の重要度を保証）
   const verticalPosition = rect.top / window.innerHeight;
-  importance += (1 - verticalPosition) * 20;
+  const positionScore = Math.max(0, 1 - verticalPosition);
+  importance += positionScore * 20;
   
   // セマンティックタグによる重要度
   const importantTags = ['main', 'article', 'h1', 'h2', 'nav', 'header'];
@@ -353,6 +385,11 @@ function calculateImportance(element, rect) {
   }
   if (style.borderWidth !== '0px') {
     importance += 5;
+  }
+  
+  // 最低限の重要度を保証（小さくても表示されている要素は重要）
+  if (area > 100) { // 100px²以上の要素
+    importance = Math.max(importance, 5);
   }
   
   return Math.min(100, importance);

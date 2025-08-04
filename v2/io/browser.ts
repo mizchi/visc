@@ -2,27 +2,48 @@ import puppeteer from 'puppeteer';
 import { analyzeLayout } from '../layout/extractor.js';
 import type { LayoutAnalysisResult } from '../layout/extractor.js';
 
-// ページを自動的にスクロールして遅延ロードコンテンツを読み込む
-async function autoScroll(page: any): Promise<void> {
-  await page.evaluate(`(async () => {
-    const distance = 500;
-    const delay = 300;
-    const maxScrolls = 50; // 無限ループを防ぐ
-    let scrollCount = 0;
-    
-    while (
-      document.scrollingElement.scrollTop + window.innerHeight < document.scrollingElement.scrollHeight &&
-      scrollCount < maxScrolls
-    ) {
-      document.scrollingElement.scrollBy(0, distance);
-      scrollCount++;
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    
-    // 最後まで到達したら、もう一度上部に戻る
-    document.scrollingElement.scrollTop = 0;
-    await new Promise(resolve => setTimeout(resolve, 500));
-  })()`)
+// 遅延ロードされる要素を待つためのシンプルな待機戦略
+async function waitForLazyContent(page: any): Promise<void> {
+  // 少し待つ
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // ページの下部までスクロールして遅延ロードコンテンツをトリガー
+  const scrollInfo = await page.evaluate(() => {
+    return new Promise((resolve) => {
+      const initialHeight = document.body.scrollHeight;
+      let totalHeight = 0;
+      const distance = 100;
+      let scrollCount = 0;
+      const maxScrolls = 50; // 最大スクロール回数
+      
+      const timer = setInterval(() => {
+        const currentScrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+        scrollCount++;
+        
+        // スクロールが完了したか、最大回数に達したか
+        if (totalHeight >= currentScrollHeight - window.innerHeight || scrollCount >= maxScrolls) {
+          clearInterval(timer);
+          // スクロール完了後、少し待つ
+          setTimeout(() => {
+            window.scrollTo(0, 0); // トップに戻る
+            resolve({
+              initialHeight,
+              finalHeight: document.body.scrollHeight,
+              scrollCount,
+              totalScrolled: totalHeight
+            });
+          }, 2000); // 2秒待つ
+        }
+      }, 200); // スクロール間隔を200msに
+    });
+  });
+  
+  console.log('Scroll info:', scrollInfo);
+  
+  // 追加の待機時間を設けて、動的コンテンツの読み込みを確実に待つ
+  await new Promise(resolve => setTimeout(resolve, 2000));
 }
 
 export async function fetchLayoutAnalysis(
@@ -32,7 +53,7 @@ export async function fetchLayoutAnalysis(
     headless?: boolean;
     groupingThreshold?: number;
     importanceThreshold?: number;
-    scrollToBottom?: boolean;
+    waitForContent?: boolean;
   } = {},
 ): Promise<LayoutAnalysisResult> {
   const { 
@@ -40,7 +61,7 @@ export async function fetchLayoutAnalysis(
     headless = true,
     groupingThreshold,
     importanceThreshold,
-    scrollToBottom = true
+    waitForContent = true
   } = options;
   const browser = await puppeteer.launch({ headless });
   const page = await browser.newPage();
@@ -49,9 +70,11 @@ export async function fetchLayoutAnalysis(
   try {
     await page.goto(url, { waitUntil: 'networkidle0' });
     
-    // ページの下部までスクロールして遅延マウントされる要素を読み込む
-    if (scrollToBottom) {
-      await autoScroll(page);
+    // 遅延ロードされる要素を確実に取得
+    if (waitForContent) {
+      console.log('Waiting for content to load...');
+      await waitForLazyContent(page);
+      console.log('Content loading complete');
     }
     
     const layoutData = await analyzeLayout(page, {
