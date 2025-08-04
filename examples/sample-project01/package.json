@@ -1,9 +1,0 @@
-{
-  "name": "css-refactor-test",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "test": "node test.ts",
-    "test:custom": "node test.ts --outdir"
-  }
-}

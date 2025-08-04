@@ -47,7 +47,7 @@ Fetches layout data from a URL and outputs as JSON.
 
 Options:
 - `-o, --output <path>` - Save to file instead of stdout
-- `--viewport <size>` - Viewport size (default: `1280x800`)
+- `--viewport <size>` - Viewport size (e.g., `--viewport=1920x1080`) (default: `1280x800`, e.g., `--viewport=1920x1080`)
 - `-f, --full` - Capture full page
 - `--headless` - Run browser in headless mode
 
@@ -61,7 +61,7 @@ Arguments:
 Options:
 - `-o, --output <path>` - Save to file instead of stdout
 - `--diff` - Render as diff (requires two sources)
-- `--viewport <size>` - Viewport size for URLs
+- `--viewport <size>` - Viewport size (e.g., `--viewport=1920x1080`) for URLs
 - `--show-labels` - Show element labels
 - `--highlight-level <level>` - Highlight level: subtle, moderate, strong
 
@@ -72,7 +72,7 @@ Options:
 - `-o, --output <path>` - Save to file instead of stdout
 - `-n, --samples <number>` - Number of samples (default: 5)
 - `-d, --delay <ms>` - Delay between samples (default: 1000)
-- `--viewport <size>` - Viewport size
+- `--viewport <size>` - Viewport size (e.g., `--viewport=1920x1080`)
 - `--strictness <level>` - Strictness: low, medium, high
 
 #### `visc check <settings>`
@@ -90,7 +90,7 @@ Compares two sources (files or URLs).
 Options:
 - `-o, --output <path>` - Save to file instead of stdout
 - `--threshold <percent>` - Similarity threshold (default: 90)
-- `--viewport <size>` - Viewport size for URLs
+- `--viewport <size>` - Viewport size (e.g., `--viewport=1920x1080`) for URLs
 
 #### `visc <url>`
 Quick command that processes a URL, generating layout data, SVG, and comparison settings.
@@ -99,6 +99,16 @@ Options:
 - `--outdir <dir>` - Output directory (default: `out`)
 
 ## Examples
+
+### Command line usage with viewport options
+
+```bash
+# Capture mobile viewport
+visc get https://example.com --viewport=375x667 -o mobile.json
+
+# Compare desktop and tablet layouts
+visc compare https://example.com https://example.com --viewport=1920x1080 --threshold=95
+```
 
 ### Basic workflow with stdout
 
@@ -182,6 +192,8 @@ import {
   calibrateComparisonSettings
 } from '@mizchi/visc';
 ```
+
+See [examples/basic-usage.ts](examples/basic-usage.ts) for a complete example of the library API.
 
 ## License
 

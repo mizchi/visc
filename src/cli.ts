@@ -32,7 +32,7 @@ program
   .description("Get layout data from URL")
   .argument("<url>", "URL to fetch")
   .option("-o, --output <path>", "Output path for JSON file")
-  .option("--viewport <size>", "Viewport size (e.g., 1280x800)", "1280x800")
+  .option("--viewport <size>", "Viewport size (e.g., --viewport=1280x800)", "1280x800")
   .option("-f, --full", "Capture full page (default: viewport only)")
   .option("--headless", "Run browser in headless mode", true)
   .action(async (url, options) => {
@@ -78,7 +78,7 @@ program
   .argument("[compareWith]", "Second source for diff rendering (with --diff)")
   .option("-o, --output <path>", "Output path for SVG file")
   .option("--diff", "Render as diff (requires two sources)")
-  .option("--viewport <size>", "Viewport size for URL", "1280x800")
+  .option("--viewport <size>", "Viewport size for URL (e.g., --viewport=1280x800)", "1280x800")
   .option("--show-labels", "Show element labels", true)
   .option("--highlight-level <level>", "Highlight level: subtle, moderate, strong", "moderate")
   .action(async (source, compareWith, options) => {
@@ -130,7 +130,7 @@ program
   .option("-o, --output <path>", "Output path for settings")
   .option("-n, --samples <number>", "Number of samples", "5")
   .option("-d, --delay <ms>", "Delay between samples", "1000")
-  .option("--viewport <size>", "Viewport size", "1280x800")
+  .option("--viewport <size>", "Viewport size (e.g., --viewport=1280x800)", "1280x800")
   .option("--strictness <level>", "Strictness: low, medium, high", "medium")
   .action(async (url, options) => {
     const spinner = options.output ? ora("Collecting samples for calibration...").start() : null;
@@ -240,7 +240,7 @@ program
   .argument("<source2>", "Second source (file or URL)")
   .option("-o, --output <path>", "Output comparison result")
   .option("--threshold <percent>", "Similarity threshold", "90")
-  .option("--viewport <size>", "Viewport size for URLs", "1280x800")
+  .option("--viewport <size>", "Viewport size for URLs (e.g., --viewport=1280x800)", "1280x800")
   .action(async (source1, source2, options) => {
     const spinner = options.output ? ora("Comparing layouts...").start() : null;
 
