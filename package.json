@@ -1,14 +1,14 @@
 {
-  "name": "@mizchi/vischeck",
+  "name": "@mizchi/visc",
   "version": "0.1.0",
-  "description": "Visual regression testing library",
+  "description": "Visual regression testing CLI tool",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mizchi/visual-checker.git"
+    "url": "https://github.com/mizchi/visc.git"
   },
   "main": "dist/index.js",
   "bin": {
-    "visual-checker": "dist/cli.js"
+    "visc": "dist/cli.js"
   },
   "types": "dist/index.d.ts",
   "type": "module",
@@ -32,9 +32,9 @@
   ],
   "author": "mizchi",
   "license": "MIT",
-  "homepage": "https://github.com/mizchi/vischeck#readme",
+  "homepage": "https://github.com/mizchi/visc#readme",
   "bugs": {
-    "url": "https://github.com/mizchi/vischeck/issues"
+    "url": "https://github.com/mizchi/visc/issues"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
