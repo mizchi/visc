@@ -1,28 +1,28 @@
 /**
- * セマンティックグループを比較するための新しい比較エンジン
+ * ビジュアルノードグループを比較するための新しい比較エンジン
  */
 
 import type { 
-  LayoutAnalysisResult, 
-  SemanticGroup, 
-  LayoutElement,
-  LayoutRect 
+  VisualTreeAnalysis, 
+  VisualNodeGroup, 
+  VisualNode,
+  BoundingRect 
 } from '../types.js';
 
-export interface SemanticDifference {
+export interface VisualGroupDifference {
   groupPath: string;
   type: 'added' | 'removed' | 'modified' | 'moved' | 'resized';
-  oldGroup?: SemanticGroup;
-  newGroup?: SemanticGroup;
+  oldGroup?: VisualNodeGroup;
+  newGroup?: VisualNodeGroup;
   changes?: {
-    bounds?: Partial<LayoutRect>;
+    bounds?: Partial<BoundingRect>;
     childrenCount?: { old: number; new: number };
     importance?: { old: number; new: number };
   };
 }
 
-export interface SemanticComparisonResult {
-  differences: SemanticDifference[];
+export interface VisualGroupComparisonResult {
+  differences: VisualGroupDifference[];
   addedGroups: string[];
   removedGroups: string[];
   modifiedGroups: string[];
@@ -36,30 +36,30 @@ export interface SemanticComparisonResult {
 }
 
 /**
- * セマンティックグループからパスを生成
+ * ビジュアルノードグループからパスを生成
  */
-function generateGroupPath(group: SemanticGroup, parentPath: string = ''): string {
+function generateGroupPath(group: VisualNodeGroup, parentPath: string = ''): string {
   const path = parentPath ? `${parentPath}/${group.type}:${group.label}` : `${group.type}:${group.label}`;
   return path.substring(0, 100); // 長すぎるパスを制限
 }
 
 /**
- * セマンティックグループをフラット化してマップに変換
+ * ビジュアルノードグループをフラット化してマップに変換
  */
-function flattenSemanticGroups(
-  groups: SemanticGroup[], 
+function flattenVisualNodeGroups(
+  groups: VisualNodeGroup[], 
   parentPath: string = ''
-): Map<string, SemanticGroup> {
-  const map = new Map<string, SemanticGroup>();
+): Map<string, VisualNodeGroup> {
+  const map = new Map<string, VisualNodeGroup>();
   
-  function traverse(group: SemanticGroup, currentPath: string) {
+  function traverse(group: VisualNodeGroup, currentPath: string) {
     const path = generateGroupPath(group, currentPath);
     map.set(path, group);
     
     // 子要素がセマンティックグループの場合のみ再帰
     group.children.forEach(child => {
       if ('type' in child && 'bounds' in child) {
-        traverse(child as SemanticGroup, path);
+        traverse(child as VisualNodeGroup, path);
       }
     });
   }
@@ -72,11 +72,11 @@ function flattenSemanticGroups(
  * 境界の変更を検出
  */
 function detectBoundsChanges(
-  oldBounds: LayoutRect,
-  newBounds: LayoutRect,
+  oldBounds: BoundingRect,
+  newBounds: BoundingRect,
   threshold: number = 5
-): { hasChange: boolean; changes?: Partial<LayoutRect> } {
-  const changes: Partial<LayoutRect> = {};
+): { hasChange: boolean; changes?: Partial<BoundingRect> } {
+  const changes: Partial<BoundingRect> = {};
   let hasChange = false;
   
   if (Math.abs(oldBounds.x - newBounds.x) > threshold) {
@@ -102,15 +102,15 @@ function detectBoundsChanges(
 /**
  * セマンティックグループを比較
  */
-export function compareSemanticGroups(
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+export function compareVisualNodeGroups(
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   options: {
     positionThreshold?: number;
     sizeThreshold?: number;
     importanceThreshold?: number;
   } = {}
-): SemanticComparisonResult {
+): VisualGroupComparisonResult {
   const { 
     positionThreshold = 5, 
     sizeThreshold = 5,
@@ -118,7 +118,7 @@ export function compareSemanticGroups(
   } = options;
   
   // セマンティックグループが存在しない場合は空の結果を返す
-  if (!baseline.semanticGroups || !current.semanticGroups) {
+  if (!baseline.visualNodeGroups || !current.visualNodeGroups) {
     return {
       differences: [],
       addedGroups: [],
@@ -134,10 +134,10 @@ export function compareSemanticGroups(
     };
   }
   
-  const baselineMap = flattenSemanticGroups(baseline.semanticGroups);
-  const currentMap = flattenSemanticGroups(current.semanticGroups);
+  const baselineMap = flattenVisualNodeGroups(baseline.visualNodeGroups);
+  const currentMap = flattenVisualNodeGroups(current.visualNodeGroups);
   
-  const differences: SemanticDifference[] = [];
+  const differences: VisualGroupDifference[] = [];
   const addedGroups: string[] = [];
   const removedGroups: string[] = [];
   const modifiedGroups: string[] = [];
@@ -170,7 +170,7 @@ export function compareSemanticGroups(
       ) > importanceThreshold;
       
       if (boundsResult.hasChange || childrenCountChanged || importanceChanged) {
-        const diff: SemanticDifference = {
+        const diff: VisualGroupDifference = {
           groupPath,
           type: 'modified',
           oldGroup: baselineGroup,
@@ -253,7 +253,7 @@ export function compareSemanticGroups(
 /**
  * セマンティックグループの統計情報を取得
  */
-export function getSemanticStatistics(groups: SemanticGroup[]): {
+export function getVisualNodeGroupStatistics(groups: VisualNodeGroup[]): {
   totalGroups: number;
   groupsByType: Record<string, number>;
   maxDepth: number;
@@ -266,7 +266,7 @@ export function getSemanticStatistics(groups: SemanticGroup[]): {
     totalChildren: 0
   };
   
-  function traverse(group: SemanticGroup, depth: number = 0) {
+  function traverse(group: VisualNodeGroup, depth: number = 0) {
     stats.totalGroups++;
     stats.groupsByType[group.type] = (stats.groupsByType[group.type] || 0) + 1;
     stats.maxDepth = Math.max(stats.maxDepth, depth);
@@ -274,7 +274,7 @@ export function getSemanticStatistics(groups: SemanticGroup[]): {
     
     group.children.forEach(child => {
       if ('type' in child && 'bounds' in child) {
-        traverse(child as SemanticGroup, depth + 1);
+        traverse(child as VisualNodeGroup, depth + 1);
       }
     });
   }

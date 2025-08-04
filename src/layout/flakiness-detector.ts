@@ -5,11 +5,11 @@
  */
 
 import type {
-  LayoutAnalysisResult,
-  SemanticGroup,
-  LayoutElement,
+  VisualTreeAnalysis,
+  VisualNodeGroup,
+  VisualNode,
 } from "./extractor.js";
-import type { LayoutDifference } from "./comparator.js";
+import type { VisualDifference } from "./comparator.js";
 import { compareLayoutTrees } from "./comparator.js";
 
 export interface FlakinessAnalysis {
@@ -114,7 +114,7 @@ function generateElementId(identifier: any): string {
  * 複数のレイアウト分析結果からフレーキーネスを検出
  */
 export function detectFlakiness(
-  results: LayoutAnalysisResult[],
+  results: VisualTreeAnalysis[],
   options: {
     /** 位置の変動を検出する閾値（ピクセル） */
     positionThreshold?: number;
@@ -213,35 +213,35 @@ export function detectFlakiness(
  * レイアウト結果から要素を追跡
  */
 function trackElements(
-  result: LayoutAnalysisResult,
+  result: VisualTreeAnalysis,
   trackers: Map<string, ElementTracker>,
   resultIndex: number
 ): void {
-  // SemanticGroups を追跡
-  if (result.semanticGroups) {
-    result.semanticGroups.forEach((group, index) => {
-      trackSemanticGroup(
+  // VisualNodeGroups を追跡
+  if (result.visualNodeGroups) {
+    result.visualNodeGroups.forEach((group, index) => {
+      trackVisualNodeGroup(
         group,
-        `semanticGroup[${index}]`,
+        `visualNodeGroup[${index}]`,
         trackers,
         resultIndex
       );
     });
   }
 
-  // LayoutElements を追跡
+  // VisualNodes を追跡
   if (result.elements) {
     result.elements.forEach((element, index) => {
-      trackLayoutElement(element, `element[${index}]`, trackers, resultIndex);
+      trackVisualNode(element, `element[${index}]`, trackers, resultIndex);
     });
   }
 }
 
 /**
- * SemanticGroupを再帰的に追跡
+ * VisualNodeGroupを再帰的に追跡
  */
-function trackSemanticGroup(
-  group: SemanticGroup,
+function trackVisualNodeGroup(
+  group: VisualNodeGroup,
   path: string,
   trackers: Map<string, ElementTracker>,
   resultIndex: number
@@ -274,15 +274,15 @@ function trackSemanticGroup(
   if (group.children) {
     group.children.forEach((child, index) => {
       if ("children" in child) {
-        trackSemanticGroup(
-          child as SemanticGroup,
+        trackVisualNodeGroup(
+          child as VisualNodeGroup,
           `${path}/child[${index}]`,
           trackers,
           resultIndex
         );
       } else {
-        trackLayoutElement(
-          child as LayoutElement,
+        trackVisualNode(
+          child as VisualNode,
           `${path}/child[${index}]`,
           trackers,
           resultIndex
@@ -293,10 +293,10 @@ function trackSemanticGroup(
 }
 
 /**
- * LayoutElementを追跡
+ * VisualNodeを追跡
  */
-function trackLayoutElement(
-  element: LayoutElement,
+function trackVisualNode(
+  element: VisualNode,
   path: string,
   trackers: Map<string, ElementTracker>,
   resultIndex: number
@@ -350,11 +350,11 @@ function recordProperty(
  */
 function updateTrackerWithDifference(
   trackers: Map<string, ElementTracker>,
-  diff: LayoutDifference,
+  diff: VisualDifference,
   index1: number,
   index2: number
 ): void {
-  // 新しいLayoutDifferenceインターフェースではelementIdを使用
+  // 新しいVisualDifferenceインターフェースではelementIdを使用
   const tracker = Array.from(trackers.values()).find(
     (t) =>
       t.identifier.tagName === diff.oldValue.tagName &&

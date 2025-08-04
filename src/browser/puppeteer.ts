@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { analyzeLayout } from "../layout/extractor.js";
-import type { LayoutAnalysisResult } from "../layout/extractor.js";
+import type { VisualTreeAnalysis } from "../layout/extractor.js";
 
 // 遅延ロードされる要素を待つためのシンプルな待機戦略
 async function waitForLazyContent(page: any): Promise<void> {
@@ -84,11 +84,11 @@ export async function extractLayoutTree(
     importanceThreshold?: number;
     viewportOnly?: boolean;
   } = {}
-): Promise<LayoutAnalysisResult> {
-  const { organizeIntoSemanticGroups } = await import("../layout/extractor.js");
+): Promise<VisualTreeAnalysis> {
+  const { organizeIntoVisualNodeGroups } = await import("../layout/extractor.js");
 
-  // セマンティックグループに整理
-  const semanticGroups = organizeIntoSemanticGroups(rawData.elements, {
+  // ビジュアルノードグループに整理
+  const visualNodeGroups = organizeIntoVisualNodeGroups(rawData.elements, {
     ...options,
     viewport: options.viewportOnly ? rawData.viewport : undefined,
   });
@@ -98,11 +98,11 @@ export async function extractLayoutTree(
 
   return {
     ...rawData,
-    semanticGroups,
+    visualNodeGroups,
     patterns,
     statistics: {
       ...rawData.statistics,
-      semanticGroupCount: semanticGroups.length,
+      visualNodeGroupCount: visualNodeGroups.length,
       patternCount: patterns.length,
     },
   };

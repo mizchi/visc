@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { fetchRawLayoutData, extractLayoutTree } from "./puppeteer.js";
-import type { LayoutAnalysisResult } from "../layout/extractor.js";
+import type { VisualTreeAnalysis } from "../layout/extractor.js";
 
 /**
  * ブラウザインスタンスを作成し、管理するためのヘルパー
@@ -60,7 +60,7 @@ export async function getLayoutsParallel(
     waitForContent?: boolean;
     captureFullPage?: boolean;
   } = {}
-): Promise<LayoutAnalysisResult[]> {
+): Promise<VisualTreeAnalysis[]> {
   return withBrowser(
     async (browser) => {
       const promises = urls.map((url) =>
@@ -103,8 +103,8 @@ export async function getLayoutsSamples(
     captureFullPage?: boolean;
     delay?: number;
   } = {}
-): Promise<LayoutAnalysisResult[]> {
-  const samples: LayoutAnalysisResult[] = [];
+): Promise<VisualTreeAnalysis[]> {
+  const samples: VisualTreeAnalysis[] = [];
   const { delay = 1000, ...layoutOptions } = options;
 
   return withBrowser(

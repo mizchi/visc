@@ -1,8 +1,8 @@
 export type { StabilityCheckOptions } from "./types.js";
 export type {
-  LayoutAnalysisResult,
-  LayoutElement,
-  SemanticGroup,
+  VisualTreeAnalysis,
+  VisualNode,
+  VisualNodeGroup,
 } from "./layout/extractor.js";
 
 // Core APIs - データ取得と変換
@@ -18,7 +18,7 @@ export {
 } from "./browser/helpers.js";
 export {
   getExtractLayoutScript,
-  organizeIntoSemanticGroups,
+  organizeIntoVisualNodeGroups,
   analyzeLayout,
 } from "./layout/extractor.js";
 
@@ -29,21 +29,21 @@ export {
   hasLayoutChanged,
 } from "./layout/comparator.js";
 export type {
-  LayoutComparisonResult,
-  LayoutDifference,
+  VisualComparisonResult,
+  VisualDifference,
 } from "./layout/comparator.js";
 
-// Semantic Comparator
+// Visual Comparator
 export {
-  compareSemanticGroups,
-  getSemanticStatistics,
-  type SemanticDifference,
-  type SemanticComparisonResult,
-} from "./layout/semantic-comparator.js";
+  compareVisualNodeGroups,
+  getVisualNodeGroupStatistics,
+  type VisualGroupDifference,
+  type VisualGroupComparisonResult,
+} from "./layout/visual-comparator.js";
 
 // Flat Comparator
 export {
-  flattenSemanticGroups,
+  flattenVisualNodeGroups,
   compareFlattenedGroups,
   generateChangeSummary,
   type FlattenedGroup,

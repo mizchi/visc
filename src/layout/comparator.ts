@@ -2,9 +2,9 @@
  * 新しいフォーマットのレイアウト比較機能
  */
 
-import type { LayoutAnalysisResult, LayoutElement } from './extractor.js';
+import type { VisualTreeAnalysis, VisualNode } from './extractor.js';
 
-export interface LayoutDifference {
+export interface VisualDifference {
   elementId: string;
   type: 'position' | 'size' | 'both' | 'text' | 'visibility';
   changes: {
@@ -17,12 +17,12 @@ export interface LayoutDifference {
     text?: string;
     visibility?: boolean;
   };
-  oldValue: LayoutElement;
-  newValue: LayoutElement;
+  oldValue: VisualNode;
+  newValue: VisualNode;
 }
 
-export interface LayoutComparisonResult {
-  differences: LayoutDifference[];
+export interface VisualComparisonResult {
+  differences: VisualDifference[];
   addedElements: string[];
   removedElements: string[];
   similarity: number;
@@ -37,7 +37,7 @@ export interface LayoutComparisonResult {
 /**
  * 要素のIDを生成
  */
-export function generateElementId(element: LayoutElement): string {
+export function generateElementId(element: VisualNode): string {
   // tagName, className, id の組み合わせで一意のIDを生成
   const tag = element.tagName || 'unknown';
   const className = element.className || 'no-class';
@@ -49,7 +49,7 @@ export function generateElementId(element: LayoutElement): string {
 /**
  * 要素が無視リストにマッチするかチェック
  */
-function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]): boolean {
+function shouldIgnoreElement(element: VisualNode, ignoreSelectors: string[]): boolean {
   if (ignoreSelectors.length === 0) return false;
   
   for (const selector of ignoreSelectors) {
@@ -90,8 +90,8 @@ function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]):
 /**
  * 要素のマップを作成
  */
-function createElementMap(elements: LayoutElement[]): Map<string, LayoutElement> {
-  const map = new Map<string, LayoutElement>();
+function createElementMap(elements: VisualNode[]): Map<string, VisualNode> {
+  const map = new Map<string, VisualNode>();
   elements.forEach(element => {
     const id = generateElementId(element);
     map.set(id, element);
@@ -103,8 +103,8 @@ function createElementMap(elements: LayoutElement[]): Map<string, LayoutElement>
  * 矩形の変更を検出
  */
 function detectRectChanges(
-  rect1: LayoutElement['rect'],
-  rect2: LayoutElement['rect'],
+  rect1: VisualNode['rect'],
+  rect2: VisualNode['rect'],
   threshold: number = 2
 ): { hasChange: boolean; type: 'position' | 'size' | 'both' | null; changes: any } {
   const changes: any = {};
@@ -141,20 +141,20 @@ function detectRectChanges(
  * レイアウトを比較（新フォーマット）
  */
 export function compareLayoutTrees(
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   options: {
     threshold?: number;
     ignoreText?: boolean;
     ignoreElements?: string[];
   } = {}
-): LayoutComparisonResult {
+): VisualComparisonResult {
   const { threshold = 2, ignoreText = false, ignoreElements = [] } = options;
   
   const baselineMap = createElementMap(baseline.elements);
   const currentMap = createElementMap(current.elements);
   
-  const differences: LayoutDifference[] = [];
+  const differences: VisualDifference[] = [];
   const addedElements: string[] = [];
   const removedElements: string[] = [];
   const processedIds = new Set<string>();
@@ -184,7 +184,7 @@ export function compareLayoutTrees(
       const textChanged = !ignoreText && baselineElement.text !== currentElement.text;
       
       if (rectResult.hasChange || textChanged) {
-        const diff: LayoutDifference = {
+        const diff: VisualDifference = {
           elementId,
           type: textChanged && rectResult.type ? 'both' : (rectResult.type || 'text'),
           changes: {},
@@ -241,8 +241,8 @@ export function compareLayoutTrees(
  * レイアウトが変更されたかチェック
  */
 export function hasLayoutChanged(
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   threshold: number = 2
 ): boolean {
   const result = compareLayoutTrees(baseline, current, { threshold });
@@ -255,8 +255,8 @@ export function hasLayoutChanged(
  * レイアウトの類似度をチェック
  */
 export function calculateSimilarity(
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   similarityThreshold: number = 90,
   positionThreshold: number = 2
 ): boolean {

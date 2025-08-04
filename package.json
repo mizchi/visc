@@ -1,7 +1,7 @@
 {
-  "name": "@mizchi/visual-checker",
+  "name": "@mizchi/vischeck",
   "version": "0.1.0",
-  "description": "Visual regression testing framework for web applications",
+  "description": "Visual regression testing library",
   "repository": {
     "type": "git",
     "url": "https://github.com/mizchi/visual-checker.git"
@@ -22,18 +22,8 @@
     "build": "tsc --emitDeclarationOnly && tsdown && npx tsx --build src/cli.ts -o dist/cli.js || npx esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
     "build:watch": "tsdown --watch",
     "dev": "tsdown --watch",
-    "test": "npm run build && node dist/cli.js test",
-    "update-snapshots": "npm run build && node dist/cli.js update",
-    "compare": "npm run build && node dist/cli.js compare",
-    "extract": "npm run build && tsx examples/layout/extract-layout-refactored.ts",
-    "viewer": "npx http-server examples -o fixtures/layout-viewer.html",
-    "typecheck": "tsc --noEmit",
-    "test:unit": "vitest",
-    "test:all": "npm run test:unit && npm run test:layout",
-    "stability-check": "npm run build && tsx examples/layout/layout-stability-check.ts",
-    "test:proxy": "npm run build && vitest tests/proxy/",
-    "proxy:dev": "cd cloudflare-proxy && npm run dev",
-    "proxy:setup": "cd cloudflare-proxy && npm install"
+    "test": "vitest --run",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "visual-regression",
@@ -42,9 +32,9 @@
   ],
   "author": "mizchi",
   "license": "MIT",
-  "homepage": "https://github.com/mizchi/visual-checker#readme",
+  "homepage": "https://github.com/mizchi/vischeck#readme",
   "bugs": {
-    "url": "https://github.com/mizchi/visual-checker/issues"
+    "url": "https://github.com/mizchi/vischeck/issues"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",

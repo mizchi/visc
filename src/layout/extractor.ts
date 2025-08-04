@@ -3,19 +3,19 @@
  */
 
 import type {
-  LayoutRect,
-  LayoutElement,
-  SemanticGroup,
-  LayoutPattern,
-  LayoutAnalysisResult,
+  BoundingRect,
+  VisualNode,
+  VisualNodeGroup,
+  VisualPattern,
+  VisualTreeAnalysis,
 } from "../types.js";
 
 export type {
-  LayoutRect,
-  LayoutElement,
-  SemanticGroup,
-  LayoutPattern,
-  LayoutAnalysisResult,
+  BoundingRect,
+  VisualNode,
+  VisualNodeGroup,
+  VisualPattern,
+  VisualTreeAnalysis,
 };
 
 /**
@@ -24,7 +24,7 @@ export type {
 export function getExtractLayoutScript(): string {
   return `
 (() => {
-  const getSemanticType = ${getSemanticType.toString()};
+  const getNodeType = ${getNodeType.toString()};
   const calculateImportance = ${calculateImportance.toString()};
   
   // DOM要素を収集して分析
@@ -106,7 +106,7 @@ export function getExtractLayoutScript(): string {
           fontSize: computedStyle.fontSize,
           fontWeight: computedStyle.fontWeight
         },
-        semanticType: getSemanticType(element),
+        nodeType: getNodeType(element),
         importance: calculateImportance(element, rect),
       });
     }
@@ -145,14 +145,14 @@ export function getExtractLayoutScript(): string {
 /**
  * 抽出されたレイアウトデータをセマンティックグループに整理
  */
-export function organizeIntoSemanticGroups(
-  elements: LayoutElement[],
+export function organizeIntoVisualNodeGroups(
+  elements: VisualNode[],
   options: {
     groupingThreshold?: number; // グループ化の閾値
     importanceThreshold?: number; // 重要度の閾値
     viewport?: { width: number; height: number }; // ビューポートによるフィルタリング
   } = {}
-): SemanticGroup[] {
+): VisualNodeGroup[] {
   const { groupingThreshold = 20, importanceThreshold = 3, viewport } = options;
 
   // ビューポートが指定されている場合、ビューポート外の要素をフィルタリング
@@ -174,7 +174,7 @@ export function organizeIntoSemanticGroups(
       return true;
     });
   }
-  const root: SemanticGroup = {
+  const root: VisualNodeGroup = {
     type: "root",
     label: "Page Root",
     bounds: {
@@ -209,8 +209,8 @@ export function organizeIntoSemanticGroups(
   );
 
   // グループ化処理
-  const groups: SemanticGroup[] = [];
-  const assignedToGroup = new Set<LayoutElement>();
+  const groups: VisualNodeGroup[] = [];
+  const assignedToGroup = new Set<VisualNode>();
 
   sortedElements.forEach((element) => {
     if (
@@ -230,7 +230,7 @@ export function organizeIntoSemanticGroups(
       return;
     }
 
-    let bestGroup: SemanticGroup | null = null;
+    let bestGroup: VisualNodeGroup | null = null;
     let minDistance = Infinity;
 
     // 既存のグループに所属できるか探す
@@ -246,9 +246,9 @@ export function organizeIntoSemanticGroups(
     });
 
     if (bestGroup !== null) {
-      const group = bestGroup as SemanticGroup;
+      const group = bestGroup as VisualNodeGroup;
       // 既存グループに追加
-      group.children.push(element as LayoutElement | SemanticGroup);
+      group.children.push(element as VisualNode | VisualNodeGroup);
       assignedToGroup.add(element);
       // グループの境界を更新
       const newX = Math.min(group.bounds.x, element.rect.x);
@@ -266,12 +266,12 @@ export function organizeIntoSemanticGroups(
       group.bounds.y = newY;
     } else {
       // 新規グループを作成
-      const newGroup: SemanticGroup = {
-        type: element.semanticType || "content",
+      const newGroup: VisualNodeGroup = {
+        type: element.nodeType || "content",
         label: element.text?.substring(0, 30) || element.tagName,
         bounds: { ...element.rect },
         importance: element.importance || 0,
-        children: [element as LayoutElement | SemanticGroup],
+        children: [element as VisualNode | VisualNodeGroup],
       };
       groups.push(newGroup);
       assignedToGroup.add(element);
@@ -279,7 +279,7 @@ export function organizeIntoSemanticGroups(
   });
 
   // グループの階層化（簡易版）
-  const topLevelGroups: SemanticGroup[] = [];
+  const topLevelGroups: VisualNodeGroup[] = [];
   groups.sort(
     (a, b) =>
       b.bounds.width * b.bounds.height - a.bounds.width * a.bounds.height
@@ -296,7 +296,7 @@ export function organizeIntoSemanticGroups(
         parent.bounds.y + parent.bounds.height >=
           group.bounds.y + group.bounds.height
       ) {
-        parent.children.push(group as LayoutElement | SemanticGroup);
+        parent.children.push(group as VisualNode | VisualNodeGroup);
         parentFound = true;
       }
     });
@@ -338,12 +338,12 @@ export async function analyzeLayout(
     importanceThreshold?: number;
     viewportOnly?: boolean;
   } = {}
-): Promise<LayoutAnalysisResult> {
+): Promise<VisualTreeAnalysis> {
   // ブラウザでスクリプトを実行してデータを取得
   const rawData = await page.evaluate(getExtractLayoutScript());
 
   // セマンティックグループに整理
-  const semanticGroups = organizeIntoSemanticGroups(rawData.elements, {
+  const visualNodeGroups = organizeIntoVisualNodeGroups(rawData.elements, {
     ...options,
     viewport: options.viewportOnly ? rawData.viewport : undefined,
   });
@@ -353,17 +353,17 @@ export async function analyzeLayout(
 
   return {
     ...rawData,
-    semanticGroups,
+    visualNodeGroups,
     patterns,
     statistics: {
       ...rawData.statistics,
-      semanticGroupCount: semanticGroups.length,
+      visualNodeGroupCount: visualNodeGroups.length,
       patternCount: patterns.length,
     },
   };
 }
 
-function getSemanticType(element: any) {
+function getNodeType(element: any) {
   const tag = element.tagName.toLowerCase();
   const role = element.getAttribute("role");
 
@@ -439,7 +439,7 @@ function calculateImportance(element: any, rect: any) {
   }
 
   // インタラクティブ要素の重要度
-  if (getSemanticType(element) === "interactive") {
+  if (getNodeType(element) === "interactive") {
     importance += 15;
   }
 
@@ -464,14 +464,14 @@ function calculateImportance(element: any, rect: any) {
   return Math.min(100, importance);
 }
 
-function detectPatterns(elements: any[]): LayoutPattern[] {
-  const patterns: LayoutPattern[] = [];
+function detectPatterns(elements: any[]): VisualPattern[] {
+  const patterns: VisualPattern[] = [];
   const processed = new Set<number>();
 
   elements.forEach((el, i) => {
     if (processed.has(i)) return;
 
-    const pattern: LayoutPattern = {
+    const pattern: VisualPattern = {
       elements: [el],
       type: el.tagName,
       className: el.className,

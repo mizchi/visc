@@ -1,4 +1,4 @@
-import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from '../types.js';
+import type { VisualTreeAnalysis, VisualNodeGroup, VisualNode } from '../types.js';
 
 const typeColorMap: Record<string, string> = {
   navigation: '#4A90E2', // Blue
@@ -11,12 +11,12 @@ const typeColorMap: Record<string, string> = {
   default: '#9B9B9B',      // Gray
 };
 
-function getElementColor(element: SemanticGroup | LayoutElement): string {
+function getElementColor(element: VisualNodeGroup | VisualNode): string {
   if ('type' in element && element.type) {
     return typeColorMap[element.type] || typeColorMap.default;
   }
   if ('tagName' in element) {
-    // A simple heuristic for layout elements if they don't have a semantic type
+    // A simple heuristic for visual nodes if they don't have a node type
     const tagName = element.tagName.toLowerCase();
     if (['nav', 'header', 'footer'].includes(tagName)) return typeColorMap.navigation;
     if (['button', 'a', 'input'].includes(tagName)) return typeColorMap.interactive;
@@ -62,7 +62,7 @@ export interface RenderOptions {
 /**
  * 要素が無視リストにマッチするかチェック
  */
-function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]): boolean {
+function shouldIgnoreElement(element: VisualNode, ignoreSelectors: string[]): boolean {
   if (!ignoreSelectors || ignoreSelectors.length === 0) return false;
   
   for (const selector of ignoreSelectors) {
@@ -99,8 +99,8 @@ function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]):
   return false;
 }
 
-export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult, options: RenderOptions = {}): string {
-  const { viewport, semanticGroups, elements } = analysisResult;
+export function renderLayoutToSvg(analysisResult: VisualTreeAnalysis, options: RenderOptions = {}): string {
+  const { viewport, visualNodeGroups, elements } = analysisResult;
   const viewportWidth = viewport.width || 1280;
   const viewportHeight = viewport.height || 800;
 
@@ -116,17 +116,17 @@ export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult, options:
     maxY = Math.max(maxY, rect.y + rect.height);
   };
 
-  // Render semantic groups first as background areas
-  if (semanticGroups) {
-    const traverse = (group: SemanticGroup | LayoutElement) => {
-      // LayoutElementの場合、無視チェック
-      if ('tagName' in group && options.ignoreElements && shouldIgnoreElement(group as LayoutElement, options.ignoreElements)) {
+  // Render visual node groups first as background areas
+  if (visualNodeGroups) {
+    const traverse = (group: VisualNodeGroup | VisualNode) => {
+      // VisualNodeの場合、無視チェック
+      if ('tagName' in group && options.ignoreElements && shouldIgnoreElement(group as VisualNode, options.ignoreElements)) {
         return;
       }
       
-      // SemanticGroupの場合、ラベルベースの無視チェック
+      // VisualNodeGroupの場合、ラベルベースの無視チェック
       if ('type' in group && 'label' in group && options.ignoreElements) {
-        const labelSelector = `[data-semantic-label="${group.label}"]`;
+        const labelSelector = `[data-visual-label="${group.label}"]`;
         if (options.ignoreElements.includes(labelSelector)) {
           return;
         }
@@ -140,13 +140,13 @@ export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult, options:
         svgElements.push(createTextElement(label, group.bounds, color));
       }
       if (group.children) {
-        group.children.forEach((child: SemanticGroup | LayoutElement) => traverse(child));
+        group.children.forEach((child: VisualNodeGroup | VisualNode) => traverse(child));
       }
     };
-    semanticGroups.forEach(traverse);
+    visualNodeGroups.forEach(traverse);
   } else if (elements) {
-    // Fallback to rendering individual elements if no semantic groups
-    elements.forEach((element: LayoutElement) => {
+    // Fallback to rendering individual elements if no visual node groups
+    elements.forEach((element: VisualNode) => {
       // 無視要素はスキップ
       if (options.ignoreElements && shouldIgnoreElement(element, options.ignoreElements)) {
         return;

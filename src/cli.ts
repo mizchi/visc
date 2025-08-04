@@ -5,7 +5,7 @@ import {
   validateWithSettings,
   renderLayoutToSvg,
   renderComparisonToSvg,
-  getSemanticStatistics,
+  getVisualNodeGroupStatistics,
   compareFlattenedGroups,
   generateChangeSummary,
   fetchRawLayoutData,
@@ -13,7 +13,7 @@ import {
   compareLayoutTrees,
 } from "./index.js";
 import puppeteer from "puppeteer";
-import type { ComparisonSettings, LayoutAnalysisResult } from "./index.js";
+import type { ComparisonSettings, VisualTreeAnalysis } from "./index.js";
 import fs from "fs/promises";
 import path from "path";
 import chalk from "chalk";
@@ -59,7 +59,7 @@ program
     const spinner = ora("Collecting samples for calibration...").start();
 
     try {
-      const samples: LayoutAnalysisResult[] = [];
+      const samples: VisualTreeAnalysis[] = [];
       const viewport = parseViewport(options.viewport);
       const sampleCount = parseInt(options.samples);
 
@@ -175,7 +175,7 @@ program
       });
 
       // ベースラインを取得または作成
-      let baselineLayout: LayoutAnalysisResult;
+      let baselineLayout: VisualTreeAnalysis;
       if (options.baseline) {
         spinner.text = "Loading baseline...";
         baselineLayout = JSON.parse(
@@ -409,7 +409,7 @@ program
       console.log(`Removed: ${comparison.summary.totalRemoved}`);
 
       if (flatComparison.statistics.totalBaselineGroups > 0) {
-        console.log("\n" + chalk.bold("Semantic Group Comparison:"));
+        console.log("\n" + chalk.bold("Visual Node Group Comparison:"));
         console.log(chalk.gray("─".repeat(40)));
         console.log(generateChangeSummary(flatComparison));
       }
@@ -474,10 +474,10 @@ program
       console.log(
         `Interactive Elements: ${layout.statistics.interactiveElements}`
       );
-      if (layout.semanticGroups) {
-        console.log(`Semantic Groups: ${layout.semanticGroups.length}`);
+      if (layout.visualNodeGroups) {
+        console.log(`Visual Node Groups: ${layout.visualNodeGroups.length}`);
 
-        const stats = getSemanticStatistics(layout.semanticGroups);
+        const stats = getVisualNodeGroupStatistics(layout.visualNodeGroups);
         console.log(
           `Group Types: ${Object.entries(stats.groupsByType)
             .map(([type, count]) => `${type}(${count})`)
@@ -507,7 +507,7 @@ async function loadLayoutFromSource(
   viewport: { width: number; height: number },
   spinner: any,
   captureFullPage: boolean = false
-): Promise<LayoutAnalysisResult> {
+): Promise<VisualTreeAnalysis> {
   if (
     source.startsWith("http://") ||
     source.startsWith("https://") ||
@@ -538,7 +538,7 @@ async function fetchLayoutFromUrl(
     waitForContent?: boolean;
     captureFullPage?: boolean;
   } = {}
-): Promise<LayoutAnalysisResult> {
+): Promise<VisualTreeAnalysis> {
   const {
     viewport = { width: 1280, height: 800 },
     headless = true,

@@ -1,20 +1,20 @@
 /**
- * フラットリスト化されたセマンティックグループの比較エンジン
+ * フラットリスト化されたビジュアルノードグループの比較エンジン
  * 最近傍マッチングアルゴリズムを使用
  */
 
 import type { 
-  LayoutAnalysisResult, 
-  SemanticGroup, 
-  LayoutElement,
-  LayoutRect 
+  VisualTreeAnalysis, 
+  VisualNodeGroup, 
+  VisualNode,
+  BoundingRect 
 } from '../types.js';
 
 export interface FlattenedGroup {
   id: string;
   type: string;
   label: string;
-  bounds: LayoutRect;
+  bounds: BoundingRect;
   importance: number;
   elementCount: number; // 含まれる要素数
   path: string[]; // 親グループのパス
@@ -43,15 +43,15 @@ export interface FlatComparisonResult {
 }
 
 /**
- * セマンティックグループをフラットリストに展開
+ * ビジュアルノードグループをフラットリストに展開
  */
-export function flattenSemanticGroups(
-  groups: SemanticGroup[],
+export function flattenVisualNodeGroups(
+  groups: VisualNodeGroup[],
   parentPath: string[] = []
 ): FlattenedGroup[] {
   const flattened: FlattenedGroup[] = [];
   
-  function traverse(group: SemanticGroup, path: string[], depth: number) {
+  function traverse(group: VisualNodeGroup, path: string[], depth: number) {
     // グループのIDを生成（位置とタイプから）
     const id = `${group.type}_${Math.round(group.bounds.x)}_${Math.round(group.bounds.y)}`;
     
@@ -59,7 +59,7 @@ export function flattenSemanticGroups(
     let elementCount = 0;
     group.children.forEach(child => {
       if (!('type' in child)) {
-        // LayoutElement
+        // VisualNode
         elementCount++;
       }
     });
@@ -80,7 +80,7 @@ export function flattenSemanticGroups(
     const newPath = [...path, `${group.type}:${group.label}`];
     group.children.forEach(child => {
       if ('type' in child && 'bounds' in child) {
-        traverse(child as SemanticGroup, newPath, depth + 1);
+        traverse(child as VisualNodeGroup, newPath, depth + 1);
       }
     });
   }
@@ -195,11 +195,11 @@ function findBestMatches(
 }
 
 /**
- * フラットリスト化されたセマンティックグループを比較
+ * フラットリスト化されたビジュアルノードグループを比較
  */
 export function compareFlattenedGroups(
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   options: {
     maxMatchDistance?: number;
     weights?: {
@@ -212,8 +212,8 @@ export function compareFlattenedGroups(
 ): FlatComparisonResult {
   const { maxMatchDistance = 0.5, weights } = options;
   
-  // セマンティックグループが存在しない場合
-  if (!baseline.semanticGroups || !current.semanticGroups) {
+  // ビジュアルノードグループが存在しない場合
+  if (!baseline.visualNodeGroups || !current.visualNodeGroups) {
     return {
       matches: [],
       unmatchedBaseline: [],
@@ -230,8 +230,8 @@ export function compareFlattenedGroups(
   }
   
   // グループをフラット化
-  const baselineFlat = flattenSemanticGroups(baseline.semanticGroups);
-  const currentFlat = flattenSemanticGroups(current.semanticGroups);
+  const baselineFlat = flattenVisualNodeGroups(baseline.visualNodeGroups);
+  const currentFlat = flattenVisualNodeGroups(current.visualNodeGroups);
   
   // 最近傍マッチング
   const { matches, unmatchedBaseline, unmatchedCurrent } = findBestMatches(

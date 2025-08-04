@@ -6,7 +6,7 @@ export interface StabilityCheckOptions {
   targetStability: number;
 }
 
-export interface LayoutRect {
+export interface BoundingRect {
   x: number;
   y: number;
   width: number;
@@ -17,11 +17,11 @@ export interface LayoutRect {
   left: number;
 }
 
-export interface LayoutElement {
+export interface VisualNode {
   tagName: string;
   className: string;
   id: string;
-  rect: LayoutRect;
+  rect: BoundingRect;
   text?: string;
   role?: string | null;
   ariaLabel?: string | null;
@@ -30,26 +30,26 @@ export interface LayoutElement {
   hasParentWithSameSize?: boolean;
   computedStyle?: { [key: string]: string };
   importance?: number;
-  semanticType?: string;
-  children?: (LayoutElement | SemanticGroup)[];
+  nodeType?: string;
+  children?: (VisualNode | VisualNodeGroup)[];
 }
 
-export interface SemanticGroup {
+export interface VisualNodeGroup {
   type: string;
   label: string;
-  bounds: LayoutRect;
+  bounds: BoundingRect;
   importance: number;
-  children: (LayoutElement | SemanticGroup)[];
+  children: (VisualNode | VisualNodeGroup)[];
 }
 
-export interface LayoutPattern {
-  elements: LayoutElement[];
+export interface VisualPattern {
+  elements: VisualNode[];
   type: string;
   className: string;
   averageSize: { width: number; height: number };
 }
 
-export interface LayoutAnalysisResult {
+export interface VisualTreeAnalysis {
   url: string;
   timestamp: string;
   viewport: { 
@@ -58,17 +58,17 @@ export interface LayoutAnalysisResult {
     scrollX: number; 
     scrollY: number 
   };
-  elements: LayoutElement[];
-  semanticGroups?: SemanticGroup[];
-  patterns?: LayoutPattern[];
+  elements: VisualNode[];
+  visualNodeGroups?: VisualNodeGroup[];
+  patterns?: VisualPattern[];
   statistics: { [key: string]: number };
 }
 
-export interface LayoutDifference {
+export interface VisualDifference {
   type: "added" | "removed" | "modified" | "moved";
   path: string;
-  element?: LayoutElement | SemanticGroup;
-  previousElement?: LayoutElement | SemanticGroup;
+  element?: VisualNode | VisualNodeGroup;
+  previousElement?: VisualNode | VisualNodeGroup;
   changes?: {
     property: string;
     before: unknown;

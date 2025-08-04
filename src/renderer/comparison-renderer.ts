@@ -3,14 +3,14 @@
  */
 
 import type {
-  LayoutComparisonResult,
-  LayoutDifference,
+  VisualComparisonResult,
+  VisualDifference,
 } from "../layout/comparator.js";
 import { generateElementId } from "../layout/comparator.js";
 import type {
-  LayoutAnalysisResult,
-  LayoutElement,
-  SemanticGroup,
+  VisualTreeAnalysis,
+  VisualNode,
+  VisualNodeGroup,
 } from "../layout/extractor.js";
 import { escapeXml } from "./layout-renderer.js";
 
@@ -25,9 +25,9 @@ interface DiffRenderOptions {
  * 比較結果をSVGに描画
  */
 export function renderComparisonToSvg(
-  comparison: LayoutComparisonResult,
-  baseline: LayoutAnalysisResult,
-  current: LayoutAnalysisResult,
+  comparison: VisualComparisonResult,
+  baseline: VisualTreeAnalysis,
+  current: VisualTreeAnalysis,
   options: DiffRenderOptions = {}
 ): string {
   const {
@@ -38,12 +38,12 @@ export function renderComparisonToSvg(
   } = options;
 
   // コンテンツの実際の高さを計算
-  const calculateContentHeight = (layout: LayoutAnalysisResult): number => {
+  const calculateContentHeight = (layout: VisualTreeAnalysis): number => {
     let maxHeight = viewport.height;
 
-    // セマンティックグループモードの場合
-    if (layout.semanticGroups && layout.semanticGroups.length > 0) {
-      layout.semanticGroups.forEach((group) => {
+    // ビジュアルノードグループモードの場合
+    if (layout.visualNodeGroups && layout.visualNodeGroups.length > 0) {
+      layout.visualNodeGroups.forEach((group) => {
         const groupBottom = group.bounds.y + group.bounds.height;
         maxHeight = Math.max(maxHeight, groupBottom);
       });
@@ -82,15 +82,15 @@ export function renderComparisonToSvg(
   );
 
   // 差分要素のマップを作成
-  const diffMap = new Map<string, LayoutDifference>();
+  const diffMap = new Map<string, VisualDifference>();
   comparison.differences.forEach((diff) => {
     diffMap.set(diff.elementId, diff);
   });
 
   // ベースラインの要素を描画
-  if (baseline.semanticGroups && baseline.semanticGroups.length > 0) {
+  if (baseline.visualNodeGroups && baseline.visualNodeGroups.length > 0) {
     // セマンティックグループモード
-    baseline.semanticGroups.forEach((group) => {
+    baseline.visualNodeGroups.forEach((group) => {
       renderGroupDiff(elements, group, diffMap, showUnchanged, showLabels);
     });
   } else {
@@ -187,8 +187,8 @@ function generateLegend(): string {
 
 function renderGroupDiff(
   elements: string[],
-  group: SemanticGroup,
-  diffMap: Map<string, LayoutDifference>,
+  group: VisualNodeGroup,
+  diffMap: Map<string, VisualDifference>,
   showUnchanged: boolean,
   showLabels: boolean
 ): void {
@@ -196,7 +196,7 @@ function renderGroupDiff(
   const groupClass = getGroupDiffClass(group, diffMap);
   if (showUnchanged || groupClass !== "unchanged") {
     elements.push(`
-      <g class="semantic-group">
+      <g class="visual-group">
         <rect x="${group.bounds.x}" y="${group.bounds.y}" 
               width="${group.bounds.width}" height="${group.bounds.height}"
               class="${groupClass}" rx="5" />
@@ -220,20 +220,20 @@ function renderGroupDiff(
     if ("children" in child) {
       renderGroupDiff(
         elements,
-        child as SemanticGroup,
+        child as VisualNodeGroup,
         diffMap,
         showUnchanged,
         showLabels
       );
     }
-    // 個別要素（LayoutElement）は描画しない - グループで既に表現されている
+    // 個別要素（VisualNode）は描画しない - グループで既に表現されている
   });
 }
 
 function renderElementDiff(
   elements: string[],
-  element: LayoutElement,
-  diffMap: Map<string, LayoutDifference>,
+  element: VisualNode,
+  diffMap: Map<string, VisualDifference>,
   showUnchanged: boolean,
   showLabels: boolean
 ): void {
@@ -276,7 +276,7 @@ function renderElementDiff(
 
 function renderAddedElement(
   elements: string[],
-  element: LayoutElement,
+  element: VisualNode,
   showLabels: boolean
 ): void {
   elements.push(`
@@ -296,7 +296,7 @@ function renderAddedElement(
 
 function renderRemovedElement(
   elements: string[],
-  element: LayoutElement,
+  element: VisualNode,
   showLabels: boolean
 ): void {
   elements.push(`
@@ -315,7 +315,7 @@ function renderRemovedElement(
 }
 
 function generateSummary(
-  comparison: LayoutComparisonResult,
+  comparison: VisualComparisonResult,
   viewport: { width: number; height: number }
 ): string {
   const summary = comparison.summary;
@@ -341,7 +341,7 @@ function generateSummary(
 
 // ヘルパー関数
 
-function getDiffClass(diff: LayoutDifference): string {
+function getDiffClass(diff: VisualDifference): string {
   switch (diff.type) {
     case "position":
       return "changed-position";
@@ -355,19 +355,19 @@ function getDiffClass(diff: LayoutDifference): string {
 }
 
 function getGroupDiffClass(
-  group: SemanticGroup,
-  diffMap: Map<string, LayoutDifference>
+  group: VisualNodeGroup,
+  diffMap: Map<string, VisualDifference>
 ): string {
   let hasPositionChange = false;
   let hasSizeChange = false;
 
   // グループ内の全要素の変更を集計
-  const checkChildren = (children: (LayoutElement | SemanticGroup)[]): void => {
+  const checkChildren = (children: (VisualNode | VisualNodeGroup)[]): void => {
     children.forEach((child) => {
       if ("children" in child) {
-        checkChildren((child as SemanticGroup).children);
+        checkChildren((child as VisualNodeGroup).children);
       } else {
-        const elementId = generateElementId(child as LayoutElement);
+        const elementId = generateElementId(child as VisualNode);
         const diff = diffMap.get(elementId);
         if (diff) {
           if (diff.type === "position" || diff.type === "both")
@@ -388,8 +388,8 @@ function getGroupDiffClass(
 }
 
 function findElement(
-  layout: LayoutAnalysisResult,
+  layout: VisualTreeAnalysis,
   elementId: string
-): LayoutElement | undefined {
+): VisualNode | undefined {
   return layout.elements.find((el) => generateElementId(el) === elementId);
 }

@@ -2,9 +2,9 @@
  * 比較設定の自動キャリブレーション機能
  */
 
-import type { LayoutAnalysisResult } from "./extractor.js";
+import type { VisualTreeAnalysis } from "./extractor.js";
 import { compareLayoutTrees } from "./comparator.js";
-import { compareSemanticGroups } from "./semantic-comparator.js";
+import { compareVisualNodeGroups } from "./visual-comparator.js";
 import { detectFlakiness, type FlakyElement } from "./flakiness-detector.js";
 
 export interface ComparisonSettings {
@@ -39,7 +39,7 @@ export interface DynamicElementInfo {
  * 複数のレイアウトサンプルから最適な比較設定を自動生成
  */
 export function calibrateComparisonSettings(
-  samples: LayoutAnalysisResult[],
+  samples: VisualTreeAnalysis[],
   options: {
     targetStability?: number; // 目標とする安定性（0-100）
     strictness?: "low" | "medium" | "high"; // 厳密さのレベル
@@ -74,7 +74,7 @@ export function calibrateComparisonSettings(
       .filter(elem => {
         // scoreプロパティを使用（flakinessScoreではない）
         const passesThreshold = elem.score >= dynamicThreshold;
-        if (passesThreshold && elem.path.startsWith('semanticGroup')) {
+        if (passesThreshold && elem.path.startsWith('visualNodeGroup')) {
           console.log(`[Calibrator] Element ${elem.path} passes threshold with score ${elem.score}%`);
           console.log(`[Calibrator] Identifier:`, JSON.stringify(elem.identifier));
         }
@@ -154,8 +154,8 @@ export function calibrateComparisonSettings(
  * キャリブレーションされた設定を使用して新しいレイアウトを検証
  */
 export function validateWithSettings(
-  layout: LayoutAnalysisResult,
-  baseline: LayoutAnalysisResult,
+  layout: VisualTreeAnalysis,
+  baseline: VisualTreeAnalysis,
   settings: ComparisonSettings
 ): ValidationResult {
   const comparison = compareLayoutTrees(baseline, layout);
@@ -242,7 +242,7 @@ interface SampleVariances {
 }
 
 function analyzeSampleVariances(
-  samples: LayoutAnalysisResult[]
+  samples: VisualTreeAnalysis[]
 ): SampleVariances {
   const elementComparisons = [];
   const groupComparisons = [];
@@ -254,8 +254,8 @@ function analyzeSampleVariances(
       elementComparisons.push(compareLayoutTrees(samples[i], samples[j]));
 
       // セマンティックグループレベルでの比較
-      if (samples[i].semanticGroups && samples[j].semanticGroups) {
-        groupComparisons.push(compareSemanticGroups(samples[i], samples[j]));
+      if (samples[i].visualNodeGroups && samples[j].visualNodeGroups) {
+        groupComparisons.push(compareVisualNodeGroups(samples[i], samples[j]));
       }
     }
   }
@@ -400,19 +400,19 @@ interface Violation {
  */
 function generateSelector(
   flakyElement: FlakyElement,
-  samples: LayoutAnalysisResult[]
+  samples: VisualTreeAnalysis[]
 ): string | undefined {
   // パスから要素情報を取得
   const identifier = flakyElement.identifier;
   
-  // semanticGroupの場合
-  if (flakyElement.path.startsWith("semanticGroup")) {
-    // semanticGroup配下の要素の場合、通常の要素として処理
+  // visualNodeGroupの場合
+  if (flakyElement.path.startsWith("visualNodeGroup")) {
+    // visualNodeGroup配下の要素の場合、通常の要素として処理
     if (identifier.tagName || identifier.id || identifier.className) {
       // 通常の要素処理にフォールスルー
     } else if (identifier.label) {
       // セマンティックグループ自体の場合
-      return `[data-semantic-label="${identifier.label}"]`;
+      return `[data-visual-label="${identifier.label}"]`;
     } else {
       return undefined;
     }
