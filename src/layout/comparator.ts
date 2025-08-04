@@ -47,6 +47,47 @@ export function generateElementId(element: LayoutElement): string {
 }
 
 /**
+ * 要素が無視リストにマッチするかチェック
+ */
+function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]): boolean {
+  if (ignoreSelectors.length === 0) return false;
+  
+  for (const selector of ignoreSelectors) {
+    // IDセレクタ
+    if (selector.startsWith('#')) {
+      const id = selector.substring(1);
+      if (element.id === id) return true;
+    }
+    // クラスセレクタ
+    else if (selector.startsWith('.')) {
+      const className = selector.substring(1);
+      if (element.className && element.className.includes(className)) return true;
+    }
+    // タグセレクタ
+    else if (!selector.includes('#') && !selector.includes('.')) {
+      if (element.tagName && element.tagName.toLowerCase() === selector.toLowerCase()) return true;
+    }
+    // 複合セレクタ（簡易的な実装）
+    else {
+      // タグ#ID or タグ.クラス の形式をサポート
+      const parts = selector.match(/^(\w+)?(#[\w-]+)?(\.[\w-]+)?$/);
+      if (parts) {
+        const [, tag, id, className] = parts;
+        let matches = true;
+        
+        if (tag && element.tagName?.toLowerCase() !== tag.toLowerCase()) matches = false;
+        if (id && element.id !== id.substring(1)) matches = false;
+        if (className && (!element.className || !element.className.includes(className.substring(1)))) matches = false;
+        
+        if (matches) return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+/**
  * 要素のマップを作成
  */
 function createElementMap(elements: LayoutElement[]): Map<string, LayoutElement> {
@@ -105,9 +146,10 @@ export function compareLayoutTrees(
   options: {
     threshold?: number;
     ignoreText?: boolean;
+    ignoreElements?: string[];
   } = {}
 ): LayoutComparisonResult {
-  const { threshold = 2, ignoreText = false } = options;
+  const { threshold = 2, ignoreText = false, ignoreElements = [] } = options;
   
   const baselineMap = createElementMap(baseline.elements);
   const currentMap = createElementMap(current.elements);
@@ -120,12 +162,23 @@ export function compareLayoutTrees(
   // ベースラインの要素をチェック
   baselineMap.forEach((baselineElement, elementId) => {
     processedIds.add(elementId);
+    
+    // 無視要素はスキップ
+    if (shouldIgnoreElement(baselineElement, ignoreElements)) {
+      return;
+    }
+    
     const currentElement = currentMap.get(elementId);
     
     if (!currentElement) {
       // 要素が削除された
       removedElements.push(elementId);
     } else {
+      // 無視要素はスキップ
+      if (shouldIgnoreElement(currentElement, ignoreElements)) {
+        return;
+      }
+      
       // 要素の変更をチェック
       const rectResult = detectRectChanges(baselineElement.rect, currentElement.rect, threshold);
       const textChanged = !ignoreText && baselineElement.text !== currentElement.text;
@@ -154,7 +207,10 @@ export function compareLayoutTrees(
   // 新しく追加された要素をチェック
   currentMap.forEach((currentElement, elementId) => {
     if (!processedIds.has(elementId)) {
-      addedElements.push(elementId);
+      // 無視要素はスキップ
+      if (!shouldIgnoreElement(currentElement, ignoreElements)) {
+        addedElements.push(elementId);
+      }
     }
   });
 

@@ -1,0 +1,176 @@
+{
+  "url": "https://example.com/",
+  "timestamp": "2025-08-04T11:40:32.039Z",
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "scrollX": 0,
+    "scrollY": 0
+  },
+  "elements": [
+    {
+      "tagName": "DIV",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 308,
+        "y": 80,
+        "width": 664,
+        "height": 252.875,
+        "top": 80,
+        "right": 972,
+        "bottom": 332.875,
+        "left": 308
+      },
+      "text": "Example Domain\n    This domain is for use in illustrative examples in documents. You may use this\n  ",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgb(253, 253, 255)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      },
+      "semanticType": "container",
+      "importance": 32.919208984375004
+    },
+    {
+      "tagName": "H1",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 340,
+        "y": 133.4375,
+        "width": 600,
+        "height": 38,
+        "top": 133.4375,
+        "right": 940,
+        "bottom": 171.4375,
+        "left": 340
+      },
+      "text": "Example Domain",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "32px",
+        "fontWeight": "700"
+      },
+      "semanticType": "content",
+      "importance": 37.33203125
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 340,
+        "y": 192.875,
+        "width": 600,
+        "height": 57,
+        "top": 192.875,
+        "right": 940,
+        "bottom": 249.875,
+        "left": 340
+      },
+      "text": "This domain is for use in illustrative examples in documents. You may use this\n    domain in literat",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      },
+      "semanticType": "content",
+      "importance": 16.180078125
+    },
+    {
+      "tagName": "P",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 340,
+        "y": 265.875,
+        "width": 600,
+        "height": 19,
+        "top": 265.875,
+        "right": 940,
+        "bottom": 284.875,
+        "left": 340
+      },
+      "text": "More information...",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": false,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "block",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(0, 0, 0)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      },
+      "semanticType": "content",
+      "importance": 13.687109375000002
+    },
+    {
+      "tagName": "A",
+      "className": "",
+      "id": "",
+      "rect": {
+        "x": 340,
+        "y": 265.875,
+        "width": 152.359375,
+        "height": 19,
+        "top": 265.875,
+        "right": 492.359375,
+        "bottom": 284.875,
+        "left": 340
+      },
+      "text": "More information...",
+      "role": null,
+      "ariaLabel": null,
+      "ariaAttributes": {},
+      "isInteractive": true,
+      "hasParentWithSameSize": false,
+      "computedStyle": {
+        "display": "inline",
+        "position": "static",
+        "zIndex": "auto",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "color": "rgb(56, 72, 143)",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      },
+      "semanticType": "interactive",
+      "importance": 28.437934417724613
+    }
+  ],
+  "statistics": {
+    "totalElements": 5,
+    "interactiveElements": 1
+  }
+}

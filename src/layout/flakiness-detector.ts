@@ -36,6 +36,8 @@ export interface FlakinessAnalysis {
 export interface FlakyElement {
   /** 要素のパス */
   path: string;
+  /** 要素のID */
+  elementId: string;
   /** 要素の識別情報 */
   identifier: {
     type?: string;
@@ -60,6 +62,10 @@ export interface FlakyElement {
   occurrenceCount: number;
   /** 全体に対する出現率 */
   occurrenceRate: number;
+  /** 変更頻度 */
+  changeFrequency: number;
+  /** 全比較回数 */
+  totalComparisons: number;
 }
 
 export interface VariationDetail {
@@ -77,6 +83,31 @@ interface ElementTracker {
   identifier: any;
   occurrences: Map<string, any[]>; // property -> values
   appearanceCount: number;
+}
+
+/**
+ * 要素識別子からIDを生成
+ */
+function generateElementId(identifier: any): string {
+  const parts = [];
+  
+  if (identifier.type) {
+    parts.push(identifier.type);
+  }
+  if (identifier.tagName) {
+    parts.push(identifier.tagName);
+  }
+  if (identifier.id) {
+    parts.push(identifier.id);
+  }
+  if (identifier.className) {
+    parts.push(identifier.className.split(' ')[0]); // 最初のクラスのみ
+  }
+  if (identifier.label) {
+    parts.push(identifier.label.replace(/\s+/g, '-'));
+  }
+  
+  return parts.filter(p => p).join('-') || 'unknown';
 }
 
 /**
@@ -431,14 +462,27 @@ function analyzeElementFlakiness(
     flakinessType = "mixed";
   }
 
+  // elementIdを生成
+  const elementId = generateElementId(tracker.identifier);
+  
+  // 変更頻度を計算
+  const changeFrequency = variations.reduce((sum, v) => {
+    // 最も頻度の低い値の出現回数を変更回数とみなす
+    const minCount = Math.min(...v.values.map(val => val.count));
+    return sum + minCount;
+  }, 0);
+  
   return {
     path: tracker.path,
+    elementId,
     identifier: tracker.identifier,
     flakinessType,
     score: propertyCount > 0 ? totalScore / propertyCount : 0,
     variations,
     occurrenceCount: tracker.appearanceCount,
     occurrenceRate,
+    changeFrequency,
+    totalComparisons: totalSamples - 1
   };
 }
 

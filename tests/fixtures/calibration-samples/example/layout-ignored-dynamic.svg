@@ -1,0 +1,14 @@
+<svg width="1280" height="800" viewBox="0 0 1280 800" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        rect { transition: all 0.3s ease; }
+        text { transition: all 0.3s ease; }
+        .viewport-indicator { fill: none; stroke: #FF0000; stroke-width: 3; stroke-dasharray: 10,5; opacity: 0.5; }
+      </style>
+      <rect x="0" y="0" width="1280" height="800" fill="#FFFFFF" />
+      <rect x="308" y="80" width="664" height="252.875" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="94" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Example Domain</text>
+      <rect x="340" y="192.875" width="600" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="345" y="206.875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: More information...</text>
+      <!-- ビューポート範囲を示す赤い破線の矩形 -->
+      <rect class="viewport-indicator" x="0" y="0" width="1280" height="800" />
+    </svg>

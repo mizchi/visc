@@ -5,6 +5,7 @@
 import type { LayoutAnalysisResult } from "./extractor.js";
 import { compareLayoutTrees } from "./comparator.js";
 import { compareSemanticGroups } from "./semantic-comparator.js";
+import { detectFlakiness, type FlakyElement } from "./flakiness-detector.js";
 
 export interface ComparisonSettings {
   positionTolerance: number; // 位置の許容誤差（ピクセル）
@@ -23,6 +24,15 @@ export interface CalibrationResult {
     avgTextSimilarity: number;
     stableElementRatio: number;
   };
+  dynamicElements?: DynamicElementInfo[];
+}
+
+export interface DynamicElementInfo {
+  path: string;
+  selector?: string;
+  flakinessScore: number;
+  changeFrequency: number;
+  reason: 'position' | 'size' | 'content' | 'existence' | 'style' | 'mixed';
 }
 
 /**
@@ -33,9 +43,16 @@ export function calibrateComparisonSettings(
   options: {
     targetStability?: number; // 目標とする安定性（0-100）
     strictness?: "low" | "medium" | "high"; // 厳密さのレベル
+    detectDynamicElements?: boolean; // 動的要素を検出するか
+    dynamicThreshold?: number; // 動的とみなすフレーキーネススコアの閾値
   } = {}
 ): CalibrationResult {
-  const { targetStability = 95, strictness = "medium" } = options;
+  const { 
+    targetStability = 95, 
+    strictness = "medium",
+    detectDynamicElements = true,
+    dynamicThreshold = 50
+  } = options;
 
   if (samples.length < 2) {
     throw new Error("At least 2 samples are required for calibration");
@@ -44,6 +61,50 @@ export function calibrateComparisonSettings(
   // サンプル間の差異を分析
   const variances = analyzeSampleVariances(samples);
 
+  // 動的要素の検出
+  let dynamicElements: DynamicElementInfo[] = [];
+  let ignoreSelectors: string[] = [];
+  
+  if (detectDynamicElements) {
+    const flakiness = detectFlakiness(samples);
+    console.log(`[Calibrator] Detected ${flakiness.flakyElements.length} flaky elements`);
+    console.log(`[Calibrator] Filtering with threshold: ${dynamicThreshold}%`);
+    
+    dynamicElements = flakiness.flakyElements
+      .filter(elem => {
+        // scoreプロパティを使用（flakinessScoreではない）
+        const passesThreshold = elem.score >= dynamicThreshold;
+        if (passesThreshold && elem.path.startsWith('semanticGroup')) {
+          console.log(`[Calibrator] Element ${elem.path} passes threshold with score ${elem.score}%`);
+          console.log(`[Calibrator] Identifier:`, JSON.stringify(elem.identifier));
+        }
+        return passesThreshold;
+      })
+      .map(elem => ({
+        path: elem.path,
+        selector: generateSelector(elem, samples),
+        flakinessScore: elem.score, // scoreプロパティを使用
+        changeFrequency: elem.changeFrequency,
+        reason: elem.flakinessType
+      }));
+    
+    console.log(`[Calibrator] Dynamic elements after filtering: ${dynamicElements.length}`);
+    if (dynamicElements.length > 0) {
+      console.log(`[Calibrator] First 5 dynamic elements:`, dynamicElements.slice(0, 5).map(e => ({
+        path: e.path,
+        selector: e.selector,
+        score: e.flakinessScore.toFixed(1)
+      })));
+    }
+    
+    // 動的要素のセレクタを生成
+    ignoreSelectors = dynamicElements
+      .filter(elem => elem.selector)
+      .map(elem => elem.selector!);
+    
+    console.log(`[Calibrator] Generated ${ignoreSelectors.length} ignore selectors`);
+  }
+
   // 厳密さに基づいて基準値を調整
   const strictnessMultiplier = {
     low: 1.5,
@@ -51,25 +112,28 @@ export function calibrateComparisonSettings(
     high: 0.7,
   }[strictness];
 
-  // 統計に基づいて設定を生成
+  // 統計に基づいて設定を生成（最小値を保証）
   const settings: ComparisonSettings = {
-    positionTolerance: Math.ceil(
-      variances.maxPositionDrift * strictnessMultiplier
+    positionTolerance: Math.max(
+      2, // 最小値は2px
+      Math.ceil(variances.maxPositionDrift * strictnessMultiplier)
     ),
-    sizeTolerance: Math.ceil(
-      variances.maxSizeVariance * 100 * strictnessMultiplier
+    sizeTolerance: Math.max(
+      5, // 最小値は5%
+      Math.ceil(variances.maxSizeVariance * 100 * strictnessMultiplier)
     ),
     textSimilarityThreshold: Math.max(
       0.8,
       1 - variances.avgTextDissimilarity * strictnessMultiplier
     ),
     importanceThreshold: 10, // デフォルト値
+    ignoreElements: ignoreSelectors.length > 0 ? ignoreSelectors : undefined
   };
 
   // 信頼度を計算（サンプル数と分散の安定性に基づく）
   const confidence = calculateConfidence(samples.length, variances);
 
-  return {
+  const result = {
     settings,
     confidence,
     sampleStats: {
@@ -78,7 +142,12 @@ export function calibrateComparisonSettings(
       avgTextSimilarity: 1 - variances.avgTextDissimilarity,
       stableElementRatio: variances.stableElementRatio,
     },
+    dynamicElements: dynamicElements.length > 0 ? dynamicElements : undefined
   };
+  
+  console.log(`[Calibrator] Returning result with ${result.dynamicElements?.length || 0} dynamic elements`);
+  
+  return result;
 }
 
 /**
@@ -324,4 +393,54 @@ interface Violation {
   expected: number;
   actual: number;
   severity: "low" | "medium" | "high";
+}
+
+/**
+ * フレーキーな要素からCSSセレクタを生成
+ */
+function generateSelector(
+  flakyElement: FlakyElement,
+  samples: LayoutAnalysisResult[]
+): string | undefined {
+  // パスから要素情報を取得
+  const identifier = flakyElement.identifier;
+  
+  // semanticGroupの場合
+  if (flakyElement.path.startsWith("semanticGroup")) {
+    // semanticGroup配下の要素の場合、通常の要素として処理
+    if (identifier.tagName || identifier.id || identifier.className) {
+      // 通常の要素処理にフォールスルー
+    } else if (identifier.label) {
+      // セマンティックグループ自体の場合
+      return `[data-semantic-label="${identifier.label}"]`;
+    } else {
+      return undefined;
+    }
+  }
+  
+  // 通常の要素の場合
+  const parts: string[] = [];
+  
+  if (identifier.tagName) {
+    parts.push(identifier.tagName.toLowerCase());
+  }
+  
+  if (identifier.id) {
+    parts.push(`#${identifier.id}`);
+  }
+  
+  if (identifier.className) {
+    // クラス名をスペースで分割して最初のクラスを使用
+    const classes = identifier.className.split(' ').filter(c => c);
+    if (classes.length > 0) {
+      parts.push(`.${classes[0]}`);
+    }
+  }
+  
+  // セレクタが生成できない場合はundefined
+  if (parts.length === 0) {
+    return undefined;
+  }
+  
+  return parts.join('');
 }

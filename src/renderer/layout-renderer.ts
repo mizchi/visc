@@ -55,7 +55,51 @@ function createTextElement(text: string, rect: { x: number; y: number; width: nu
   return `<text x="${rect.x + 5}" y="${yPos}" font-family="sans-serif" font-size="${fontSize}" fill="${color}" dy=".3em">${escapeXml(text)}</text>`;
 }
 
-export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult): string {
+export interface RenderOptions {
+  ignoreElements?: string[];
+}
+
+/**
+ * 要素が無視リストにマッチするかチェック
+ */
+function shouldIgnoreElement(element: LayoutElement, ignoreSelectors: string[]): boolean {
+  if (!ignoreSelectors || ignoreSelectors.length === 0) return false;
+  
+  for (const selector of ignoreSelectors) {
+    // IDセレクタ
+    if (selector.startsWith('#')) {
+      const id = selector.substring(1);
+      if (element.id === id) return true;
+    }
+    // クラスセレクタ
+    else if (selector.startsWith('.')) {
+      const className = selector.substring(1);
+      if (element.className && element.className.includes(className)) return true;
+    }
+    // タグセレクタ
+    else if (!selector.includes('#') && !selector.includes('.')) {
+      if (element.tagName && element.tagName.toLowerCase() === selector.toLowerCase()) return true;
+    }
+    // 複合セレクタ（簡易的な実装）
+    else {
+      const parts = selector.match(/^(\w+)?(#[\w-]+)?(\.[\w-]+)?$/);
+      if (parts) {
+        const [, tag, id, className] = parts;
+        let matches = true;
+        
+        if (tag && element.tagName?.toLowerCase() !== tag.toLowerCase()) matches = false;
+        if (id && element.id !== id.substring(1)) matches = false;
+        if (className && (!element.className || !element.className.includes(className.substring(1)))) matches = false;
+        
+        if (matches) return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult, options: RenderOptions = {}): string {
   const { viewport, semanticGroups, elements } = analysisResult;
   const viewportWidth = viewport.width || 1280;
   const viewportHeight = viewport.height || 800;
@@ -75,6 +119,19 @@ export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult): string 
   // Render semantic groups first as background areas
   if (semanticGroups) {
     const traverse = (group: SemanticGroup | LayoutElement) => {
+      // LayoutElementの場合、無視チェック
+      if ('tagName' in group && options.ignoreElements && shouldIgnoreElement(group as LayoutElement, options.ignoreElements)) {
+        return;
+      }
+      
+      // SemanticGroupの場合、ラベルベースの無視チェック
+      if ('type' in group && 'label' in group && options.ignoreElements) {
+        const labelSelector = `[data-semantic-label="${group.label}"]`;
+        if (options.ignoreElements.includes(labelSelector)) {
+          return;
+        }
+      }
+      
       const color = getElementColor(group);
       if ('bounds' in group) {
         updateBounds(group.bounds);
@@ -90,6 +147,11 @@ export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult): string 
   } else if (elements) {
     // Fallback to rendering individual elements if no semantic groups
     elements.forEach((element: LayoutElement) => {
+      // 無視要素はスキップ
+      if (options.ignoreElements && shouldIgnoreElement(element, options.ignoreElements)) {
+        return;
+      }
+      
       const color = getElementColor(element);
       updateBounds(element.rect);
       svgElements.push(createRectElement(element.rect, color));

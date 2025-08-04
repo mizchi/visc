@@ -1,0 +1,90 @@
+{
+  "site": "yahoo",
+  "timestamp": "2025-08-04T12:00:18.707Z",
+  "dynamicElementCount": 590,
+  "ignoreSelectorCount": 590,
+  "topDynamicElements": [
+    {
+      "path": "semanticGroup[0]/child[8]/child[11]",
+      "selector": "li._2j0udhv5jERZtYzddeDwcv",
+      "score": 86.88524590163934,
+      "reason": "content"
+    },
+    {
+      "path": "semanticGroup[0]/child[7]/child[3]",
+      "selector": "a.yMWCYupQNdgppL-NV6sMi",
+      "score": 80.20689655172413,
+      "reason": "mixed"
+    },
+    {
+      "path": "element[1657]",
+      "selector": "div._2rAUgZCCoop3ytgHsTDyzN",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1658]",
+      "selector": "cite.O9jggTRv0zy3XcPayfJLa",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1659]",
+      "selector": "div._7uaWVw_YSgf_GKoctUM12",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1660]",
+      "selector": "span.rStpk9W4eUO5IMVhnJylj",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1661]",
+      "selector": "img",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1662]",
+      "selector": "article._3S2Q2j3wAQxbug02Q7t3dO",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1663]",
+      "selector": "a.yMWCYupQNdgppL-NV6sMi",
+      "score": 80,
+      "reason": "existence"
+    },
+    {
+      "path": "element[1664]",
+      "selector": "div._1ayyrUoOJeoE6w2hd09HV2",
+      "score": 80,
+      "reason": "existence"
+    }
+  ],
+  "ignoreSelectors": [
+    "li._2j0udhv5jERZtYzddeDwcv",
+    "a.yMWCYupQNdgppL-NV6sMi",
+    "div._2rAUgZCCoop3ytgHsTDyzN",
+    "cite.O9jggTRv0zy3XcPayfJLa",
+    "div._7uaWVw_YSgf_GKoctUM12",
+    "span.rStpk9W4eUO5IMVhnJylj",
+    "img",
+    "article._3S2Q2j3wAQxbug02Q7t3dO",
+    "a.yMWCYupQNdgppL-NV6sMi",
+    "div._1ayyrUoOJeoE6w2hd09HV2",
+    "div._3JzPQNweNOi2PGgRhkTKjU",
+    "h1._1ex3N2iA9gRSHpMG80SyN6",
+    "span.fQMqQTGJTbIMxjQwZA2zk",
+    "div._2rAUgZCCoop3ytgHsTDyzN",
+    "cite.O9jggTRv0zy3XcPayfJLa",
+    "div._7uaWVw_YSgf_GKoctUM12",
+    "span.rStpk9W4eUO5IMVhnJylj",
+    "img",
+    "article._3S2Q2j3wAQxbug02Q7t3dO",
+    "a.yMWCYupQNdgppL-NV6sMi"
+  ]
+}

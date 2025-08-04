@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import { getLayout } from "./puppeteer.js";
+import { fetchRawLayoutData, extractLayoutTree } from "./puppeteer.js";
 import type { LayoutAnalysisResult } from "../layout/extractor.js";
 
 /**
@@ -68,11 +68,14 @@ export async function getLayoutsParallel(
           browser,
           url,
           async (page) => {
-            return getLayout(page, {
-              groupingThreshold: options.groupingThreshold,
-              importanceThreshold: options.importanceThreshold,
+            const rawData = await fetchRawLayoutData(page, {
               waitForContent: options.waitForContent,
               captureFullPage: options.captureFullPage,
+            });
+            return extractLayoutTree(rawData, {
+              groupingThreshold: options.groupingThreshold,
+              importanceThreshold: options.importanceThreshold,
+              viewportOnly: !options.captureFullPage,
             });
           },
           { viewport: options.viewport }
@@ -111,11 +114,14 @@ export async function getLayoutsSamples(
           browser,
           url,
           async (page) => {
-            return getLayout(page, {
-              groupingThreshold: layoutOptions.groupingThreshold,
-              importanceThreshold: layoutOptions.importanceThreshold,
+            const rawData = await fetchRawLayoutData(page, {
               waitForContent: layoutOptions.waitForContent,
               captureFullPage: layoutOptions.captureFullPage,
+            });
+            return extractLayoutTree(rawData, {
+              groupingThreshold: layoutOptions.groupingThreshold,
+              importanceThreshold: layoutOptions.importanceThreshold,
+              viewportOnly: !layoutOptions.captureFullPage,
             });
           },
           { viewport: layoutOptions.viewport }

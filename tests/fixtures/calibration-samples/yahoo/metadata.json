@@ -1,0 +1,32 @@
+{
+  "site": "yahoo",
+  "url": "https://www.yahoo.co.jp",
+  "collectedAt": "2025-08-04T11:41:01.203Z",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "sampleCount": 5,
+  "samples": [
+    {
+      "index": 2,
+      "filename": "sample-2.json",
+      "elementCount": 1657
+    },
+    {
+      "index": 3,
+      "filename": "sample-3.json",
+      "elementCount": 1657
+    },
+    {
+      "index": 4,
+      "filename": "sample-4.json",
+      "elementCount": 1657
+    },
+    {
+      "index": 5,
+      "filename": "sample-5.json",
+      "elementCount": 1657
+    }
+  ]
+}

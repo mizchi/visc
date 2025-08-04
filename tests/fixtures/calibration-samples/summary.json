@@ -1,0 +1,22 @@
+{
+  "collectionDate": "2025-08-04T11:41:13.086Z",
+  "sites": [
+    {
+      "name": "zenn",
+      "sampleCount": 5
+    },
+    {
+      "name": "yahoo",
+      "sampleCount": 5
+    },
+    {
+      "name": "example",
+      "sampleCount": 5
+    },
+    {
+      "name": "github-mizchi",
+      "sampleCount": 5
+    }
+  ],
+  "totalSamples": 20
+}
