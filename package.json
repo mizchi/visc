@@ -8,8 +8,7 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "visual-checker": "dist/cli.js",
-    "visual-checker-v2": "dist/v2/cli.js"
+    "visual-checker": "dist/cli.js"
   },
   "types": "dist/index.d.ts",
   "type": "module",
@@ -20,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "tsc --emitDeclarationOnly && tsdown",
+    "build": "tsc --emitDeclarationOnly && tsdown && npx tsx --build src/cli.ts -o dist/cli.js || npx esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
     "build:watch": "tsdown --watch",
     "dev": "tsdown --watch",
     "test": "npm run build && node dist/cli.js test",

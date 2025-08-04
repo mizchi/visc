@@ -2,20 +2,20 @@
  * レイアウト抽出のコア機能
  */
 
-import type { 
-  LayoutRect, 
-  LayoutElement, 
-  SemanticGroup, 
-  LayoutPattern, 
-  LayoutAnalysisResult 
-} from '../types.js';
+import type {
+  LayoutRect,
+  LayoutElement,
+  SemanticGroup,
+  LayoutPattern,
+  LayoutAnalysisResult,
+} from "../types.js";
 
 export type {
   LayoutRect,
   LayoutElement,
   SemanticGroup,
   LayoutPattern,
-  LayoutAnalysisResult
+  LayoutAnalysisResult,
 };
 
 /**
@@ -154,15 +154,15 @@ export function organizeIntoSemanticGroups(
   } = {}
 ): SemanticGroup[] {
   const { groupingThreshold = 20, importanceThreshold = 3, viewport } = options;
-  
+
   // ビューポートが指定されている場合、ビューポート外の要素をフィルタリング
   let filteredElements = elements;
   if (viewport) {
-    filteredElements = elements.filter(element => {
+    filteredElements = elements.filter((element) => {
       // 要素がビューポート内に少しでも表示されているかチェック
       const elementBottom = element.rect.y + element.rect.height;
       const elementRight = element.rect.x + element.rect.width;
-      
+
       // 完全にビューポート外の要素を除外
       if (element.rect.y >= viewport.height || elementBottom <= 0) {
         return false;
@@ -170,24 +170,33 @@ export function organizeIntoSemanticGroups(
       if (element.rect.x >= viewport.width || elementRight <= 0) {
         return false;
       }
-      
+
       return true;
     });
   }
   const root: SemanticGroup = {
-    type: 'root',
-    label: 'Page Root',
-    bounds: { x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0 },
+    type: "root",
+    label: "Page Root",
+    bounds: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
     importance: 100,
     children: [],
   };
 
   // ページ全体のバウンディングボックスを計算
   if (filteredElements.length > 0) {
-    const xs = filteredElements.map(e => e.rect.x);
-    const ys = filteredElements.map(e => e.rect.y);
-    const rights = filteredElements.map(e => e.rect.right);
-    const bottoms = filteredElements.map(e => e.rect.bottom);
+    const xs = filteredElements.map((e) => e.rect.x);
+    const ys = filteredElements.map((e) => e.rect.y);
+    const rights = filteredElements.map((e) => e.rect.right);
+    const bottoms = filteredElements.map((e) => e.rect.bottom);
     root.bounds.x = Math.max(0, Math.min(...xs));
     root.bounds.y = Math.max(0, Math.min(...ys));
     root.bounds.width = Math.max(...rights) - root.bounds.x;
@@ -195,22 +204,27 @@ export function organizeIntoSemanticGroups(
   }
 
   // 重要度で要素をソート
-  const sortedElements = filteredElements
-    .sort((a, b) => (b.importance || 0) - (a.importance || 0));
+  const sortedElements = filteredElements.sort(
+    (a, b) => (b.importance || 0) - (a.importance || 0)
+  );
 
   // グループ化処理
   const groups: SemanticGroup[] = [];
   const assignedToGroup = new Set<LayoutElement>();
 
-  sortedElements.forEach(element => {
-    if (assignedToGroup.has(element) || (element.importance || 0) < importanceThreshold) {
+  sortedElements.forEach((element) => {
+    if (
+      assignedToGroup.has(element) ||
+      (element.importance || 0) < importanceThreshold
+    ) {
       return;
     }
-    
+
     // ページ全体を覆う要素はスキップ（より具体的なグループを優先）
-    const pageArea = viewport 
+    const pageArea = viewport
       ? viewport.width * viewport.height
-      : (filteredElements[0]?.rect.width || 1280) * (filteredElements[0]?.rect.height || 800);
+      : (filteredElements[0]?.rect.width || 1280) *
+        (filteredElements[0]?.rect.height || 800);
     const elementArea = element.rect.width * element.rect.height;
     if (elementArea > pageArea * 0.8) {
       return;
@@ -220,7 +234,7 @@ export function organizeIntoSemanticGroups(
     let minDistance = Infinity;
 
     // 既存のグループに所属できるか探す
-    groups.forEach(group => {
+    groups.forEach((group) => {
       const distance = Math.hypot(
         group.bounds.x - element.rect.x,
         group.bounds.y - element.rect.y
@@ -234,23 +248,30 @@ export function organizeIntoSemanticGroups(
     if (bestGroup !== null) {
       const group = bestGroup as SemanticGroup;
       // 既存グループに追加
-      group.children.push(element as (LayoutElement | SemanticGroup));
+      group.children.push(element as LayoutElement | SemanticGroup);
       assignedToGroup.add(element);
       // グループの境界を更新
       const newX = Math.min(group.bounds.x, element.rect.x);
       const newY = Math.min(group.bounds.y, element.rect.y);
-      group.bounds.width = Math.max(1, Math.max(group.bounds.x + group.bounds.width, element.rect.right) - newX);
-      group.bounds.height = Math.max(1, Math.max(group.bounds.y + group.bounds.height, element.rect.bottom) - newY);
+      group.bounds.width = Math.max(
+        1,
+        Math.max(group.bounds.x + group.bounds.width, element.rect.right) - newX
+      );
+      group.bounds.height = Math.max(
+        1,
+        Math.max(group.bounds.y + group.bounds.height, element.rect.bottom) -
+          newY
+      );
       group.bounds.x = newX;
       group.bounds.y = newY;
     } else {
       // 新規グループを作成
       const newGroup: SemanticGroup = {
-        type: element.semanticType || 'content',
+        type: element.semanticType || "content",
         label: element.text?.substring(0, 30) || element.tagName,
         bounds: { ...element.rect },
         importance: element.importance || 0,
-        children: [element as (LayoutElement | SemanticGroup)],
+        children: [element as LayoutElement | SemanticGroup],
       };
       groups.push(newGroup);
       assignedToGroup.add(element);
@@ -259,18 +280,23 @@ export function organizeIntoSemanticGroups(
 
   // グループの階層化（簡易版）
   const topLevelGroups: SemanticGroup[] = [];
-  groups.sort((a, b) => b.bounds.width * b.bounds.height - a.bounds.width * a.bounds.height);
+  groups.sort(
+    (a, b) =>
+      b.bounds.width * b.bounds.height - a.bounds.width * a.bounds.height
+  );
 
-  groups.forEach(group => {
+  groups.forEach((group) => {
     let parentFound = false;
-    topLevelGroups.forEach(parent => {
+    topLevelGroups.forEach((parent) => {
       if (
         parent.bounds.x <= group.bounds.x &&
         parent.bounds.y <= group.bounds.y &&
-        parent.bounds.x + parent.bounds.width >= group.bounds.x + group.bounds.width &&
-        parent.bounds.y + parent.bounds.height >= group.bounds.y + group.bounds.height
+        parent.bounds.x + parent.bounds.width >=
+          group.bounds.x + group.bounds.width &&
+        parent.bounds.y + parent.bounds.height >=
+          group.bounds.y + group.bounds.height
       ) {
-        parent.children.push(group as (LayoutElement | SemanticGroup));
+        parent.children.push(group as LayoutElement | SemanticGroup);
         parentFound = true;
       }
     });
@@ -280,25 +306,25 @@ export function organizeIntoSemanticGroups(
   });
 
   // デバッグ: セマンティックグループの統計情報
-  const groupStats = topLevelGroups.map(g => ({
+  const groupStats = topLevelGroups.map((g) => ({
     type: g.type,
     y: g.bounds.y,
     height: g.bounds.height,
     bottom: g.bounds.y + g.bounds.height,
-    childCount: g.children.length
+    childCount: g.children.length,
   }));
-  
-  const maxGroupY = Math.max(...groupStats.map(g => g.bottom));
-  const groupsBelow2000 = groupStats.filter(g => g.y > 2000).length;
-  
-  console.log('Semantic group debug:', {
+
+  const maxGroupY = Math.max(...groupStats.map((g) => g.bottom));
+  const groupsBelow2000 = groupStats.filter((g) => g.y > 2000).length;
+
+  console.log("Semantic group debug:", {
     totalTopLevelGroups: topLevelGroups.length,
     totalGroups: groups.length,
     maxGroupY: maxGroupY,
     groupsBelow2000: groupsBelow2000,
-    groupsAbove2000: groupStats.filter(g => g.y <= 2000).length
+    groupsAbove2000: groupStats.filter((g) => g.y <= 2000).length,
   });
-  
+
   return topLevelGroups;
 }
 
@@ -319,7 +345,7 @@ export async function analyzeLayout(
   // セマンティックグループに整理
   const semanticGroups = organizeIntoSemanticGroups(rawData.elements, {
     ...options,
-    viewport: options.viewportOnly ? rawData.viewport : undefined
+    viewport: options.viewportOnly ? rawData.viewport : undefined,
   });
 
   // パターン検出
@@ -337,126 +363,146 @@ export async function analyzeLayout(
   };
 }
 
-function getSemanticType(element) {
+function getSemanticType(element: any) {
   const tag = element.tagName.toLowerCase();
-  const role = element.getAttribute('role');
-  
+  const role = element.getAttribute("role");
+
   // ナビゲーション要素
-  if (tag === 'nav' || role === 'navigation' || 
-      element.classList.contains('nav') || element.classList.contains('navigation')) {
-    return 'navigation';
+  if (
+    tag === "nav" ||
+    role === "navigation" ||
+    element.classList.contains("nav") ||
+    element.classList.contains("navigation")
+  ) {
+    return "navigation";
   }
-  
+
   // セクション要素
-  if (['section', 'article', 'main', 'aside', 'header', 'footer'].includes(tag) ||
-      ['main', 'complementary', 'banner', 'contentinfo'].includes(role || '')) {
-    return 'section';
+  if (
+    ["section", "article", "main", "aside", "header", "footer"].includes(tag) ||
+    ["main", "complementary", "banner", "contentinfo"].includes(role || "")
+  ) {
+    return "section";
   }
-  
+
   // インタラクティブ要素
-  if (['a', 'button', 'input', 'select', 'textarea'].includes(tag) ||
-      ['button', 'link', 'textbox'].includes(role || '') ||
-      element.onclick || element.getAttribute('tabindex')) {
-    return 'interactive';
+  if (
+    ["a", "button", "input", "select", "textarea"].includes(tag) ||
+    ["button", "link", "textbox"].includes(role || "") ||
+    element.onclick ||
+    element.getAttribute("tabindex")
+  ) {
+    return "interactive";
   }
-  
+
   // コンテナ要素（子要素が多い）
-  const childElements = Array.from(element.children).filter(child => 
-    child.nodeType === 1 && window.getComputedStyle(child).display !== 'none'
+  const childElements = Array.from(element.children).filter(
+    (child: any) =>
+      child.nodeType === 1 && window.getComputedStyle(child).display !== "none"
   );
   if (childElements.length >= 3) {
-    return 'container';
+    return "container";
   }
-  
+
   // グループ要素（同種の要素を含む）
   if (childElements.length >= 2) {
-    const firstTag = childElements[0]?.tagName;
-    const isSameType = childElements.every(child => child.tagName === firstTag);
+    const firstTag = (childElements[0] as any)?.tagName;
+    const isSameType = childElements.every(
+      (child: any) => child.tagName === firstTag
+    );
     if (isSameType) {
-      return 'group';
+      return "group";
     }
   }
-  
+
   // その他はコンテンツ
-  return 'content';
+  return "content";
 }
 
-function calculateImportance(element, rect) {
+function calculateImportance(element: any, rect: any) {
   let importance = 0;
-  
+
   // サイズによる重要度
   const area = rect.width * rect.height;
   const viewportArea = window.innerWidth * window.innerHeight;
   importance += (area / viewportArea) * 30;
-  
+
   // 位置による重要度（上部ほど重要だが、下部も最低限の重要度を保証）
   const verticalPosition = rect.top / window.innerHeight;
   const positionScore = Math.max(0, 1 - verticalPosition);
   importance += positionScore * 20;
-  
+
   // セマンティックタグによる重要度
-  const importantTags = ['main', 'article', 'h1', 'h2', 'nav', 'header'];
+  const importantTags = ["main", "article", "h1", "h2", "nav", "header"];
   if (importantTags.includes(element.tagName.toLowerCase())) {
     importance += 20;
   }
-  
+
   // インタラクティブ要素の重要度
-  if (getSemanticType(element) === 'interactive') {
+  if (getSemanticType(element) === "interactive") {
     importance += 15;
   }
-  
+
   // 視覚的な強調（背景色、ボーダーなど）
   const style = window.getComputedStyle(element);
-  if (style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent') {
+  if (
+    style.backgroundColor !== "rgba(0, 0, 0, 0)" &&
+    style.backgroundColor !== "transparent"
+  ) {
     importance += 10;
   }
-  if (style.borderWidth !== '0px') {
+  if (style.borderWidth !== "0px") {
     importance += 5;
   }
-  
+
   // 最低限の重要度を保証（小さくても表示されている要素は重要）
-  if (area > 100) { // 100px²以上の要素
+  if (area > 100) {
+    // 100px²以上の要素
     importance = Math.max(importance, 5);
   }
-  
+
   return Math.min(100, importance);
 }
 
 function detectPatterns(elements: any[]): LayoutPattern[] {
   const patterns: LayoutPattern[] = [];
   const processed = new Set<number>();
-  
+
   elements.forEach((el, i) => {
     if (processed.has(i)) return;
-    
+
     const pattern: LayoutPattern = {
       elements: [el],
       type: el.tagName,
       className: el.className,
-      averageSize: { width: el.rect.width, height: el.rect.height }
+      averageSize: { width: el.rect.width, height: el.rect.height },
     };
-    
+
     // 類似要素を探す
     elements.forEach((other, j) => {
       if (i === j || processed.has(j)) return;
-      
+
       // 同じタグとクラス
       if (el.tagName === other.tagName && el.className === other.className) {
         // サイズが類似
-        const widthRatio = Math.min(el.rect.width, other.rect.width) / Math.max(el.rect.width, other.rect.width);
-        const heightRatio = Math.min(el.rect.height, other.rect.height) / Math.max(el.rect.height, other.rect.height);
-        
+        const widthRatio =
+          Math.min(el.rect.width, other.rect.width) /
+          Math.max(el.rect.width, other.rect.width);
+        const heightRatio =
+          Math.min(el.rect.height, other.rect.height) /
+          Math.max(el.rect.height, other.rect.height);
+
         if (widthRatio > 0.8 && heightRatio > 0.8) {
           pattern.elements.push(other);
           processed.add(j);
         }
       }
     });
-    
+
     if (pattern.elements.length >= 2) {
       patterns.push(pattern);
     }
   });
-  
+
   return patterns;
 }

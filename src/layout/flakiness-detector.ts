@@ -1,12 +1,16 @@
 /**
  * フレーキーネス検出機能
- * 
+ *
  * 複数回のクロール結果を分析して、不安定な要素を特定します。
  */
 
-import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from './extractor.js';
-import type { LayoutDifference } from './comparator-v2.js';
-import { compareLayouts } from './comparator-v2.js';
+import type {
+  LayoutAnalysisResult,
+  SemanticGroup,
+  LayoutElement,
+} from "./extractor.js";
+import type { LayoutDifference } from "./comparator.js";
+import { compareLayoutTrees } from "./comparator.js";
 
 export interface FlakinessAnalysis {
   /** 全体のフレーキーネススコア (0-100, 0が最も安定) */
@@ -41,7 +45,13 @@ export interface FlakyElement {
     label?: string;
   };
   /** フレーキーネスの種類 */
-  flakinessType: 'position' | 'size' | 'content' | 'existence' | 'style' | 'mixed';
+  flakinessType:
+    | "position"
+    | "size"
+    | "content"
+    | "existence"
+    | "style"
+    | "mixed";
   /** フレーキーネススコア (0-100) */
   score: number;
   /** 変動の詳細 */
@@ -105,16 +115,16 @@ export function detectFlakiness(
   // 全ての結果を比較して要素の変動を追跡
   for (let i = 0; i < results.length; i++) {
     trackElements(results[i], elementTrackers, i);
-    
+
     // 他の全ての結果と比較
     for (let j = i + 1; j < results.length; j++) {
-      const comparison = compareLayouts(results[i], results[j], {
+      const comparison = compareLayoutTrees(results[i], results[j], {
         threshold: Math.min(positionThreshold, sizeThreshold),
-        ignoreText
+        ignoreText,
       });
 
       // 差分を追跡
-      comparison.differences.forEach(diff => {
+      comparison.differences.forEach((diff) => {
         updateTrackerWithDifference(elementTrackers, diff, i, j);
       });
     }
@@ -131,17 +141,17 @@ export function detectFlakiness(
   };
 
   elementTrackers.forEach((tracker, path) => {
-    const analysis = analyzeElementFlakiness(
-      tracker,
-      sampleCount,
-      { positionThreshold, sizeThreshold, flakinessThreshold }
-    );
+    const analysis = analyzeElementFlakiness(tracker, sampleCount, {
+      positionThreshold,
+      sizeThreshold,
+      flakinessThreshold,
+    });
 
     if (analysis && analysis.score > 0) {
       flakyElements.push(analysis);
-      
+
       // カテゴリ分け
-      if (analysis.flakinessType !== 'mixed') {
+      if (analysis.flakinessType !== "mixed") {
         categorized[analysis.flakinessType].push(analysis);
       } else {
         // mixed の場合は最も変動が大きいカテゴリに分類
@@ -155,9 +165,8 @@ export function detectFlakiness(
   const unstableCount = flakyElements.length;
   const totalElements = elementTrackers.size;
   const stableCount = totalElements - unstableCount;
-  const overallScore = totalElements > 0 
-    ? (unstableCount / totalElements) * 100 
-    : 0;
+  const overallScore =
+    totalElements > 0 ? (unstableCount / totalElements) * 100 : 0;
 
   return {
     overallScore,
@@ -180,7 +189,12 @@ function trackElements(
   // SemanticGroups を追跡
   if (result.semanticGroups) {
     result.semanticGroups.forEach((group, index) => {
-      trackSemanticGroup(group, `semanticGroup[${index}]`, trackers, resultIndex);
+      trackSemanticGroup(
+        group,
+        `semanticGroup[${index}]`,
+        trackers,
+        resultIndex
+      );
     });
   }
 
@@ -216,22 +230,32 @@ function trackSemanticGroup(
   }
 
   tracker.appearanceCount++;
-  
+
   // プロパティを記録
-  recordProperty(tracker, 'x', group.bounds.x);
-  recordProperty(tracker, 'y', group.bounds.y);
-  recordProperty(tracker, 'width', group.bounds.width);
-  recordProperty(tracker, 'height', group.bounds.height);
-  recordProperty(tracker, 'importance', group.importance);
-  recordProperty(tracker, 'label', group.label);
+  recordProperty(tracker, "x", group.bounds.x);
+  recordProperty(tracker, "y", group.bounds.y);
+  recordProperty(tracker, "width", group.bounds.width);
+  recordProperty(tracker, "height", group.bounds.height);
+  recordProperty(tracker, "importance", group.importance);
+  recordProperty(tracker, "label", group.label);
 
   // 子要素を再帰的に追跡
   if (group.children) {
     group.children.forEach((child, index) => {
-      if ('children' in child) {
-        trackSemanticGroup(child as SemanticGroup, `${path}/child[${index}]`, trackers, resultIndex);
+      if ("children" in child) {
+        trackSemanticGroup(
+          child as SemanticGroup,
+          `${path}/child[${index}]`,
+          trackers,
+          resultIndex
+        );
       } else {
-        trackLayoutElement(child as LayoutElement, `${path}/child[${index}]`, trackers, resultIndex);
+        trackLayoutElement(
+          child as LayoutElement,
+          `${path}/child[${index}]`,
+          trackers,
+          resultIndex
+        );
       }
     });
   }
@@ -262,24 +286,28 @@ function trackLayoutElement(
   }
 
   tracker.appearanceCount++;
-  
+
   // プロパティを記録
-  recordProperty(tracker, 'x', element.rect.x);
-  recordProperty(tracker, 'y', element.rect.y);
-  recordProperty(tracker, 'width', element.rect.width);
-  recordProperty(tracker, 'height', element.rect.height);
+  recordProperty(tracker, "x", element.rect.x);
+  recordProperty(tracker, "y", element.rect.y);
+  recordProperty(tracker, "width", element.rect.width);
+  recordProperty(tracker, "height", element.rect.height);
   if (element.text !== undefined) {
-    recordProperty(tracker, 'text', element.text);
+    recordProperty(tracker, "text", element.text);
   }
   if (element.computedStyle?.fontSize) {
-    recordProperty(tracker, 'fontSize', element.computedStyle.fontSize);
+    recordProperty(tracker, "fontSize", element.computedStyle.fontSize);
   }
 }
 
 /**
  * プロパティの値を記録
  */
-function recordProperty(tracker: ElementTracker, property: string, value: unknown): void {
+function recordProperty(
+  tracker: ElementTracker,
+  property: string,
+  value: unknown
+): void {
   if (!tracker.occurrences.has(property)) {
     tracker.occurrences.set(property, []);
   }
@@ -296,35 +324,44 @@ function updateTrackerWithDifference(
   index2: number
 ): void {
   // 新しいLayoutDifferenceインターフェースではelementIdを使用
-  const tracker = Array.from(trackers.values()).find(t => 
-    t.identifier.tagName === diff.oldValue.tagName &&
-    t.identifier.id === diff.oldValue.id &&
-    t.identifier.className === diff.oldValue.className
+  const tracker = Array.from(trackers.values()).find(
+    (t) =>
+      t.identifier.tagName === diff.oldValue.tagName &&
+      t.identifier.id === diff.oldValue.id &&
+      t.identifier.className === diff.oldValue.className
   );
   if (!tracker) return;
 
   // 変更の詳細を記録
   if (diff.changes.rect) {
     if (diff.changes.rect.x !== undefined) {
-      recordProperty(tracker, 'x', diff.oldValue.rect.x);
-      recordProperty(tracker, 'x', diff.oldValue.rect.x + diff.changes.rect.x);
+      recordProperty(tracker, "x", diff.oldValue.rect.x);
+      recordProperty(tracker, "x", diff.oldValue.rect.x + diff.changes.rect.x);
     }
     if (diff.changes.rect.y !== undefined) {
-      recordProperty(tracker, 'y', diff.oldValue.rect.y);
-      recordProperty(tracker, 'y', diff.oldValue.rect.y + diff.changes.rect.y);
+      recordProperty(tracker, "y", diff.oldValue.rect.y);
+      recordProperty(tracker, "y", diff.oldValue.rect.y + diff.changes.rect.y);
     }
     if (diff.changes.rect.width !== undefined) {
-      recordProperty(tracker, 'width', diff.oldValue.rect.width);
-      recordProperty(tracker, 'width', diff.oldValue.rect.width + diff.changes.rect.width);
+      recordProperty(tracker, "width", diff.oldValue.rect.width);
+      recordProperty(
+        tracker,
+        "width",
+        diff.oldValue.rect.width + diff.changes.rect.width
+      );
     }
     if (diff.changes.rect.height !== undefined) {
-      recordProperty(tracker, 'height', diff.oldValue.rect.height);
-      recordProperty(tracker, 'height', diff.oldValue.rect.height + diff.changes.rect.height);
+      recordProperty(tracker, "height", diff.oldValue.rect.height);
+      recordProperty(
+        tracker,
+        "height",
+        diff.oldValue.rect.height + diff.changes.rect.height
+      );
     }
   }
   if (diff.changes.text !== undefined) {
-    recordProperty(tracker, 'text', diff.oldValue.text);
-    recordProperty(tracker, 'text', diff.changes.text);
+    recordProperty(tracker, "text", diff.oldValue.text);
+    recordProperty(tracker, "text", diff.changes.text);
   }
 }
 
@@ -359,12 +396,20 @@ function analyzeElementFlakiness(
   // 存在の不安定性をチェック
   const occurrenceRate = tracker.appearanceCount / totalSamples;
   if (occurrenceRate < 1 && occurrenceRate > 0) {
-    flakinessTypes.add('existence');
+    flakinessTypes.add("existence");
     variations.push({
-      property: 'existence',
+      property: "existence",
       values: [
-        { value: 'present', count: tracker.appearanceCount, percentage: occurrenceRate * 100 },
-        { value: 'absent', count: totalSamples - tracker.appearanceCount, percentage: (1 - occurrenceRate) * 100 }
+        {
+          value: "present",
+          count: tracker.appearanceCount,
+          percentage: occurrenceRate * 100,
+        },
+        {
+          value: "absent",
+          count: totalSamples - tracker.appearanceCount,
+          percentage: (1 - occurrenceRate) * 100,
+        },
       ],
       variance: 1 - occurrenceRate,
     });
@@ -377,11 +422,13 @@ function analyzeElementFlakiness(
   }
 
   // フレーキーネスタイプの決定
-  let flakinessType: FlakyElement['flakinessType'];
+  let flakinessType: FlakyElement["flakinessType"];
   if (flakinessTypes.size === 1) {
-    flakinessType = Array.from(flakinessTypes)[0] as FlakyElement['flakinessType'];
+    flakinessType = Array.from(
+      flakinessTypes
+    )[0] as FlakyElement["flakinessType"];
   } else {
-    flakinessType = 'mixed';
+    flakinessType = "mixed";
   }
 
   return {
@@ -407,9 +454,9 @@ function analyzePropertyVariation(
   }
 ): VariationDetail | null {
   const valueMap = new Map<string, number>();
-  
+
   // 値をグループ化（数値の場合は閾値を考慮）
-  values.forEach(value => {
+  values.forEach((value) => {
     const key = normalizeValue(value, property, options);
     valueMap.set(key, (valueMap.get(key) || 0) + 1);
   });
@@ -421,14 +468,14 @@ function analyzePropertyVariation(
 
   const total = values.length;
   const valueStats = Array.from(valueMap.entries()).map(([value, count]) => ({
-    value: value === 'null' ? null : value,
+    value: value === "null" ? null : value,
     count,
     percentage: (count / total) * 100,
   }));
 
   // 分散を計算（最も頻度の高い値からの偏差）
-  const maxCount = Math.max(...valueStats.map(v => v.count));
-  const variance = 1 - (maxCount / total);
+  const maxCount = Math.max(...valueStats.map((v) => v.count));
+  const variance = 1 - maxCount / total;
 
   return {
     property,
@@ -446,15 +493,18 @@ function normalizeValue(
   options: { positionThreshold: number; sizeThreshold: number }
 ): string {
   if (value === null || value === undefined) {
-    return 'null';
+    return "null";
   }
 
   // 数値プロパティの場合
-  if (typeof value === 'number' && ['x', 'y', 'width', 'height'].includes(property)) {
-    const threshold = ['x', 'y'].includes(property) 
-      ? options.positionThreshold 
+  if (
+    typeof value === "number" &&
+    ["x", "y", "width", "height"].includes(property)
+  ) {
+    const threshold = ["x", "y"].includes(property)
+      ? options.positionThreshold
       : options.sizeThreshold;
-    
+
     // 閾値でグループ化
     return String(Math.round(value / threshold) * threshold);
   }
@@ -465,11 +515,13 @@ function normalizeValue(
 /**
  * プロパティのカテゴリを取得
  */
-function getPropertyCategory(property: string): 'position' | 'size' | 'content' | 'style' {
-  if (['x', 'y'].includes(property)) return 'position';
-  if (['width', 'height'].includes(property)) return 'size';
-  if (['text', 'label'].includes(property)) return 'content';
-  return 'style';
+function getPropertyCategory(
+  property: string
+): "position" | "size" | "content" | "style" {
+  if (["x", "y"].includes(property)) return "position";
+  if (["width", "height"].includes(property)) return "size";
+  if (["text", "label"].includes(property)) return "content";
+  return "style";
 }
 
 /**
@@ -477,7 +529,7 @@ function getPropertyCategory(property: string): 'position' | 'size' | 'content' 
  */
 function determineMainFlakinessType(
   variations: VariationDetail[]
-): 'position' | 'size' | 'content' | 'existence' | 'style' {
+): "position" | "size" | "content" | "existence" | "style" {
   const categoryScores = {
     position: 0,
     size: 0,
@@ -486,15 +538,17 @@ function determineMainFlakinessType(
     style: 0,
   };
 
-  variations.forEach(v => {
-    const category = v.property === 'existence' 
-      ? 'existence' 
-      : getPropertyCategory(v.property);
+  variations.forEach((v) => {
+    const category =
+      v.property === "existence"
+        ? "existence"
+        : getPropertyCategory(v.property);
     categoryScores[category] += v.variance || 0;
   });
 
-  return Object.entries(categoryScores)
-    .sort(([, a], [, b]) => b - a)[0][0] as any;
+  return Object.entries(categoryScores).sort(
+    ([, a], [, b]) => b - a
+  )[0][0] as any;
 }
 
 /**
@@ -504,101 +558,111 @@ export function generateFlakinessReport(
   analysis: FlakinessAnalysis,
   options: {
     /** 詳細レベル */
-    verbosity?: 'summary' | 'detailed' | 'full';
+    verbosity?: "summary" | "detailed" | "full";
     /** フォーマット */
-    format?: 'text' | 'json' | 'markdown';
+    format?: "text" | "json" | "markdown";
   } = {}
 ): string {
-  const { verbosity = 'detailed', format = 'text' } = options;
+  const { verbosity = "detailed", format = "text" } = options;
 
-  if (format === 'json') {
+  if (format === "json") {
     return JSON.stringify(analysis, null, 2);
   }
 
   const lines: string[] = [];
 
-  if (format === 'markdown') {
-    lines.push('# フレーキーネス分析レポート');
-    lines.push('');
+  if (format === "markdown") {
+    lines.push("# フレーキーネス分析レポート");
+    lines.push("");
     lines.push(`## 概要`);
-    lines.push(`- **全体スコア**: ${analysis.overallScore.toFixed(1)}% (0%が最も安定)`);
+    lines.push(
+      `- **全体スコア**: ${analysis.overallScore.toFixed(1)}% (0%が最も安定)`
+    );
     lines.push(`- **サンプル数**: ${analysis.sampleCount}`);
     lines.push(`- **安定要素**: ${analysis.stableCount}`);
     lines.push(`- **不安定要素**: ${analysis.unstableCount}`);
-    lines.push('');
-    
-    if (verbosity !== 'summary') {
-      lines.push('## カテゴリ別統計');
-      Object.entries(analysis.categorizedFlakiness).forEach(([category, elements]) => {
-        if (elements.length > 0) {
-          lines.push(`- **${category}**: ${elements.length}要素`);
+    lines.push("");
+
+    if (verbosity !== "summary") {
+      lines.push("## カテゴリ別統計");
+      Object.entries(analysis.categorizedFlakiness).forEach(
+        ([category, elements]) => {
+          if (elements.length > 0) {
+            lines.push(`- **${category}**: ${elements.length}要素`);
+          }
         }
-      });
-      lines.push('');
+      );
+      lines.push("");
     }
 
-    if (verbosity === 'detailed' || verbosity === 'full') {
-      lines.push('## 不安定な要素 (上位10件)');
+    if (verbosity === "detailed" || verbosity === "full") {
+      lines.push("## 不安定な要素 (上位10件)");
       const topElements = analysis.flakyElements.slice(0, 10);
       topElements.forEach((element, index) => {
         lines.push(`### ${index + 1}. ${element.path}`);
         lines.push(`- **スコア**: ${element.score.toFixed(1)}%`);
         lines.push(`- **タイプ**: ${element.flakinessType}`);
         lines.push(`- **出現率**: ${element.occurrenceRate * 100}%`);
-        
-        if (verbosity === 'full') {
-          lines.push('- **変動**:');
-          element.variations.forEach(v => {
-            lines.push(`  - ${v.property}: ${v.values.map(val => 
-              `${val.value} (${val.percentage.toFixed(1)}%)`
-            ).join(', ')}`);
+
+        if (verbosity === "full") {
+          lines.push("- **変動**:");
+          element.variations.forEach((v) => {
+            lines.push(
+              `  - ${v.property}: ${v.values
+                .map((val) => `${val.value} (${val.percentage.toFixed(1)}%)`)
+                .join(", ")}`
+            );
           });
         }
-        lines.push('');
+        lines.push("");
       });
     }
   } else {
     // テキスト形式
-    lines.push('=== フレーキーネス分析レポート ===');
-    lines.push(`全体スコア: ${analysis.overallScore.toFixed(1)}% (0%が最も安定)`);
+    lines.push("=== フレーキーネス分析レポート ===");
+    lines.push(
+      `全体スコア: ${analysis.overallScore.toFixed(1)}% (0%が最も安定)`
+    );
     lines.push(`サンプル数: ${analysis.sampleCount}`);
     lines.push(`安定要素: ${analysis.stableCount}`);
     lines.push(`不安定要素: ${analysis.unstableCount}`);
-    lines.push('');
-    
-    if (verbosity !== 'summary') {
-      lines.push('カテゴリ別:');
-      Object.entries(analysis.categorizedFlakiness).forEach(([category, elements]) => {
-        if (elements.length > 0) {
-          lines.push(`  ${category}: ${elements.length}要素`);
+    lines.push("");
+
+    if (verbosity !== "summary") {
+      lines.push("カテゴリ別:");
+      Object.entries(analysis.categorizedFlakiness).forEach(
+        ([category, elements]) => {
+          if (elements.length > 0) {
+            lines.push(`  ${category}: ${elements.length}要素`);
+          }
         }
-      });
-      lines.push('');
+      );
+      lines.push("");
     }
 
-    if (verbosity === 'detailed' || verbosity === 'full') {
-      lines.push('不安定な要素 (上位10件):');
+    if (verbosity === "detailed" || verbosity === "full") {
+      lines.push("不安定な要素 (上位10件):");
       const topElements = analysis.flakyElements.slice(0, 10);
       topElements.forEach((element, index) => {
         lines.push(`${index + 1}. ${element.path}`);
         lines.push(`   スコア: ${element.score.toFixed(1)}%`);
         lines.push(`   タイプ: ${element.flakinessType}`);
         lines.push(`   出現率: ${(element.occurrenceRate * 100).toFixed(1)}%`);
-        
-        if (verbosity === 'full' && element.variations.length > 0) {
-          lines.push('   変動:');
-          element.variations.forEach(v => {
+
+        if (verbosity === "full" && element.variations.length > 0) {
+          lines.push("   変動:");
+          element.variations.forEach((v) => {
             const valuesStr = v.values
               .slice(0, 3)
-              .map(val => `${val.value} (${val.percentage.toFixed(1)}%)`)
-              .join(', ');
+              .map((val) => `${val.value} (${val.percentage.toFixed(1)}%)`)
+              .join(", ");
             lines.push(`     ${v.property}: ${valuesStr}`);
           });
         }
-        lines.push('');
+        lines.push("");
       });
     }
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }

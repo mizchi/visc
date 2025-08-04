@@ -2,16 +2,16 @@
  * 比較設定の自動キャリブレーション機能
  */
 
-import type { LayoutAnalysisResult } from '../layout/extractor.js';
-import { compareLayouts } from '../layout/comparator-v2.js';
-import { compareSemanticGroups } from '../layout/semantic-comparator.js';
+import type { LayoutAnalysisResult } from "./extractor.js";
+import { compareLayoutTrees } from "./comparator.js";
+import { compareSemanticGroups } from "./semantic-comparator.js";
 
 export interface ComparisonSettings {
-  positionTolerance: number;      // 位置の許容誤差（ピクセル）
-  sizeTolerance: number;          // サイズの許容誤差（%）
+  positionTolerance: number; // 位置の許容誤差（ピクセル）
+  sizeTolerance: number; // サイズの許容誤差（%）
   textSimilarityThreshold: number; // テキスト類似度の閾値
-  importanceThreshold: number;     // 重要度の閾値
-  ignoreElements?: string[];       // 無視する要素のセレクタ
+  importanceThreshold: number; // 重要度の閾値
+  ignoreElements?: string[]; // 無視する要素のセレクタ
 }
 
 export interface CalibrationResult {
@@ -31,32 +31,39 @@ export interface CalibrationResult {
 export function calibrateComparisonSettings(
   samples: LayoutAnalysisResult[],
   options: {
-    targetStability?: number;  // 目標とする安定性（0-100）
-    strictness?: 'low' | 'medium' | 'high';  // 厳密さのレベル
+    targetStability?: number; // 目標とする安定性（0-100）
+    strictness?: "low" | "medium" | "high"; // 厳密さのレベル
   } = {}
 ): CalibrationResult {
-  const { targetStability = 95, strictness = 'medium' } = options;
-  
+  const { targetStability = 95, strictness = "medium" } = options;
+
   if (samples.length < 2) {
-    throw new Error('At least 2 samples are required for calibration');
+    throw new Error("At least 2 samples are required for calibration");
   }
 
   // サンプル間の差異を分析
   const variances = analyzeSampleVariances(samples);
-  
+
   // 厳密さに基づいて基準値を調整
   const strictnessMultiplier = {
     low: 1.5,
     medium: 1.0,
-    high: 0.7
+    high: 0.7,
   }[strictness];
 
   // 統計に基づいて設定を生成
   const settings: ComparisonSettings = {
-    positionTolerance: Math.ceil(variances.maxPositionDrift * strictnessMultiplier),
-    sizeTolerance: Math.ceil(variances.maxSizeVariance * 100 * strictnessMultiplier),
-    textSimilarityThreshold: Math.max(0.8, 1 - (variances.avgTextDissimilarity * strictnessMultiplier)),
-    importanceThreshold: 10,  // デフォルト値
+    positionTolerance: Math.ceil(
+      variances.maxPositionDrift * strictnessMultiplier
+    ),
+    sizeTolerance: Math.ceil(
+      variances.maxSizeVariance * 100 * strictnessMultiplier
+    ),
+    textSimilarityThreshold: Math.max(
+      0.8,
+      1 - variances.avgTextDissimilarity * strictnessMultiplier
+    ),
+    importanceThreshold: 10, // デフォルト値
   };
 
   // 信頼度を計算（サンプル数と分散の安定性に基づく）
@@ -70,7 +77,7 @@ export function calibrateComparisonSettings(
       avgSizeVariance: variances.avgSizeVariance * 100,
       avgTextSimilarity: 1 - variances.avgTextDissimilarity,
       stableElementRatio: variances.stableElementRatio,
-    }
+    },
   };
 }
 
@@ -82,19 +89,19 @@ export function validateWithSettings(
   baseline: LayoutAnalysisResult,
   settings: ComparisonSettings
 ): ValidationResult {
-  const comparison = compareLayouts(baseline, layout);
-  
+  const comparison = compareLayoutTrees(baseline, layout);
+
   const violations: Violation[] = [];
   let totalScore = 0;
   let checkedElements = 0;
 
   // 各要素の差異をチェック
-  comparison.differences.forEach(diff => {
+  comparison.differences.forEach((diff) => {
     checkedElements++;
     let elementScore = 100;
 
     // 位置の検証
-    if (diff.type === 'position' || diff.type === 'both') {
+    if (diff.type === "position" || diff.type === "both") {
       const positionDrift = Math.hypot(
         diff.changes.rect?.x || 0,
         diff.changes.rect?.y || 0
@@ -102,17 +109,18 @@ export function validateWithSettings(
       if (positionDrift > settings.positionTolerance) {
         violations.push({
           elementId: diff.elementId,
-          type: 'position',
+          type: "position",
           expected: settings.positionTolerance,
           actual: positionDrift,
-          severity: positionDrift > settings.positionTolerance * 2 ? 'high' : 'medium'
+          severity:
+            positionDrift > settings.positionTolerance * 2 ? "high" : "medium",
         });
         elementScore -= 25;
       }
     }
 
     // サイズの検証
-    if (diff.type === 'size' || diff.type === 'both') {
+    if (diff.type === "size" || diff.type === "both") {
       const widthDiff = Math.abs(diff.changes.rect?.width || 0);
       const heightDiff = Math.abs(diff.changes.rect?.height || 0);
       const oldWidth = diff.oldValue.rect?.width || 1;
@@ -120,14 +128,15 @@ export function validateWithSettings(
       const widthChangeRatio = widthDiff / oldWidth;
       const heightChangeRatio = heightDiff / oldHeight;
       const maxSizeChange = Math.max(widthChangeRatio, heightChangeRatio) * 100;
-      
+
       if (maxSizeChange > settings.sizeTolerance) {
         violations.push({
           elementId: diff.elementId,
-          type: 'size',
+          type: "size",
           expected: settings.sizeTolerance,
           actual: maxSizeChange,
-          severity: maxSizeChange > settings.sizeTolerance * 2 ? 'high' : 'medium'
+          severity:
+            maxSizeChange > settings.sizeTolerance * 2 ? "high" : "medium",
         });
         elementScore -= 25;
       }
@@ -139,15 +148,16 @@ export function validateWithSettings(
   const similarity = checkedElements > 0 ? totalScore / checkedElements : 100;
 
   return {
-    isValid: violations.filter(v => v.severity === 'high').length === 0,
+    isValid: violations.filter((v) => v.severity === "high").length === 0,
     similarity,
     violations,
     summary: {
       totalElements: comparison.summary.totalElements,
       changedElements: comparison.summary.totalChanged,
-      criticalViolations: violations.filter(v => v.severity === 'high').length,
-      warnings: violations.filter(v => v.severity === 'medium').length,
-    }
+      criticalViolations: violations.filter((v) => v.severity === "high")
+        .length,
+      warnings: violations.filter((v) => v.severity === "medium").length,
+    },
   };
 }
 
@@ -162,16 +172,18 @@ interface SampleVariances {
   stableElementRatio: number;
 }
 
-function analyzeSampleVariances(samples: LayoutAnalysisResult[]): SampleVariances {
+function analyzeSampleVariances(
+  samples: LayoutAnalysisResult[]
+): SampleVariances {
   const elementComparisons = [];
   const groupComparisons = [];
-  
+
   // 全てのサンプルペアを比較
   for (let i = 0; i < samples.length - 1; i++) {
     for (let j = i + 1; j < samples.length; j++) {
       // 生の要素レベルでの比較（互換性のため）
-      elementComparisons.push(compareLayouts(samples[i], samples[j]));
-      
+      elementComparisons.push(compareLayoutTrees(samples[i], samples[j]));
+
       // セマンティックグループレベルでの比較
       if (samples[i].semanticGroups && samples[j].semanticGroups) {
         groupComparisons.push(compareSemanticGroups(samples[i], samples[j]));
@@ -186,38 +198,44 @@ function analyzeSampleVariances(samples: LayoutAnalysisResult[]): SampleVariance
     let maxSizeVar = 0;
     let totalSizeVar = 0;
     let changeCount = 0;
-    
-    groupComparisons.forEach(comp => {
-      comp.differences.forEach(diff => {
-        if (diff.type === 'moved' || diff.type === 'modified') {
-          const xChange = Math.abs((diff.changes?.bounds?.x || 0) - (diff.oldGroup?.bounds.x || 0));
-          const yChange = Math.abs((diff.changes?.bounds?.y || 0) - (diff.oldGroup?.bounds.y || 0));
+
+    groupComparisons.forEach((comp) => {
+      comp.differences.forEach((diff) => {
+        if (diff.type === "moved" || diff.type === "modified") {
+          const xChange = Math.abs(
+            (diff.changes?.bounds?.x || 0) - (diff.oldGroup?.bounds.x || 0)
+          );
+          const yChange = Math.abs(
+            (diff.changes?.bounds?.y || 0) - (diff.oldGroup?.bounds.y || 0)
+          );
           const drift = Math.hypot(xChange, yChange);
-          
+
           maxPosDrift = Math.max(maxPosDrift, drift);
           totalPosDrift += drift;
           changeCount++;
         }
-        
-        if (diff.type === 'resized' || diff.type === 'modified') {
+
+        if (diff.type === "resized" || diff.type === "modified") {
           const oldWidth = diff.oldGroup?.bounds.width || 1;
           const oldHeight = diff.oldGroup?.bounds.height || 1;
           const newWidth = diff.newGroup?.bounds.width || oldWidth;
           const newHeight = diff.newGroup?.bounds.height || oldHeight;
-          
+
           const widthVar = Math.abs(newWidth - oldWidth) / oldWidth;
           const heightVar = Math.abs(newHeight - oldHeight) / oldHeight;
           const sizeVar = Math.max(widthVar, heightVar);
-          
+
           maxSizeVar = Math.max(maxSizeVar, sizeVar);
           totalSizeVar += sizeVar;
         }
       });
     });
-    
+
     // グループレベルの安定性を計算
-    const avgSimilarity = groupComparisons.reduce((sum, comp) => sum + comp.similarity, 0) / groupComparisons.length;
-    
+    const avgSimilarity =
+      groupComparisons.reduce((sum, comp) => sum + comp.similarity, 0) /
+      groupComparisons.length;
+
     return {
       maxPositionDrift: maxPosDrift,
       avgPositionDrift: changeCount > 0 ? totalPosDrift / changeCount : 0,
@@ -235,9 +253,9 @@ function analyzeSampleVariances(samples: LayoutAnalysisResult[]): SampleVariance
   let totalSizeVar = 0;
   let driftCount = 0;
 
-  elementComparisons.forEach(comp => {
-    comp.differences.forEach(diff => {
-      if (diff.type === 'position' || diff.type === 'both') {
+  elementComparisons.forEach((comp) => {
+    comp.differences.forEach((diff) => {
+      if (diff.type === "position" || diff.type === "both") {
         const drift = Math.hypot(
           diff.changes.rect?.x || 0,
           diff.changes.rect?.y || 0
@@ -246,8 +264,8 @@ function analyzeSampleVariances(samples: LayoutAnalysisResult[]): SampleVariance
         totalPosDrift += drift;
         driftCount++;
       }
-      
-      if (diff.type === 'size' || diff.type === 'both') {
+
+      if (diff.type === "size" || diff.type === "both") {
         const widthChange = diff.changes.rect?.width || 0;
         const heightChange = diff.changes.rect?.height || 0;
         const oldWidth = diff.oldValue.rect?.width || 1;
@@ -272,13 +290,17 @@ function analyzeSampleVariances(samples: LayoutAnalysisResult[]): SampleVariance
   };
 }
 
-function calculateConfidence(sampleCount: number, variances: SampleVariances): number {
+function calculateConfidence(
+  sampleCount: number,
+  variances: SampleVariances
+): number {
   // サンプル数による基本信頼度
   const sampleConfidence = Math.min(100, sampleCount * 10);
-  
+
   // 分散の安定性による調整
-  const varianceStability = 100 - (variances.avgPositionDrift * 2 + variances.avgSizeVariance * 100);
-  
+  const varianceStability =
+    100 - (variances.avgPositionDrift * 2 + variances.avgSizeVariance * 100);
+
   return Math.max(0, Math.min(100, (sampleConfidence + varianceStability) / 2));
 }
 
@@ -298,8 +320,8 @@ export interface ValidationResult {
 
 interface Violation {
   elementId: string;
-  type: 'position' | 'size' | 'text' | 'visibility';
+  type: "position" | "size" | "text" | "visibility";
   expected: number;
   actual: number;
-  severity: 'low' | 'medium' | 'high';
+  severity: "low" | "medium" | "high";
 }

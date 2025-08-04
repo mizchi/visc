@@ -5,8 +5,8 @@ export default [
     output: [{ dir: "dist", format: "es" }],
   },
   {
-    input: "./v2/cli.ts",
+    input: "./src/cli.ts",
     platform: "node",
-    output: [{ dir: "dist/v2", format: "es" }],
-  }
+    output: [{ dir: "dist", format: "es", chunkNames: "[name]" }],
+  },
 ];

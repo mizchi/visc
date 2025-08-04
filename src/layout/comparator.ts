@@ -2,7 +2,7 @@
  * 新しいフォーマットのレイアウト比較機能
  */
 
-import type { LayoutAnalysisResult, LayoutElement, SemanticGroup } from './extractor.js';
+import type { LayoutAnalysisResult, LayoutElement } from './extractor.js';
 
 export interface LayoutDifference {
   elementId: string;
@@ -99,7 +99,7 @@ function detectRectChanges(
 /**
  * レイアウトを比較（新フォーマット）
  */
-export function compareLayouts(
+export function compareLayoutTrees(
   baseline: LayoutAnalysisResult,
   current: LayoutAnalysisResult,
   options: {
@@ -189,7 +189,7 @@ export function hasLayoutChanged(
   current: LayoutAnalysisResult,
   threshold: number = 2
 ): boolean {
-  const result = compareLayouts(baseline, current, { threshold });
+  const result = compareLayoutTrees(baseline, current, { threshold });
   return result.differences.length > 0 || 
          result.addedElements.length > 0 || 
          result.removedElements.length > 0;
@@ -198,12 +198,12 @@ export function hasLayoutChanged(
 /**
  * レイアウトの類似度をチェック
  */
-export function isLayoutSimilar(
+export function calculateSimilarity(
   baseline: LayoutAnalysisResult,
   current: LayoutAnalysisResult,
   similarityThreshold: number = 90,
   positionThreshold: number = 2
 ): boolean {
-  const result = compareLayouts(baseline, current, { threshold: positionThreshold });
+  const result = compareLayoutTrees(baseline, current, { threshold: positionThreshold });
   return result.similarity >= similarityThreshold;
 }

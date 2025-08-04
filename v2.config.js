@@ -1,6 +1,5 @@
-
 /**
- * @type {import('./v2/index.js').StabilityCheckOptions}
+ * @type {import('./src/index.js').StabilityCheckOptions}
  */
 export default {
   minIterations: 3,
