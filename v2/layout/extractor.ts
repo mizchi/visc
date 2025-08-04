@@ -150,9 +150,30 @@ export function organizeIntoSemanticGroups(
   options: {
     groupingThreshold?: number; // グループ化の閾値
     importanceThreshold?: number; // 重要度の閾値
+    viewport?: { width: number; height: number }; // ビューポートによるフィルタリング
   } = {}
 ): SemanticGroup[] {
-  const { groupingThreshold = 20, importanceThreshold = 3 } = options;
+  const { groupingThreshold = 20, importanceThreshold = 3, viewport } = options;
+  
+  // ビューポートが指定されている場合、ビューポート外の要素をフィルタリング
+  let filteredElements = elements;
+  if (viewport) {
+    filteredElements = elements.filter(element => {
+      // 要素がビューポート内に少しでも表示されているかチェック
+      const elementBottom = element.rect.y + element.rect.height;
+      const elementRight = element.rect.x + element.rect.width;
+      
+      // 完全にビューポート外の要素を除外
+      if (element.rect.y >= viewport.height || elementBottom <= 0) {
+        return false;
+      }
+      if (element.rect.x >= viewport.width || elementRight <= 0) {
+        return false;
+      }
+      
+      return true;
+    });
+  }
   const root: SemanticGroup = {
     type: 'root',
     label: 'Page Root',
@@ -162,11 +183,11 @@ export function organizeIntoSemanticGroups(
   };
 
   // ページ全体のバウンディングボックスを計算
-  if (elements.length > 0) {
-    const xs = elements.map(e => e.rect.x);
-    const ys = elements.map(e => e.rect.y);
-    const rights = elements.map(e => e.rect.right);
-    const bottoms = elements.map(e => e.rect.bottom);
+  if (filteredElements.length > 0) {
+    const xs = filteredElements.map(e => e.rect.x);
+    const ys = filteredElements.map(e => e.rect.y);
+    const rights = filteredElements.map(e => e.rect.right);
+    const bottoms = filteredElements.map(e => e.rect.bottom);
     root.bounds.x = Math.max(0, Math.min(...xs));
     root.bounds.y = Math.max(0, Math.min(...ys));
     root.bounds.width = Math.max(...rights) - root.bounds.x;
@@ -174,7 +195,7 @@ export function organizeIntoSemanticGroups(
   }
 
   // 重要度で要素をソート
-  const sortedElements = elements
+  const sortedElements = filteredElements
     .sort((a, b) => (b.importance || 0) - (a.importance || 0));
 
   // グループ化処理
@@ -187,7 +208,9 @@ export function organizeIntoSemanticGroups(
     }
     
     // ページ全体を覆う要素はスキップ（より具体的なグループを優先）
-    const pageArea = (elements[0]?.rect.width || 1280) * (elements[0]?.rect.height || 800);
+    const pageArea = viewport 
+      ? viewport.width * viewport.height
+      : (filteredElements[0]?.rect.width || 1280) * (filteredElements[0]?.rect.height || 800);
     const elementArea = element.rect.width * element.rect.height;
     if (elementArea > pageArea * 0.8) {
       return;
@@ -287,13 +310,17 @@ export async function analyzeLayout(
   options: {
     groupingThreshold?: number;
     importanceThreshold?: number;
+    viewportOnly?: boolean;
   } = {}
 ): Promise<LayoutAnalysisResult> {
   // ブラウザでスクリプトを実行してデータを取得
   const rawData = await page.evaluate(getExtractLayoutScript());
 
   // セマンティックグループに整理
-  const semanticGroups = organizeIntoSemanticGroups(rawData.elements, options);
+  const semanticGroups = organizeIntoSemanticGroups(rawData.elements, {
+    ...options,
+    viewport: options.viewportOnly ? rawData.viewport : undefined
+  });
 
   // パターン検出
   const patterns = detectPatterns(rawData.elements);

@@ -79,7 +79,8 @@ export async function fetchLayoutAnalysis(
     
     const layoutData = await analyzeLayout(page, {
       groupingThreshold,
-      importanceThreshold
+      importanceThreshold,
+      viewportOnly: !waitForContent
     });
     return layoutData;
   } finally {
