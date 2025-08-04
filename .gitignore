@@ -11,3 +11,4 @@ tmp/
 # Examples output
 examples/output/
 output/
+.visc
