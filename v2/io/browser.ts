@@ -61,7 +61,7 @@ export async function fetchLayoutAnalysis(
     headless = true,
     groupingThreshold,
     importanceThreshold,
-    waitForContent = true
+    waitForContent = false
   } = options;
   const browser = await puppeteer.launch({ headless });
   const page = await browser.newPage();

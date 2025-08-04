@@ -29,11 +29,35 @@ export function renderComparisonToSvg(
     highlightLevel = 'moderate',
     viewport = baseline.viewport
   } = options;
+  
+  // コンテンツの実際の高さを計算
+  const calculateContentHeight = (layout: LayoutAnalysisResult): number => {
+    let maxHeight = viewport.height;
+    
+    if (layout.semanticGroups) {
+      layout.semanticGroups.forEach(group => {
+        const groupBottom = group.bounds.y + group.bounds.height;
+        maxHeight = Math.max(maxHeight, groupBottom);
+      });
+    }
+    
+    layout.elements.forEach(element => {
+      const elementBottom = element.rect.y + element.rect.height;
+      maxHeight = Math.max(maxHeight, elementBottom);
+    });
+    
+    return maxHeight;
+  };
+  
+  const svgHeight = Math.max(
+    calculateContentHeight(baseline),
+    calculateContentHeight(current)
+  );
 
   const elements: string[] = [];
   
   // SVGヘッダー
-  elements.push(`<svg width="${viewport.width}" height="${viewport.height}" xmlns="http://www.w3.org/2000/svg">`);
+  elements.push(`<svg width="${viewport.width}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`);
   
   // スタイル定義
   elements.push(generateStyles(highlightLevel));
@@ -42,7 +66,7 @@ export function renderComparisonToSvg(
   elements.push(generateLegend());
   
   // 背景
-  elements.push(`<rect width="${viewport.width}" height="${viewport.height}" fill="#f8f9fa" />`);
+  elements.push(`<rect width="${viewport.width}" height="${svgHeight}" fill="#f8f9fa" />`);
   
   // 差分要素のマップを作成
   const diffMap = new Map<string, LayoutDifference>();

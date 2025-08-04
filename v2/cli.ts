@@ -237,13 +237,14 @@ program
   .option('-o, --output <dir>', 'Output directory', './visual-checker-output')
   .option('--viewport <size>', 'Viewport size for URLs', '1280x800')
   .option('--threshold <number>', 'Similarity threshold (0-100)', '90')
+  .option('-f, --full', 'Capture full page (default: viewport only)')
   .action(async (source1, source2, options) => {
     const spinner = ora('Loading layouts...').start();
     
     try {
       // レイアウトを取得
-      const layout1 = await getLayout(source1, parseViewport(options.viewport), spinner);
-      const layout2 = await getLayout(source2, parseViewport(options.viewport), spinner);
+      const layout1 = await getLayout(source1, parseViewport(options.viewport), spinner, options.full);
+      const layout2 = await getLayout(source2, parseViewport(options.viewport), spinner, options.full);
       
       spinner.text = 'Comparing layouts...';
       
@@ -383,14 +384,16 @@ function parseViewport(viewportStr: string): { width: number; height: number } {
 async function getLayout(
   source: string, 
   viewport: { width: number; height: number },
-  spinner: any
+  spinner: any,
+  captureFullPage: boolean = false
 ): Promise<LayoutAnalysisResult> {
   if (source.startsWith('http://') || source.startsWith('https://') || source.startsWith('file://')) {
     spinner.text = `Fetching layout from ${source}...`;
     return await fetchLayoutAnalysis(source, { 
       viewport,
       groupingThreshold: 20,
-      importanceThreshold: 10
+      importanceThreshold: 10,
+      waitForContent: captureFullPage
     });
   } else {
     spinner.text = `Loading layout from ${source}...`;
