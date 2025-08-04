@@ -113,15 +113,15 @@ export function getExtractLayoutScript(): string {
   }
   
   // デバッグ: 高さ情報を確認
-  const maxY = Math.max(...elements.map(el => el.rect.y + el.rect.height));
-  const elementsBelow2000 = elements.filter(el => el.rect.y > 2000).length;
-  console.log('Layout extraction debug:', {
-    totalElements: elements.length,
-    maxY: maxY,
-    elementsBelow2000: elementsBelow2000,
-    bodyScrollHeight: document.body.scrollHeight,
-    documentHeight: document.documentElement.scrollHeight
-  });
+  // const maxY = Math.max(...elements.map(el => el.rect.y + el.rect.height));
+  // const elementsBelow2000 = elements.filter(el => el.rect.y > 2000).length;
+  // console.log('Layout extraction debug:', {
+  //   totalElements: elements.length,
+  //   maxY: maxY,
+  //   elementsBelow2000: elementsBelow2000,
+  //   bodyScrollHeight: document.body.scrollHeight,
+  //   documentHeight: document.documentElement.scrollHeight
+  // });
   
   return {
     url: window.location.href,
@@ -306,24 +306,24 @@ export function organizeIntoVisualNodeGroups(
   });
 
   // デバッグ: セマンティックグループの統計情報
-  const groupStats = topLevelGroups.map((g) => ({
-    type: g.type,
-    y: g.bounds.y,
-    height: g.bounds.height,
-    bottom: g.bounds.y + g.bounds.height,
-    childCount: g.children.length,
-  }));
+  // const groupStats = topLevelGroups.map((g) => ({
+  //   type: g.type,
+  //   y: g.bounds.y,
+  //   height: g.bounds.height,
+  //   bottom: g.bounds.y + g.bounds.height,
+  //   childCount: g.children.length,
+  // }));
 
-  const maxGroupY = Math.max(...groupStats.map((g) => g.bottom));
-  const groupsBelow2000 = groupStats.filter((g) => g.y > 2000).length;
+  // const maxGroupY = Math.max(...groupStats.map((g) => g.bottom));
+  // const groupsBelow2000 = groupStats.filter((g) => g.y > 2000).length;
 
-  console.log("Semantic group debug:", {
-    totalTopLevelGroups: topLevelGroups.length,
-    totalGroups: groups.length,
-    maxGroupY: maxGroupY,
-    groupsBelow2000: groupsBelow2000,
-    groupsAbove2000: groupStats.filter((g) => g.y <= 2000).length,
-  });
+  // console.log("Semantic group debug:", {
+  //   totalTopLevelGroups: topLevelGroups.length,
+  //   totalGroups: groups.length,
+  //   maxGroupY: maxGroupY,
+  //   groupsBelow2000: groupsBelow2000,
+  //   groupsAbove2000: groupStats.filter((g) => g.y <= 2000).length,
+  // });
 
   return topLevelGroups;
 }

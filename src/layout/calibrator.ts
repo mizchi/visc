@@ -67,16 +67,16 @@ export function calibrateComparisonSettings(
   
   if (detectDynamicElements) {
     const flakiness = detectFlakiness(samples);
-    console.log(`[Calibrator] Detected ${flakiness.flakyElements.length} flaky elements`);
-    console.log(`[Calibrator] Filtering with threshold: ${dynamicThreshold}%`);
+    // console.log(`[Calibrator] Detected ${flakiness.flakyElements.length} flaky elements`);
+    // console.log(`[Calibrator] Filtering with threshold: ${dynamicThreshold}%`);
     
     dynamicElements = flakiness.flakyElements
       .filter(elem => {
         // scoreプロパティを使用（flakinessScoreではない）
         const passesThreshold = elem.score >= dynamicThreshold;
         if (passesThreshold && elem.path.startsWith('visualNodeGroup')) {
-          console.log(`[Calibrator] Element ${elem.path} passes threshold with score ${elem.score}%`);
-          console.log(`[Calibrator] Identifier:`, JSON.stringify(elem.identifier));
+          // console.log(`[Calibrator] Element ${elem.path} passes threshold with score ${elem.score}%`);
+          // console.log(`[Calibrator] Identifier:`, JSON.stringify(elem.identifier));
         }
         return passesThreshold;
       })
@@ -88,13 +88,13 @@ export function calibrateComparisonSettings(
         reason: elem.flakinessType
       }));
     
-    console.log(`[Calibrator] Dynamic elements after filtering: ${dynamicElements.length}`);
+    // console.log(`[Calibrator] Dynamic elements after filtering: ${dynamicElements.length}`);
     if (dynamicElements.length > 0) {
-      console.log(`[Calibrator] First 5 dynamic elements:`, dynamicElements.slice(0, 5).map(e => ({
-        path: e.path,
-        selector: e.selector,
-        score: e.flakinessScore.toFixed(1)
-      })));
+      // console.log(`[Calibrator] First 5 dynamic elements:`, dynamicElements.slice(0, 5).map(e => ({
+      //   path: e.path,
+      //   selector: e.selector,
+      //   score: e.flakinessScore.toFixed(1)
+      // })));
     }
     
     // 動的要素のセレクタを生成
@@ -102,7 +102,7 @@ export function calibrateComparisonSettings(
       .filter(elem => elem.selector)
       .map(elem => elem.selector!);
     
-    console.log(`[Calibrator] Generated ${ignoreSelectors.length} ignore selectors`);
+    // console.log(`[Calibrator] Generated ${ignoreSelectors.length} ignore selectors`);
   }
 
   // 厳密さに基づいて基準値を調整
@@ -145,7 +145,7 @@ export function calibrateComparisonSettings(
     dynamicElements: dynamicElements.length > 0 ? dynamicElements : undefined
   };
   
-  console.log(`[Calibrator] Returning result with ${result.dynamicElements?.length || 0} dynamic elements`);
+  // console.log(`[Calibrator] Returning result with ${result.dynamicElements?.length || 0} dynamic elements`);
   
   return result;
 }
