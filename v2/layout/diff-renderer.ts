@@ -34,17 +34,19 @@ export function renderComparisonToSvg(
   const calculateContentHeight = (layout: LayoutAnalysisResult): number => {
     let maxHeight = viewport.height;
     
-    if (layout.semanticGroups) {
+    // セマンティックグループモードの場合
+    if (layout.semanticGroups && layout.semanticGroups.length > 0) {
       layout.semanticGroups.forEach(group => {
         const groupBottom = group.bounds.y + group.bounds.height;
         maxHeight = Math.max(maxHeight, groupBottom);
       });
+    } else {
+      // 個別要素モードの場合のみelementsを見る
+      layout.elements.forEach(element => {
+        const elementBottom = element.rect.y + element.rect.height;
+        maxHeight = Math.max(maxHeight, elementBottom);
+      });
     }
-    
-    layout.elements.forEach(element => {
-      const elementBottom = element.rect.y + element.rect.height;
-      maxHeight = Math.max(maxHeight, elementBottom);
-    });
     
     return maxHeight;
   };
@@ -75,31 +77,34 @@ export function renderComparisonToSvg(
   });
 
   // ベースラインの要素を描画
-  if (baseline.semanticGroups) {
+  if (baseline.semanticGroups && baseline.semanticGroups.length > 0) {
+    // セマンティックグループモード
     baseline.semanticGroups.forEach(group => {
       renderGroupDiff(elements, group, diffMap, showUnchanged, showLabels);
     });
   } else {
+    // 個別要素モード
     baseline.elements.forEach(element => {
       renderElementDiff(elements, element, diffMap, showUnchanged, showLabels);
     });
+    
+    // 個別要素モードでのみ、新規追加・削除要素を描画
+    // 新規追加された要素を描画
+    comparison.addedElements.forEach(elementId => {
+      const element = findElement(current, elementId);
+      if (element) {
+        renderAddedElement(elements, element, showLabels);
+      }
+    });
+
+    // 削除された要素を描画
+    comparison.removedElements.forEach(elementId => {
+      const element = findElement(baseline, elementId);
+      if (element) {
+        renderRemovedElement(elements, element, showLabels);
+      }
+    });
   }
-
-  // 新規追加された要素を描画
-  comparison.addedElements.forEach(elementId => {
-    const element = findElement(current, elementId);
-    if (element) {
-      renderAddedElement(elements, element, showLabels);
-    }
-  });
-
-  // 削除された要素を描画
-  comparison.removedElements.forEach(elementId => {
-    const element = findElement(baseline, elementId);
-    if (element) {
-      renderRemovedElement(elements, element, showLabels);
-    }
-  });
 
   // サマリー情報
   elements.push(generateSummary(comparison, viewport));
@@ -152,7 +157,7 @@ function generateLegend(): string {
   legendItems.forEach((item, i) => {
     const y = 35 + i * 20;
     legend.push(`<rect x="10" y="${y}" width="15" height="15" class="${item.class}" />`);
-    legend.push(`<text x="30" y="${y + 11}" class="label">${item.label}</text>`);
+    legend.push(`<text x="30" y="${y + 11}" class="label">${escapeXml(item.label)}</text>`);
   });
   
   legend.push('</g>');
@@ -187,13 +192,12 @@ function renderGroupDiff(
     elements.push('</g>');
   }
 
-  // 子要素を再帰的に描画
+  // 子要素を再帰的に描画（セマンティックグループのみ、個別要素は描画しない）
   group.children.forEach(child => {
     if ('children' in child) {
       renderGroupDiff(elements, child as SemanticGroup, diffMap, showUnchanged, showLabels);
-    } else {
-      renderElementDiff(elements, child as LayoutElement, diffMap, showUnchanged, showLabels);
     }
+    // 個別要素（LayoutElement）は描画しない - グループで既に表現されている
   });
 }
 
