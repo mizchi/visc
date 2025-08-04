@@ -34,7 +34,7 @@ export function getExtractLayoutScript(): string {
     NodeFilter.SHOW_ELEMENT,
     {
       acceptNode: (node) => {
-        const element = node as HTMLElement;
+        const element = node;
         const tagName = element.tagName;
         
         // 除外するタグ
@@ -55,7 +55,7 @@ export function getExtractLayoutScript(): string {
   
   let node;
   while (node = walker.nextNode()) {
-    const element = node as HTMLElement;
+    const element = node;
     const rect = element.getBoundingClientRect();
     
     if (rect.width > 0 && rect.height > 0) {
@@ -78,14 +78,14 @@ export function getExtractLayoutScript(): string {
         className: element.className,
         id: element.id,
         rect: {
-          x: rect.x,
-          y: rect.y,
+          x: Math.max(0, rect.x),
+          y: Math.max(0, rect.y),
           width: rect.width,
           height: rect.height,
-          top: rect.top,
+          top: Math.max(0, rect.top),
           right: rect.right,
           bottom: rect.bottom,
-          left: rect.left
+          left: Math.max(0, rect.left)
         },
         text: element.textContent?.trim().substring(0, 100),
         role: element.getAttribute('role'),
@@ -156,8 +156,8 @@ export function organizeIntoSemanticGroups(
     const ys = elements.map(e => e.rect.y);
     const rights = elements.map(e => e.rect.right);
     const bottoms = elements.map(e => e.rect.bottom);
-    root.bounds.x = Math.min(...xs);
-    root.bounds.y = Math.min(...ys);
+    root.bounds.x = Math.max(0, Math.min(...xs));
+    root.bounds.y = Math.max(0, Math.min(...ys));
     root.bounds.width = Math.max(...rights) - root.bounds.x;
     root.bounds.height = Math.max(...bottoms) - root.bounds.y;
   }
@@ -172,6 +172,13 @@ export function organizeIntoSemanticGroups(
 
   sortedElements.forEach(element => {
     if (assignedToGroup.has(element) || (element.importance || 0) < importanceThreshold) {
+      return;
+    }
+    
+    // ページ全体を覆う要素はスキップ（より具体的なグループを優先）
+    const pageArea = (elements[0]?.rect.width || 1280) * (elements[0]?.rect.height || 800);
+    const elementArea = element.rect.width * element.rect.height;
+    if (elementArea > pageArea * 0.8) {
       return;
     }
 
@@ -198,8 +205,8 @@ export function organizeIntoSemanticGroups(
       // グループの境界を更新
       const newX = Math.min(group.bounds.x, element.rect.x);
       const newY = Math.min(group.bounds.y, element.rect.y);
-      group.bounds.width = Math.max(group.bounds.x + group.bounds.width, element.rect.right) - newX;
-      group.bounds.height = Math.max(group.bounds.y + group.bounds.height, element.rect.bottom) - newY;
+      group.bounds.width = Math.max(1, Math.max(group.bounds.x + group.bounds.width, element.rect.right) - newX);
+      group.bounds.height = Math.max(1, Math.max(group.bounds.y + group.bounds.height, element.rect.bottom) - newY);
       group.bounds.x = newX;
       group.bounds.y = newY;
     } else {
@@ -272,7 +279,7 @@ export async function analyzeLayout(
   };
 }
 
-function getSemanticType(element: HTMLElement): string {
+function getSemanticType(element) {
   const tag = element.tagName.toLowerCase();
   const role = element.getAttribute('role');
   
@@ -297,7 +304,7 @@ function getSemanticType(element: HTMLElement): string {
   
   // コンテナ要素（子要素が多い）
   const childElements = Array.from(element.children).filter(child => 
-    child.nodeType === 1 && window.getComputedStyle(child as Element).display !== 'none'
+    child.nodeType === 1 && window.getComputedStyle(child).display !== 'none'
   );
   if (childElements.length >= 3) {
     return 'container';
@@ -316,7 +323,7 @@ function getSemanticType(element: HTMLElement): string {
   return 'content';
 }
 
-function calculateImportance(element: HTMLElement, rect: DOMRect): number {
+function calculateImportance(element, rect) {
   let importance = 0;
   
   // サイズによる重要度

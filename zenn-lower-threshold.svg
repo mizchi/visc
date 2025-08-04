@@ -1,0 +1,124 @@
+<svg width="1280" height="2887.671875" viewBox="0 0 1280 2887.671875" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        rect { transition: all 0.3s ease; }
+        text { transition: all 0.3s ease; }
+        .viewport-indicator { fill: none; stroke: #FF0000; stroke-width: 3; stroke-dasharray: 10,5; opacity: 0.5; }
+      </style>
+      <rect x="0" y="0" width="1280" height="2887.671875" fill="#FFFFFF" />
+      <rect x="0" y="256.65625" width="1280" height="1569.140625" fill="#50E3C2" fill-opacity="0.3" stroke="#50E3C2" stroke-width="2" />
+      <text x="5" y="270.65625" font-family="sans-serif" font-size="14" fill="#50E3C2" dy=".3em">section: Tech？🏗️React.js UI/Container分</text>
+      <rect x="160" y="256.65625" width="960" height="1569.140625" fill="#BD10E0" fill-opacity="0.3" stroke="#BD10E0" stroke-width="2" />
+      <text x="165" y="270.65625" font-family="sans-serif" font-size="14" fill="#BD10E0" dy=".3em">container: Tech？🏗️React.js UI/Container分</text>
+      <rect x="200" y="362.265625" width="880" height="1329.0625" fill="#BD10E0" fill-opacity="0.3" stroke="#BD10E0" stroke-width="2" />
+      <text x="205" y="376.265625" font-family="sans-serif" font-size="14" fill="#BD10E0" dy=".3em">container: 🏗️React.js UI/Container分離 × H</text>
+      <rect x="774.40625" y="658.234375" width="305.59375" height="199.578125" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="672.234375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: GraphQLの「Resolver並行性・I/O並列性」の言</text>
+      <rect x="308" y="782.25" width="305.59375" height="199.578125" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="796.25" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Claude Codeを10倍賢くする無料ツール「Seren</text>
+      <rect x="308" y="518.28125" width="305.59375" height="190.328125" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="532.28125" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: エコシステム全体でのソースコード漏洩への対処の振り返り</text>
+      <rect x="774.40625" y="715" width="305.59375" height="184.453125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="779.40625" y="729" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 株式会社エスマット</text>
+      <rect x="308" y="394.265625" width="305.59375" height="174.390625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="408.265625" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Claude Codeでn8nワークフロー作るのが楽すぎて、</text>
+      <rect x="308" y="658.234375" width="305.59375" height="174.390625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="672.234375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Figma to CodeのAIツール「Kombai」を使っ</text>
+      <rect x="666.40625" y="782.25" width="413.59375" height="117.203125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="796.25" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🌿</text>
+      <rect x="666.40625" y="518.28125" width="413.59375" height="107.953125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="532.28125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🤖</text>
+      <rect x="200" y="1055.453125" width="413.59375" height="107.953125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="1069.453125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🎤</text>
+      <rect x="200" y="1195.40625" width="413.59375" height="107.953125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="1209.40625" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🎙️</text>
+      <rect x="666.40625" y="1459.359375" width="413.59375" height="107.953125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="1473.359375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 💻</text>
+      <rect x="308" y="988.21875" width="305.59375" height="142.796875" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="1002.21875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 一家に一台Anneliちゃん！LM Studio × Aiv</text>
+      <rect x="286.765625" y="313.765625" width="326.828125" height="130.875" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="291.765625" y="327.765625" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: ？</text>
+      <rect x="308" y="1137.40625" width="305.59375" height="133.5625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="1151.40625" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 英語プレゼンターのトークをリアルタイムに日本語翻訳しプレゼン</text>
+      <rect x="774.40625" y="1112.21875" width="305.59375" height="133.5625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="1126.21875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: crates.ioにトークンレスでpublish可能になった</text>
+      <rect x="774.40625" y="1252.171875" width="305.59375" height="133.5625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="1266.171875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: OpenNext + Drizzle で Cloudflar</text>
+      <rect x="666.40625" y="658.234375" width="413.59375" height="92.015625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="672.234375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 📚</text>
+      <rect x="666.40625" y="1055.453125" width="413.59375" height="92.015625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="1069.453125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🧭</text>
+      <rect x="200" y="1599.3125" width="413.59375" height="92.015625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="1613.3125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 😊</text>
+      <rect x="666.40625" y="1599.3125" width="413.59375" height="92.015625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="1613.3125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🦾</text>
+      <rect x="666.40625" y="394.265625" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="408.265625" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🔒</text>
+      <rect x="200" y="518.28125" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="532.28125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🌊</text>
+      <rect x="200" y="658.234375" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="672.234375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🛡️</text>
+      <rect x="200" y="782.25" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="796.25" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🐕</text>
+      <rect x="200" y="931.453125" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="945.453125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: ✨</text>
+      <rect x="666.40625" y="931.453125" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="945.453125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🐔</text>
+      <rect x="666.40625" y="1195.40625" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="1209.40625" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🚀</text>
+      <rect x="200" y="1335.359375" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="1349.359375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 👻</text>
+      <rect x="666.40625" y="1335.359375" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="671.40625" y="1349.359375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🌧️</text>
+      <rect x="200" y="1459.359375" width="413.59375" height="92" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="205" y="1473.359375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 💯</text>
+      <rect x="774.40625" y="864.203125" width="305.59375" height="117.625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="878.203125" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 【Github Copilot】設計書があるなら、全部Cop</text>
+      <rect x="774.40625" y="988.21875" width="305.59375" height="117.609375" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="1002.21875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 2025年7月現在の Cursor と VS Code + </text>
+      <rect x="774.40625" y="600.234375" width="305.59375" height="108.375" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="614.234375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: ドキュメント整備をDevinに任せたら、4週間分の作業が6時</text>
+      <rect x="774.40625" y="518.28125" width="305.59375" height="107.953125" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="532.28125" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 無職が Claude Code を使って 3 週間かけて O</text>
+      <rect x="774.40625" y="394.265625" width="305.59375" height="92" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="408.265625" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: OSSは“使う前に”Claude Codeで脆弱性診断しよう</text>
+      <rect x="308" y="1277.359375" width="305.59375" height="83.1875" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="1291.359375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: 苦手だったDockerとついに向き合った</text>
+      <rect x="774.40625" y="1459.359375" width="305.59375" height="75.5625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="779.40625" y="1473.359375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Microsoft Teams の絵文字リアクションでワーク</text>
+      <rect x="308" y="1459.359375" width="305.59375" height="50.375" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="313" y="1473.359375" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: Claude Code × serenaでKiro風仕様書駆</text>
+      <rect x="345" y="451.03125" width="150.5" height="35.25" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="350" y="465.03125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: GLOBIS Tech</text>
+      <rect x="890.140625" y="864.203125" width="133.078125" height="18" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="895.140625" y="873.203125" font-family="sans-serif" font-size="9" fill="#F5A623" dy=".3em">interactive: 合同会社春秋テックブログ</text>
+      <rect x="911.453125" y="1112.21875" width="130.046875" height="18" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="916.453125" y="1121.21875" font-family="sans-serif" font-size="9" fill="#F5A623" dy=".3em">interactive: 株式会社Inner Resource</text>
+      <rect x="380.28125" y="579.421875" width="75.421875" height="17.25" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="385.28125" y="588.046875" font-family="sans-serif" font-size="8.625" fill="#B8E986" dy=".3em">content: 212</text>
+      <rect x="968.03125" y="604.609375" width="68.21875" height="17.25" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="973.03125" y="613.234375" font-family="sans-serif" font-size="8.625" fill="#B8E986" dy=".3em">content: 1日前 39</text>
+      <rect x="887.71875" y="455.40625" width="30.40625" height="17.25" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="892.71875" y="464.03125" font-family="sans-serif" font-size="8.625" fill="#B8E986" dy=".3em">content: 64</text>
+      <rect x="399.3125" y="719.375" width="30.40625" height="17.25" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="404.3125" y="728" font-family="sans-serif" font-size="8.625" fill="#B8E986" dy=".3em">content: 34</text>
+      <rect x="999.625" y="717" width="14" height="14" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="1004.625" y="725" font-family="sans-serif" font-size="8" fill="#B8E986" dy=".3em">content: svg</text>
+      <rect x="0" y="2126.359375" width="1280" height="761.3125" fill="#50E3C2" fill-opacity="0.3" stroke="#50E3C2" stroke-width="2" />
+      <text x="5" y="2140.359375" font-family="sans-serif" font-size="14" fill="#50E3C2" dy=".3em">section: Ideas？🚀子育てしながら2ヶ月でリリース！AIフル活用</text>
+      <rect x="0" y="62" width="1280" height="194.65625" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="5" y="76" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: ハッカソン第２回 AI Agent Hackathon wi</text>
+      <rect x="160" y="109.796875" width="960" height="146.859375" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="165" y="123.796875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: A</text>
+      <rect x="288" y="157.796875" width="325.59375" height="98.859375" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="293" y="171.796875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: ハッカソン</text>
+      <rect x="0" y="0" width="1280" height="109.796875" fill="#4A90E2" fill-opacity="0.3" stroke="#4A90E2" stroke-width="2" />
+      <text x="5" y="14" font-family="sans-serif" font-size="14" fill="#4A90E2" dy=".3em">navigation: TrendingExplore</text>
+      <rect x="80" y="0" width="1120" height="108.796875" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="85" y="14" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: Trending</text>
+      <rect x="1010.25" y="12.734375" width="189.75" height="36.53125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="1015.25" y="26.734375" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: ☀️</text>
+      <rect x="1075" y="13" width="125" height="36" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="1080" y="27" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: Log in</text>
+      <!-- ビューポート範囲を示す赤い破線の矩形 -->
+      <rect class="viewport-indicator" x="0" y="0" width="1280" height="800" />
+    </svg>

@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { fetchLayoutAnalysis, calibrateComparisonSettings, validateWithSettings, renderLayoutToSvg, renderComparisonToSvg } from './index.js';
+import { 
+  fetchLayoutAnalysis, 
+  calibrateComparisonSettings, 
+  validateWithSettings, 
+  renderLayoutToSvg, 
+  renderComparisonToSvg, 
+  getSemanticStatistics,
+  compareFlattenedGroups,
+  generateChangeSummary
+} from './index.js';
 import { compareLayouts } from './layout/comparator-v2.js';
 import type { ComparisonSettings, LayoutAnalysisResult } from './index.js';
 import fs from 'fs/promises';
@@ -26,6 +35,8 @@ program
   .option('--viewport <size>', 'Viewport size (e.g., "1280x800")', '1280x800')
   .option('--strictness <level>', 'Strictness level: low, medium, high', 'medium')
   .option('--headless', 'Run browser in headless mode', true)
+  .option('--grouping-threshold <number>', 'Threshold for semantic grouping', '20')
+  .option('--importance-threshold <number>', 'Minimum importance for elements', '10')
   .action(async (url, options) => {
     const spinner = ora('Collecting samples for calibration...').start();
     
@@ -39,7 +50,9 @@ program
         spinner.text = `Collecting sample ${i + 1}/${sampleCount}...`;
         const layout = await fetchLayoutAnalysis(url, { 
           viewport, 
-          headless: options.headless 
+          headless: options.headless,
+          groupingThreshold: parseFloat(options.groupingThreshold),
+          importanceThreshold: parseFloat(options.importanceThreshold)
         });
         samples.push(layout);
         
@@ -114,7 +127,11 @@ program
       spinner.text = 'Fetching current layout...';
       
       // 現在のレイアウトを取得
-      const currentLayout = await fetchLayoutAnalysis(url, { viewport });
+      const currentLayout = await fetchLayoutAnalysis(url, { 
+        viewport,
+        groupingThreshold: settingsData.groupingThreshold || 20,
+        importanceThreshold: settingsData.importanceThreshold || 10
+      });
       
       // ベースラインを取得または作成
       let baselineLayout: LayoutAnalysisResult;
@@ -233,6 +250,9 @@ program
       // 比較を実行
       const comparison = compareLayouts(layout1, layout2);
       
+      // セマンティックグループのフラット比較も実行
+      const flatComparison = compareFlattenedGroups(layout1, layout2);
+      
       // 結果を保存
       await fs.mkdir(options.output, { recursive: true });
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -241,6 +261,12 @@ program
       await fs.writeFile(
         path.join(options.output, `comparison-${timestamp}.json`),
         JSON.stringify(comparison, null, 2)
+      );
+      
+      // フラット比較結果も保存
+      await fs.writeFile(
+        path.join(options.output, `flat-comparison-${timestamp}.json`),
+        JSON.stringify(flatComparison, null, 2)
       );
       
       // SVGを生成
@@ -255,20 +281,33 @@ program
       await fs.writeFile(path.join(options.output, `diff-${timestamp}.svg`), diffSvg);
       
       const threshold = parseFloat(options.threshold);
-      const passed = comparison.similarity >= threshold;
+      
+      // セマンティックグループがある場合はフラット比較の結果を優先
+      const similarityToCheck = flatComparison.statistics.totalBaselineGroups > 0 
+        ? flatComparison.totalSimilarity 
+        : comparison.similarity;
+      
+      const passed = similarityToCheck >= threshold;
       
       if (passed) {
-        spinner.succeed(chalk.green(`Layouts are similar (${Math.round(comparison.similarity)}%)`));
+        spinner.succeed(chalk.green(`Layouts are similar (${Math.round(similarityToCheck)}%)`));
       } else {
-        spinner.fail(chalk.red(`Layouts differ too much (${Math.round(comparison.similarity)}% < ${threshold}%)`));
+        spinner.fail(chalk.red(`Layouts differ too much (${Math.round(similarityToCheck)}% < ${threshold}%)`));
       }
       
-      console.log('\n' + chalk.bold('Comparison Summary:'));
+      console.log('\n' + chalk.bold('Element-Level Comparison:'));
       console.log(chalk.gray('─'.repeat(40)));
       console.log(`Total Elements: ${comparison.summary.totalElements}`);
       console.log(`Changed: ${comparison.summary.totalChanged}`);
       console.log(`Added: ${comparison.summary.totalAdded}`);
       console.log(`Removed: ${comparison.summary.totalRemoved}`);
+      
+      if (flatComparison.statistics.totalBaselineGroups > 0) {
+        console.log('\n' + chalk.bold('Semantic Group Comparison:'));
+        console.log(chalk.gray('─'.repeat(40)));
+        console.log(generateChangeSummary(flatComparison));
+      }
+      
       console.log('\n' + chalk.gray(`Results saved to: ${options.output}`));
       
       process.exit(passed ? 0 : 1);
@@ -288,12 +327,18 @@ program
   .option('-o, --output <path>', 'Output file path', './layout.json')
   .option('--viewport <size>', 'Viewport size', '1280x800')
   .option('--svg', 'Also save as SVG', false)
+  .option('--grouping-threshold <number>', 'Threshold for semantic grouping', '20')
+  .option('--importance-threshold <number>', 'Minimum importance for elements', '10')
   .action(async (url, options) => {
     const spinner = ora('Extracting layout...').start();
     
     try {
       const viewport = parseViewport(options.viewport);
-      const layout = await fetchLayoutAnalysis(url, { viewport });
+      const layout = await fetchLayoutAnalysis(url, { 
+        viewport,
+        groupingThreshold: parseFloat(options.groupingThreshold),
+        importanceThreshold: parseFloat(options.importanceThreshold)
+      });
       
       // JSONを保存
       await fs.writeFile(options.output, JSON.stringify(layout, null, 2));
@@ -310,10 +355,15 @@ program
       
       console.log('\n' + chalk.bold('Layout Statistics:'));
       console.log(chalk.gray('─'.repeat(40)));
-      console.log(`Total Elements: ${layout.elements.length}`);
+      console.log(`Total Raw Elements: ${layout.elements.length}`);
       console.log(`Interactive Elements: ${layout.statistics.interactiveElements}`);
       if (layout.semanticGroups) {
         console.log(`Semantic Groups: ${layout.semanticGroups.length}`);
+        
+        const stats = getSemanticStatistics(layout.semanticGroups);
+        console.log(`Group Types: ${Object.entries(stats.groupsByType).map(([type, count]) => `${type}(${count})`).join(', ')}`);
+        console.log(`Max Depth: ${stats.maxDepth}`);
+        console.log(`Avg Children per Group: ${stats.averageChildrenPerGroup.toFixed(1)}`);
       }
       
     } catch (error) {
@@ -337,7 +387,11 @@ async function getLayout(
 ): Promise<LayoutAnalysisResult> {
   if (source.startsWith('http://') || source.startsWith('https://') || source.startsWith('file://')) {
     spinner.text = `Fetching layout from ${source}...`;
-    return await fetchLayoutAnalysis(source, { viewport });
+    return await fetchLayoutAnalysis(source, { 
+      viewport,
+      groupingThreshold: 20,
+      importanceThreshold: 10
+    });
   } else {
     spinner.text = `Loading layout from ${source}...`;
     return JSON.parse(await fs.readFile(source, 'utf-8'));
