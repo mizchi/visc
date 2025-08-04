@@ -3,6 +3,9 @@
  */
 
 import {
+  // Types
+  type VisualTreeAnalysis,
+  
   // Core functions
   fetchRawLayoutData,
   extractLayoutTree,
@@ -34,7 +37,7 @@ async function basicExample() {
     const rawData = await fetchRawLayoutData(page);
     
     // 2. Extract structured layout tree
-    const layout = extractLayoutTree(rawData, {
+    const layout = await extractLayoutTree(rawData, {
       viewportOnly: true, // Only include viewport elements
       groupingThreshold: 20,
       importanceThreshold: 10,
@@ -44,14 +47,14 @@ async function basicExample() {
     console.log(`Organized into ${layout.visualNodeGroups?.length || 0} visual groups`);
     
     // 3. Generate SVG visualization
-    const svg = renderLayoutToSvg(layout, {
+    const _svg = renderLayoutToSvg(layout, {
       showLabels: true,
       ignoreElements: ['.ads', '.cookie-banner'],
     });
     // Save svg to file or display...
     
     // 4. Compare two layouts
-    const layout2 = extractLayoutTree(rawData); // Second sample
+    const layout2 = await extractLayoutTree(rawData); // Second sample
     const comparison = compareLayoutTrees(layout, layout2, {
       threshold: 2, // Position change threshold in pixels
       ignoreText: false,
@@ -62,17 +65,17 @@ async function basicExample() {
     console.log(`Changes: ${comparison.differences.length}`);
     
     // 5. Render comparison as SVG
-    const diffSvg = renderComparisonToSvg(comparison, layout, layout2, {
+    const _diffSvg = renderComparisonToSvg(comparison, layout, layout2, {
       showUnchanged: true,
       highlightLevel: 'moderate',
     });
     
     // 6. Calibrate settings from multiple samples
-    const samples = [];
+    const samples: VisualTreeAnalysis[] = [];
     for (let i = 0; i < 5; i++) {
       await page.reload();
       const sample = await fetchRawLayoutData(page);
-      samples.push(extractLayoutTree(sample));
+      samples.push(await extractLayoutTree(sample));
     }
     
     const calibration = calibrateComparisonSettings(samples, {
