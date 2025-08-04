@@ -1,4 +1,4 @@
-import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from './extractor.js';
+import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from '../types.js';
 
 const typeColorMap: Record<string, string> = {
   navigation: '#4A90E2', // Blue
@@ -25,7 +25,7 @@ function getElementColor(element: SemanticGroup | LayoutElement): string {
   return typeColorMap.default;
 }
 
-function escapeXml(text: string): string {
+export function escapeXml(text: string): string {
   return text.replace(/[<>&'"]/g, (c) => {
     switch (c) {
       case '<': return '&lt;';
@@ -57,19 +57,21 @@ export function renderLayoutToSvg(analysisResult: LayoutAnalysisResult): string 
 
   // Render semantic groups first as background areas
   if (semanticGroups) {
-    const traverse = (group: SemanticGroup) => {
+    const traverse = (group: SemanticGroup | LayoutElement) => {
       const color = getElementColor(group);
-      svgElements.push(createRectElement(group.bounds, color));
-      const label = `${group.type}: ${group.label || ''}`;
-      svgElements.push(createTextElement(label, group.bounds, color));
+      if ('bounds' in group) {
+        svgElements.push(createRectElement(group.bounds, color));
+        const label = `${group.type}: ${group.label || ''}`;
+        svgElements.push(createTextElement(label, group.bounds, color));
+      }
       if (group.children) {
-        group.children.forEach(traverse);
+        group.children.forEach((child: SemanticGroup | LayoutElement) => traverse(child));
       }
     };
     semanticGroups.forEach(traverse);
   } else if (elements) {
     // Fallback to rendering individual elements if no semantic groups
-    elements.forEach(element => {
+    elements.forEach((element: LayoutElement) => {
       const color = getElementColor(element);
       svgElements.push(createRectElement(element.rect, color));
       const label = element.text || element.tagName;

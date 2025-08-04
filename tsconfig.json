@@ -16,7 +16,7 @@
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "v2/**/*"],
   "exclude": [
     "node_modules",
     "dist",
@@ -25,6 +25,7 @@
     "src/layout/examples",
     "src/layout/snippets",
     "src/layout/**/*.test.ts",
-    "src/layout/demo.ts"
+    "src/layout/demo.ts",
+    "v2/layout/comparator.old.ts"
   ]
 }

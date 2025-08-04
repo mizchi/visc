@@ -4,8 +4,9 @@
  * 複数回のクロール結果を分析して、不安定な要素を特定します。
  */
 
-import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from "./extractor.js";
-import { compareLayouts } from "./comparator.js";
+import type { LayoutAnalysisResult, SemanticGroup, LayoutElement } from './extractor.js';
+import type { LayoutDifference } from './comparator-v2.js';
+import { compareLayouts } from './comparator-v2.js';
 
 export interface FlakinessAnalysis {
   /** 全体のフレーキーネススコア (0-100, 0が最も安定) */
@@ -109,8 +110,7 @@ export function detectFlakiness(
     for (let j = i + 1; j < results.length; j++) {
       const comparison = compareLayouts(results[i], results[j], {
         threshold: Math.min(positionThreshold, sizeThreshold),
-        ignoreText,
-        ignoreStyle,
+        ignoreText
       });
 
       // 差分を追跡
@@ -207,7 +207,6 @@ function trackSemanticGroup(
       path,
       identifier: {
         type: group.type,
-        id: group.id,
         label: group.label,
       },
       occurrences: new Map(),
@@ -229,7 +228,11 @@ function trackSemanticGroup(
   // 子要素を再帰的に追跡
   if (group.children) {
     group.children.forEach((child, index) => {
-      trackSemanticGroup(child, `${path}/child[${index}]`, trackers, resultIndex);
+      if ('children' in child) {
+        trackSemanticGroup(child as SemanticGroup, `${path}/child[${index}]`, trackers, resultIndex);
+      } else {
+        trackLayoutElement(child as LayoutElement, `${path}/child[${index}]`, trackers, resultIndex);
+      }
     });
   }
 }
@@ -288,19 +291,40 @@ function recordProperty(tracker: ElementTracker, property: string, value: unknow
  */
 function updateTrackerWithDifference(
   trackers: Map<string, ElementTracker>,
-  diff: any,
+  diff: LayoutDifference,
   index1: number,
   index2: number
 ): void {
-  const tracker = trackers.get(diff.path);
+  // 新しいLayoutDifferenceインターフェースではelementIdを使用
+  const tracker = Array.from(trackers.values()).find(t => 
+    t.identifier.tagName === diff.oldValue.tagName &&
+    t.identifier.id === diff.oldValue.id &&
+    t.identifier.className === diff.oldValue.className
+  );
   if (!tracker) return;
 
   // 変更の詳細を記録
-  if (diff.changes) {
-    diff.changes.forEach((change: any) => {
-      recordProperty(tracker, change.property, change.before);
-      recordProperty(tracker, change.property, change.after);
-    });
+  if (diff.changes.rect) {
+    if (diff.changes.rect.x !== undefined) {
+      recordProperty(tracker, 'x', diff.oldValue.rect.x);
+      recordProperty(tracker, 'x', diff.oldValue.rect.x + diff.changes.rect.x);
+    }
+    if (diff.changes.rect.y !== undefined) {
+      recordProperty(tracker, 'y', diff.oldValue.rect.y);
+      recordProperty(tracker, 'y', diff.oldValue.rect.y + diff.changes.rect.y);
+    }
+    if (diff.changes.rect.width !== undefined) {
+      recordProperty(tracker, 'width', diff.oldValue.rect.width);
+      recordProperty(tracker, 'width', diff.oldValue.rect.width + diff.changes.rect.width);
+    }
+    if (diff.changes.rect.height !== undefined) {
+      recordProperty(tracker, 'height', diff.oldValue.rect.height);
+      recordProperty(tracker, 'height', diff.oldValue.rect.height + diff.changes.rect.height);
+    }
+  }
+  if (diff.changes.text !== undefined) {
+    recordProperty(tracker, 'text', diff.oldValue.text);
+    recordProperty(tracker, 'text', diff.changes.text);
   }
 }
 

@@ -8,7 +8,8 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "visual-checker": "dist/cli.js"
+    "visual-checker": "dist/cli.js",
+    "visual-checker-v2": "dist/v2/cli.js"
   },
   "types": "dist/index.d.ts",
   "type": "module",
@@ -29,8 +30,6 @@
     "viewer": "npx http-server examples -o fixtures/layout-viewer.html",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest",
-    "test:layout": "npm run build && npx playwright test tests/layout/",
-    "test:layout:ui": "npm run build && npx playwright test tests/layout/ --ui",
     "test:all": "npm run test:unit && npm run test:layout",
     "stability-check": "npm run build && tsx examples/layout/layout-stability-check.ts",
     "test:proxy": "npm run build && vitest tests/proxy/",
@@ -40,7 +39,6 @@
   "keywords": [
     "visual-regression",
     "testing",
-    "playwright",
     "snapshot"
   ],
   "author": "mizchi",
@@ -52,13 +50,11 @@
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
     "@mizchi/readability": "^0.7.7",
-    "@playwright/test": "^1.41.0",
     "ai": "^4.3.19",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
     "ora": "^8.0.1",
     "pixelmatch": "^5.3.0",
-    "playwright": "^1.54.1",
     "pngjs": "^7.0.0",
     "puppeteer": "^24.15.0"
   },
@@ -66,7 +62,6 @@
     "access": "public"
   },
   "devDependencies": {
-    "@playwright/test": "^1.41.0",
     "@types/node": "^20.11.0",
     "@types/pixelmatch": "^5.2.6",
     "@types/pngjs": "^6.0.4",

@@ -18,13 +18,8 @@ async function main() {
 
   await fs.mkdir(outputDir, { recursive: true });
 
-  const options = {
-    minIterations: 3,
-    maxIterations: 10,
-    viewport: { width: 1280, height: 720 },
-    delay: 1000, // 1 second delay between checks
-    targetStability: 95, // 95% stability
-  };
+  const configPath = path.join(process.cwd(), 'v2.config.js');
+  const options = (await import(configPath)).default;
 
   const results: LayoutAnalysisResult[] = [];
   let lastFlakinessScore = 0;

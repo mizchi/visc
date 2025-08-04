@@ -153,7 +153,7 @@ export function highlightTextDiff(
   const diff = (a: string[], b: string[]) => {
     const m = a.length;
     const n = b.length;
-    const v = { 1: 0 };
+    const v: { [key: number]: number } = { 1: 0 };
     const paths = [];
 
     for (let d = 0; d <= m + n; d++) {
