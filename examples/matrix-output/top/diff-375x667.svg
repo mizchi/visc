@@ -1,0 +1,191 @@
+<svg width="375" height="715.4375" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <style>
+        .unchanged { fill: #e9ecef; stroke: #6c757d; stroke-width: 1; opacity: 0.5; }
+        .changed-position { fill: #ffd43b; stroke: #fab005; stroke-width: 2; opacity: 0.5; }
+        .changed-size { fill: #ff8787; stroke: #fa5252; stroke-width: 2; opacity: 0.5; }
+        .changed-both { fill: #ff6b6b; stroke: #c92a2a; stroke-width: 3; opacity: 0.5; }
+        .added { fill: #ff4444; stroke: #cc0000; stroke-width: 2; opacity: 0.5; }
+        .removed { fill: #ff6666; stroke: #dd0000; stroke-width: 2; opacity: 0.5; stroke-dasharray: 5,5; }
+        .label { font-family: monospace; font-size: 10px; fill: #212529; }
+        .diff-arrow { stroke: #495057; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      </style>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#495057" />
+      </marker>
+    </defs>
+  
+<g id="legend" transform="translate(10, 10)">
+<rect x="0" y="0" width="200" height="160" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+<text x="10" y="20" class="label" font-weight="bold">Legend</text>
+<rect x="10" y="35" width="15" height="15" class="unchanged" />
+<text x="30" y="46" class="label">Unchanged</text>
+<rect x="10" y="55" width="15" height="15" class="changed-position" />
+<text x="30" y="66" class="label">Position Changed</text>
+<rect x="10" y="75" width="15" height="15" class="changed-size" />
+<text x="30" y="86" class="label">Size Changed</text>
+<rect x="10" y="95" width="15" height="15" class="changed-both" />
+<text x="30" y="106" class="label">Position &amp; Size Changed</text>
+<rect x="10" y="115" width="15" height="15" class="added" />
+<text x="30" y="126" class="label">Added</text>
+<rect x="10" y="135" width="15" height="15" class="removed" />
+<text x="30" y="146" class="label">Removed</text>
+</g>
+<rect width="375" height="715.4375" fill="#f8f9fa" />
+
+      <g class="visual-group">
+        <rect x="14" y="218.25" 
+              width="347" height="255.0625"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="233.25" class="label">
+          interactive: ？
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="14" y="331.1875" 
+              width="347" height="142.125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="346.1875" class="label">
+          content: React.js UI/Container分離 × Hook
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="0" y="62" 
+              width="375" height="179.1875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="77" class="label">
+          interactive: A
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="14" y="107" 
+              width="347" height="134.1875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="122" class="label">
+          interactive: 第２回 AI Agent Hackathon with Go
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="81.796875" y="289.6875" 
+              width="279.203125" height="194"
+              class="unchanged" rx="5" />
+    
+
+        <text x="86.796875" y="304.6875" class="label">
+          interactive: GLOBIS Tech
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="119" y="454.6875" 
+              width="20" height="20"
+              class="unchanged" rx="5" />
+    
+
+        <text x="124" y="469.6875" class="label">
+          content: IMG
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="0" y="0" 
+              width="375" height="107"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="15" class="label">
+          navigation: TrendingExplore
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="24.283340454101562" y="13.796875" 
+              width="209.71665954589844" height="92.203125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="29.283340454101562" y="28.796875" class="label">
+          interactive: ☀️
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="188.140625" y="13.796875" 
+              width="172.859375" height="34.390625"
+              class="unchanged" rx="5" />
+    
+
+        <text x="193.140625" y="28.796875" class="label">
+          interactive: Log in
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="14" y="503.3125" 
+              width="347" height="102.875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="518.3125" class="label">
+          interactive: 🤖
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="14" y="636.1875" 
+              width="347" height="79.25"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="651.1875" class="label">
+          interactive: 🔒
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="106" y="580.1875" 
+              width="255" height="103.25"
+              class="unchanged" rx="5" />
+    
+
+        <text x="111" y="595.1875" class="label">
+          interactive: Suguru Takahashi (高橋 俊)
+        </text>
+      
+</g>
+
+    <g id="summary" transform="translate(125, 10)">
+      <rect x="0" y="0" width="240" height="120" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+      <text x="10" y="20" class="label" font-weight="bold">Comparison Summary</text>
+      <text x="10" y="40" class="label">Total Elements: 1338</text>
+      <text x="10" y="55" class="label">Changed: 0</text>
+      <text x="10" y="70" class="label">Added: 0</text>
+      <text x="10" y="85" class="label">Removed: 0</text>
+      <text x="10" y="100" class="label">Similarity: 100%</text>
+    </g>
+  
+</svg>

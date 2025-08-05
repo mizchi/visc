@@ -1,0 +1,34 @@
+<svg width="375" height="715.4375" viewBox="0 0 375 715.4375" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        rect { transition: all 0.3s ease; }
+        text { transition: all 0.3s ease; }
+        .viewport-indicator { fill: none; stroke: #FF0000; stroke-width: 3; stroke-dasharray: 10,5; opacity: 0.5; }
+      </style>
+      <rect x="0" y="0" width="375" height="715.4375" fill="#FFFFFF" />
+      <rect x="14" y="218.25" width="347" height="255.0625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="19" y="232.25" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: ？</text>
+      <rect x="14" y="331.1875" width="347" height="142.125" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="19" y="345.1875" font-family="sans-serif" font-size="14" fill="#B8E986" dy=".3em">content: React.js UI/Container分離 × Hook</text>
+      <rect x="0" y="62" width="375" height="179.1875" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="5" y="76" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: A</text>
+      <rect x="14" y="107" width="347" height="134.1875" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="19" y="121" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 第２回 AI Agent Hackathon with Go</text>
+      <rect x="81.796875" y="289.6875" width="279.203125" height="194" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="86.796875" y="303.6875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: GLOBIS Tech</text>
+      <rect x="119" y="454.6875" width="20" height="20" fill="#B8E986" fill-opacity="0.3" stroke="#B8E986" stroke-width="2" />
+      <text x="124" y="464.6875" font-family="sans-serif" font-size="10" fill="#B8E986" dy=".3em">content: IMG</text>
+      <rect x="0" y="0" width="375" height="107" fill="#4A90E2" fill-opacity="0.3" stroke="#4A90E2" stroke-width="2" />
+      <text x="5" y="14" font-family="sans-serif" font-size="14" fill="#4A90E2" dy=".3em">navigation: TrendingExplore</text>
+      <rect x="24.283340454101562" y="13.796875" width="209.71665954589844" height="92.203125" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="29.283340454101562" y="27.796875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: ☀️</text>
+      <rect x="188.140625" y="13.796875" width="172.859375" height="34.390625" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="193.140625" y="27.796875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: Log in</text>
+      <rect x="14" y="503.3125" width="347" height="102.875" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="19" y="517.3125" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🤖</text>
+      <rect x="14" y="636.1875" width="347" height="79.25" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="19" y="650.1875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: 🔒</text>
+      <rect x="106" y="580.1875" width="255" height="103.25" fill="#F5A623" fill-opacity="0.3" stroke="#F5A623" stroke-width="2" />
+      <text x="111" y="594.1875" font-family="sans-serif" font-size="14" fill="#F5A623" dy=".3em">interactive: Suguru Takahashi (高橋 俊)</text>
+      <!-- ビューポート範囲を示す赤い破線の矩形 -->
+      <rect class="viewport-indicator" x="0" y="0" width="375" height="667" />
+    </svg>

@@ -1,0 +1,287 @@
+<svg width="768" height="1072.65625" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <style>
+        .unchanged { fill: #e9ecef; stroke: #6c757d; stroke-width: 1; opacity: 0.5; }
+        .changed-position { fill: #ffd43b; stroke: #fab005; stroke-width: 2; opacity: 0.5; }
+        .changed-size { fill: #ff8787; stroke: #fa5252; stroke-width: 2; opacity: 0.5; }
+        .changed-both { fill: #ff6b6b; stroke: #c92a2a; stroke-width: 3; opacity: 0.5; }
+        .added { fill: #ff4444; stroke: #cc0000; stroke-width: 2; opacity: 0.5; }
+        .removed { fill: #ff6666; stroke: #dd0000; stroke-width: 2; opacity: 0.5; stroke-dasharray: 5,5; }
+        .label { font-family: monospace; font-size: 10px; fill: #212529; }
+        .diff-arrow { stroke: #495057; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      </style>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#495057" />
+      </marker>
+    </defs>
+  
+<g id="legend" transform="translate(10, 10)">
+<rect x="0" y="0" width="200" height="160" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+<text x="10" y="20" class="label" font-weight="bold">Legend</text>
+<rect x="10" y="35" width="15" height="15" class="unchanged" />
+<text x="30" y="46" class="label">Unchanged</text>
+<rect x="10" y="55" width="15" height="15" class="changed-position" />
+<text x="30" y="66" class="label">Position Changed</text>
+<rect x="10" y="75" width="15" height="15" class="changed-size" />
+<text x="30" y="86" class="label">Size Changed</text>
+<rect x="10" y="95" width="15" height="15" class="changed-both" />
+<text x="30" y="106" class="label">Position &amp; Size Changed</text>
+<rect x="10" y="115" width="15" height="15" class="added" />
+<text x="30" y="126" class="label">Added</text>
+<rect x="10" y="135" width="15" height="15" class="removed" />
+<text x="30" y="146" class="label">Removed</text>
+</g>
+<rect width="768" height="1072.65625" fill="#f8f9fa" />
+
+      <g class="visual-group">
+        <rect x="0" y="62" 
+              width="768" height="170.65625"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="77" class="label">
+          interactive: A
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="280.65625" 
+              width="718" height="172"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="295.65625" class="label">
+          interactive: 🏗️
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="48.953125" y="360.65625" 
+              width="694.046875" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="53.953125" y="375.65625" class="label">
+          interactive: GLOBIS Tech
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="207.8125" y="392.234375" 
+              width="112.6875" height="35.25"
+              class="unchanged" rx="5" />
+    
+
+        <text x="212.8125" y="407.234375" class="label">
+          content: GLOBIS Tech
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="105.3125" y="208.171875" 
+              width="637.6875" height="177.671875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="110.3125" y="223.171875" class="label">
+          interactive: ？
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="133" y="396.859375" 
+              width="610" height="179.796875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="138" y="411.859375" class="label">
+          content: 無職が Claude Code を使って 3 週間かけて O
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="133" y="541.421875" 
+              width="610" height="159.234375"
+              class="unchanged" rx="5" />
+    
+
+        <text x="138" y="556.421875" class="label">
+          content: OSSは“使う前に”Claude Codeで脆弱性診断しよう
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="157.796875" 
+              width="718" height="122.859375"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="172.796875" class="label">
+          container: ハッカソン第２回 AI Agent Hackathon wi
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="0" y="0" 
+              width="768" height="109.796875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="15" class="label">
+          navigation: TrendingExplore
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="553.25" y="12.734375" 
+              width="189.75" height="36.53125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="558.25" y="27.734375" class="label">
+          interactive: ☀️
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="618" y="13" 
+              width="125" height="36"
+              class="unchanged" rx="5" />
+    
+
+        <text x="623" y="28" class="label">
+          interactive: Log in
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="484.65625" 
+              width="718" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="499.65625" class="label">
+          interactive: 🤖
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="608.65625" 
+              width="718" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="623.65625" class="label">
+          interactive: 🔒
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="732.65625" 
+              width="718" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="747.65625" class="label">
+          interactive: 🌊
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="133" y="732.65625" 
+              width="610" height="57.578125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="138" y="747.65625" class="label">
+          content: Claude Codeでn8nワークフロー作るのが楽すぎて、
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="856.65625" 
+              width="718" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="871.65625" class="label">
+          interactive: 🐕
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="133" y="856.65625" 
+              width="610" height="57.578125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="138" y="871.65625" class="label">
+          content: Figma to CodeのAIツール「Kombai」を使っ
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="25" y="980.65625" 
+              width="718" height="92"
+              class="unchanged" rx="5" />
+    
+
+        <text x="30" y="995.65625" class="label">
+          interactive: 🎤
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="133" y="980.65625" 
+              width="610" height="57.578125"
+              class="unchanged" rx="5" />
+    
+
+        <text x="138" y="995.65625" class="label">
+          content: 一家に一台Anneliちゃん！LM Studio × Aiv
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="35.28334045410156" y="24.78316879272461" 
+              width="143.88853454589844" height="156.2012062072754"
+              class="unchanged" rx="5" />
+    
+
+        <text x="40.28334045410156" y="39.78316879272461" class="label">
+          interactive: Explore
+        </text>
+      
+</g>
+
+    <g id="summary" transform="translate(518, 10)">
+      <rect x="0" y="0" width="240" height="120" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+      <text x="10" y="20" class="label" font-weight="bold">Comparison Summary</text>
+      <text x="10" y="40" class="label">Total Elements: 1338</text>
+      <text x="10" y="55" class="label">Changed: 0</text>
+      <text x="10" y="70" class="label">Added: 0</text>
+      <text x="10" y="85" class="label">Removed: 0</text>
+      <text x="10" y="100" class="label">Similarity: 100%</text>
+    </g>
+  
+</svg>

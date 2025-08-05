@@ -141,8 +141,8 @@ function generateStyles(
         .changed-position { fill: #ffd43b; stroke: #fab005; stroke-width: 2; opacity: ${opacity}; }
         .changed-size { fill: #ff8787; stroke: #fa5252; stroke-width: 2; opacity: ${opacity}; }
         .changed-both { fill: #ff6b6b; stroke: #c92a2a; stroke-width: 3; opacity: ${opacity}; }
-        .added { fill: #8ce99a; stroke: #51cf66; stroke-width: 2; opacity: ${opacity}; }
-        .removed { fill: #ffa8a8; stroke: #ff6b6b; stroke-width: 2; opacity: ${opacity}; stroke-dasharray: 5,5; }
+        .added { fill: #ff4444; stroke: #cc0000; stroke-width: 2; opacity: ${opacity}; }
+        .removed { fill: #ff6666; stroke: #dd0000; stroke-width: 2; opacity: ${opacity}; stroke-dasharray: 5,5; }
         .label { font-family: monospace; font-size: 10px; fill: #212529; }
         .diff-arrow { stroke: #495057; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
       </style>
@@ -279,6 +279,13 @@ function renderAddedElement(
   element: VisualNode,
   showLabels: boolean
 ): void {
+  // Outer highlight border
+  elements.push(`
+    <rect x="${element.rect.x - 2}" y="${element.rect.y - 2}" 
+          width="${element.rect.width + 4}" height="${element.rect.height + 4}"
+          fill="none" stroke="#ff0000" stroke-width="3" />
+  `);
+  
   elements.push(`
     <rect x="${element.rect.x}" y="${element.rect.y}" 
           width="${element.rect.width}" height="${element.rect.height}"
@@ -287,7 +294,7 @@ function renderAddedElement(
 
   if (showLabels) {
     elements.push(`
-      <text x="${element.rect.x + 5}" y="${element.rect.y + 15}" class="label">
+      <text x="${element.rect.x + 5}" y="${element.rect.y + 15}" class="label" fill="#ff0000" font-weight="bold">
         + ${escapeXml(element.tagName)}
       </text>
     `);
@@ -299,6 +306,13 @@ function renderRemovedElement(
   element: VisualNode,
   showLabels: boolean
 ): void {
+  // Outer highlight border with dashed line
+  elements.push(`
+    <rect x="${element.rect.x - 2}" y="${element.rect.y - 2}" 
+          width="${element.rect.width + 4}" height="${element.rect.height + 4}"
+          fill="none" stroke="#ff0000" stroke-width="3" stroke-dasharray="8,4" />
+  `);
+  
   elements.push(`
     <rect x="${element.rect.x}" y="${element.rect.y}" 
           width="${element.rect.width}" height="${element.rect.height}"
@@ -307,7 +321,7 @@ function renderRemovedElement(
 
   if (showLabels) {
     elements.push(`
-      <text x="${element.rect.x + 5}" y="${element.rect.y + 15}" class="label">
+      <text x="${element.rect.x + 5}" y="${element.rect.y + 15}" class="label" fill="#ff0000" font-weight="bold">
         - ${escapeXml(element.tagName)}
       </text>
     `);

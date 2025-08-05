@@ -1,0 +1,7 @@
+{
+  "ignoreText": true,
+  "threshold": 10,
+  "similarityThreshold": 95,
+  "waitUntil": "networkidle0",
+  "waitForLCP": true
+}

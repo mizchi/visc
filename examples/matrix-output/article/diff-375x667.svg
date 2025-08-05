@@ -1,0 +1,239 @@
+<svg width="375" height="667" xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <style>
+        .unchanged { fill: #e9ecef; stroke: #6c757d; stroke-width: 1; opacity: 0.5; }
+        .changed-position { fill: #ffd43b; stroke: #fab005; stroke-width: 2; opacity: 0.5; }
+        .changed-size { fill: #ff8787; stroke: #fa5252; stroke-width: 2; opacity: 0.5; }
+        .changed-both { fill: #ff6b6b; stroke: #c92a2a; stroke-width: 3; opacity: 0.5; }
+        .added { fill: #ff4444; stroke: #cc0000; stroke-width: 2; opacity: 0.5; }
+        .removed { fill: #ff6666; stroke: #dd0000; stroke-width: 2; opacity: 0.5; stroke-dasharray: 5,5; }
+        .label { font-family: monospace; font-size: 10px; fill: #212529; }
+        .diff-arrow { stroke: #495057; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      </style>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#495057" />
+      </marker>
+    </defs>
+  
+<g id="legend" transform="translate(10, 10)">
+<rect x="0" y="0" width="200" height="160" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+<text x="10" y="20" class="label" font-weight="bold">Legend</text>
+<rect x="10" y="35" width="15" height="15" class="unchanged" />
+<text x="30" y="46" class="label">Unchanged</text>
+<rect x="10" y="55" width="15" height="15" class="changed-position" />
+<text x="30" y="66" class="label">Position Changed</text>
+<rect x="10" y="75" width="15" height="15" class="changed-size" />
+<text x="30" y="86" class="label">Size Changed</text>
+<rect x="10" y="95" width="15" height="15" class="changed-both" />
+<text x="30" y="106" class="label">Position &amp; Size Changed</text>
+<rect x="10" y="115" width="15" height="15" class="added" />
+<text x="30" y="126" class="label">Added</text>
+<rect x="10" y="135" width="15" height="15" class="removed" />
+<text x="30" y="146" class="label">Removed</text>
+</g>
+<rect width="375" height="667" fill="#f8f9fa" />
+
+      <g class="visual-group">
+        <rect x="0" y="63" 
+              width="375" height="334.296875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="78" class="label">
+          section: 🤖速習 Claude Code2025/07/07に公開4
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="0" y="173" 
+              width="375" height="176.296875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="188" class="label">
+          content: 🤖速習 Claude Code2025/07/07に公開4
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="14" y="273.5" 
+              width="347" height="75.796875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="19" y="288.5" class="label">
+          content: 速習 Claude Code
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="148.125" y="173" 
+              width="82.5" height="82.5"
+              class="unchanged" rx="5" />
+    
+
+        <text x="153.125" y="188" class="label">
+          content: 🤖
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="96.71875" y="331" 
+              width="82.734375" height="16"
+              class="unchanged" rx="5" />
+    
+
+        <text x="101.71875" y="346" class="label">
+          content: 2025/07/07
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="233.65625" y="329" 
+              width="44.609375" height="20.296875"
+              class="unchanged" rx="5" />
+    
+
+        <text x="238.65625" y="344" class="label">
+          interactive: 4件
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="348" y="85.5" 
+              width="13" height="13"
+              class="unchanged" rx="5" />
+    
+
+        <text x="353" y="100.5" class="label">
+          content: svg
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="0" y="0" 
+              width="375" height="62"
+              class="unchanged" rx="5" />
+    
+
+        <text x="5" y="15" class="label">
+          section: Zenn☀️Log in
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="93.76631164550781" y="13.796875" 
+              width="267.2336883544922" height="34.390625"
+              class="unchanged" rx="5" />
+    
+
+        <text x="98.76631164550781" y="28.796875" class="label">
+          interactive: ☀️
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="36.5" y="599" 
+              width="302" height="48"
+              class="unchanged" rx="5" />
+    
+
+        <text x="41.5" y="614" class="label">
+          interactive: BUTTON
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="155.984375" y="606" 
+              width="34" height="34"
+              class="unchanged" rx="5" />
+    
+
+        <text x="160.984375" y="621" class="label">
+          interactive: BUTTON
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="275.5" y="609" 
+              width="24" height="28"
+              class="unchanged" rx="5" />
+    
+
+        <text x="280.5" y="624" class="label">
+          interactive: BUTTON
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="249" y="14.984375" 
+              width="112" height="90.515625"
+              class="unchanged" rx="5" />
+    
+
+        <text x="254" y="29.984375" class="label">
+          interactive: Log in
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="348" y="85.5" 
+              width="13" height="13"
+              class="unchanged" rx="5" />
+    
+
+        <text x="353" y="100.5" class="label">
+          content: svg
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="15" y="425.796875" 
+              width="183.1875" height="32"
+              class="unchanged" rx="5" />
+    
+
+        <text x="20" y="440.796875" class="label">
+          interactive: Claude Code
+        </text>
+      
+</g>
+
+      <g class="visual-group">
+        <rect x="207.1875" y="425.796875" 
+              width="71.90625" height="32"
+              class="unchanged" rx="5" />
+    
+
+        <text x="212.1875" y="440.796875" class="label">
+          interactive: tech
+        </text>
+      
+</g>
+
+    <g id="summary" transform="translate(125, 10)">
+      <rect x="0" y="0" width="240" height="120" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
+      <text x="10" y="20" class="label" font-weight="bold">Comparison Summary</text>
+      <text x="10" y="40" class="label">Total Elements: 678</text>
+      <text x="10" y="55" class="label">Changed: 15</text>
+      <text x="10" y="70" class="label">Added: 515</text>
+      <text x="10" y="85" class="label">Removed: 515</text>
+      <text x="10" y="100" class="label">Similarity: 0%</text>
+    </g>
+  
+</svg>

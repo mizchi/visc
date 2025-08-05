@@ -64,3 +64,19 @@ export {
 // Rendering APIs - 可視化
 export { renderLayoutToSvg } from "./renderer/layout-renderer.js";
 export { renderComparisonToSvg } from "./renderer/comparison-renderer.js";
+
+// Workflow APIs - 高レベルワークフロー
+export {
+  captureLayouts,
+  captureLayout,
+  compareLayouts,
+  collectCaptures,
+  generateSummary,
+  type Viewport,
+  type TestCase,
+  type CaptureResult,
+  type ComparisonResult,
+  type TestResult,
+  type CaptureOptions,
+  type CompareOptions,
+} from "./workflow.js";

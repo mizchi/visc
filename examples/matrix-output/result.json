@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-08-04T17:51:29.878Z",
+  "totalTests": 2,
+  "completedTests": 2,
+  "testsWithIssues": 1,
+  "results": [
+    {
+      "id": "top",
+      "url": "https://zenn.dev",
+      "description": "Zenn top page",
+      "hasIssues": false,
+      "captureCount": 0,
+      "comparisonCount": 3
+    },
+    {
+      "id": "article",
+      "url": "https://zenn.dev/mizchi/articles/claude-code-cheatsheet",
+      "description": "Article",
+      "hasIssues": true,
+      "captureCount": 0,
+      "comparisonCount": 3
+    }
+  ]
+}
