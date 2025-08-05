@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2025-08-05
+
 ### Added
-- Responsive matrix testing feature for validating CSS consistency across multiple viewports
-- Media query tracking and consistency validation
-- CSS fingerprinting for detecting style changes between viewports
-- Multi-format report generation (HTML, JSON, Markdown) for matrix test results
-- New CLI command `@mizchi/visual-checker matrix` for running responsive tests
-- Support for custom viewport configurations with device scale factors and user agents
+- Network request controls for capture and comparison phases
+- `networkBlocks` option to block requests by URL patterns (e.g., analytics, GTM)
+- Phase-specific configuration for capture and comparison phases
+- Support for different overrides/networkBlocks settings for each phase
+- CSS regression testing capability by applying different CSS in comparison phase
+- Comprehensive tests for network controls
+
+### Changed
+- Reorganized test fixtures to `tests/fixtures` directory
+- Moved CLI implementation to `src/cli/` directory (BREAKING CHANGE for direct imports)
+
+### Fixed
+- Improved request interception handling to prevent "Request is already handled" errors
 
 ## [0.1.0] - 2025-01-24
 
