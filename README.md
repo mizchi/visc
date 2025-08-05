@@ -12,6 +12,47 @@ npm install @mizchi/visc
 npm install -g @mizchi/visc
 ```
 
+## Quick Start
+
+```bash
+# 1. Install visc globally
+npm install -g @mizchi/visc
+
+# 2. Create configuration file
+cat > visc.config.json << 'EOF'
+{
+  "version": "1.0",
+  "viewports": {
+    "mobile": {
+      "name": "Mobile",
+      "width": 375,
+      "height": 667,
+      "deviceScaleFactor": 2
+    },
+    "desktop": {
+      "name": "Desktop",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1
+    }
+  },
+  "testCases": [
+    {
+      "id": "home",
+      "url": "https://example.com",
+      "description": "Homepage"
+    }
+  ]
+}
+EOF
+
+# 3. Run initial capture (creates baseline)
+visc check
+
+# 4. Run again to detect changes
+visc check
+```
+
 ## Library API
 
 This package provides a programmatic API for use in Node.js applications.
@@ -88,7 +129,11 @@ import { captureLayout } from '@mizchi/visc';
 const layout = await captureLayout(page, url, viewport, {
   waitUntil: 'networkidle0',
   waitForLCP: true,  // Default: true, waits for Largest Contentful Paint
-  additionalWait: 1000  // Additional wait after LCP in ms
+  additionalWait: 1000,  // Additional wait after LCP in ms
+  overrides: {  // Network request overrides
+    '**/analytics.js': './tests/fixtures/test-overrides/empty.js',
+    'https://cdn.example.com/lib.js': 'https://localhost:8080/lib.js'
+  }
 });
 ```
 
@@ -125,7 +170,9 @@ High-level function that navigates to URL and captures layout with smart waiting
 Options:
 - `waitUntil`: Puppeteer navigation wait option (default: 'networkidle0')
 - `waitForLCP`: Wait for Largest Contentful Paint (default: true)
-- `additionalWait`: Additional wait time after LCP in ms (default: 1000)
+- `additionalWait`: Additional wait time after LCP in ms (default: 500)
+- `overrides`: Network request overrides (key: URL pattern, value: replacement file/URL)
+- `networkBlocks`: Array of URL patterns to block entirely
 
 See [examples/basic-usage.ts](examples/basic-usage.ts) and [examples/responsive-matrix.ts](examples/responsive-matrix.ts) for complete examples.
 
@@ -150,8 +197,15 @@ visc render baseline.json current.json --diff -o diff.svg
 visc calibrate https://example.com
 visc calibrate https://example.com -o check.json
 
-# Check URL against settings
-visc check check.json
+# Run visual regression tests with configuration file
+visc check                           # Uses visc.config.json by default
+visc check -c custom.config.json     # Use custom config file
+visc check -o results/               # Override output directory
+visc check -p 4                      # Run with 4 concurrent pages
+visc check --interval 1000           # Set 1s interval between requests
+visc check -p 1 --interval 0         # Sequential with no delay
+visc check --update                  # Update baseline snapshots
+visc check --clear-cache            # Clear cache before running
 
 # Compare two sources (files or URLs, output to stdout by default)
 visc compare https://example.com https://example.com/v2
@@ -163,6 +217,40 @@ visc https://example.com --outdir out
 
 ### Advanced Usage - Responsive Matrix Testing
 
+The package provides two ways to run responsive matrix tests:
+
+#### 1. Using Configuration File (Recommended)
+
+Create a `visc.config.json` file based on the example:
+
+```bash
+# Copy the example configuration
+cp visc.config.example.json visc.config.json
+
+# Edit the configuration to match your needs
+# - Update URLs in testCases
+# - Adjust viewports as needed
+# - Customize capture and compare options
+```
+
+Then run tests:
+
+```bash
+# Initial run (creates baseline snapshots)
+visc check
+
+# Run tests and detect changes
+visc check
+
+# Update baseline snapshots after intentional changes
+visc check --update
+
+# Clear cache and start fresh
+visc check --clear-cache --update
+```
+
+#### 2. Using the Example Script
+
 The package includes a powerful example for testing responsive designs across multiple viewports. See [examples/responsive-matrix.ts](examples/responsive-matrix.ts) for a complete implementation.
 
 ```bash
@@ -173,11 +261,140 @@ npx tsx examples/responsive-matrix.ts
 npx tsx examples/responsive-matrix.ts --wait-until networkidle0 --no-wait-lcp --additional-wait 2000
 ```
 
-This will:
+Both methods will:
 - Test multiple URLs across different viewport sizes (Mobile, Tablet, Desktop)
 - Generate visual comparisons for each viewport
 - Show progress bars during capture and comparison phases
-- Output diff SVGs and JSON files in `matrix-output/` directory
+- Output diff SVGs and JSON files
+
+### Configuration-based Testing with `visc check`
+
+The `visc check` command enables comprehensive visual regression testing across multiple URLs and viewports using a configuration file. This is the recommended approach for CI/CD integration and regular testing.
+
+#### Configuration File Format
+
+Create a `visc.config.json` file:
+
+```json
+{
+  "version": "1.0",
+  "cacheDir": ".visc/cache",
+  "outputDir": ".visc/output",
+  "viewports": {
+    "mobile": {
+      "name": "Mobile",
+      "width": 375,
+      "height": 667,
+      "deviceScaleFactor": 2,
+      "userAgent": "Mozilla/5.0 (iPhone)..."
+    },
+    "tablet": {
+      "name": "Tablet",
+      "width": 768,
+      "height": 1024,
+      "deviceScaleFactor": 2
+    },
+    "desktop": {
+      "name": "Desktop",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1
+    }
+  },
+  "testCases": [
+    {
+      "id": "home",
+      "url": "https://example.com",
+      "description": "Homepage"
+    },
+    {
+      "id": "about",
+      "url": "https://example.com/about",
+      "description": "About page",
+      "captureOptions": {
+        "additionalWait": 2000
+      }
+    },
+    {
+      "id": "products",
+      "url": "https://example.com/products",
+      "description": "Products listing",
+      "compareOptions": {
+        "threshold": 10,
+        "similarityThreshold": 90
+      }
+    }
+  ],
+  "captureOptions": {
+    "waitUntil": "networkidle0",
+    "waitForLCP": true,
+    "additionalWait": 500,
+    "networkBlocks": ["**/gtag/**", "**/analytics/**"]
+  },
+  "compareOptions": {
+    "ignoreText": true,
+    "threshold": 5,
+    "similarityThreshold": 98,
+    "overrides": {
+      "**/styles.css": "./tests/fixtures/test-overrides/modified.css"
+    }
+  }
+}
+```
+
+#### Check Command Usage
+
+```bash
+# Initial run (creates baseline snapshots)
+visc check
+
+# Update baseline snapshots
+visc check --update
+
+# Use custom config file
+visc check -c my-tests.config.json
+
+# Override output directory
+visc check -o test-results/
+
+# Run tests in parallel with 4 concurrent pages
+visc check -p 4
+
+# Run sequentially with 500ms interval
+visc check --interval 500
+
+# Run parallel with no interval (fast for local sites)
+visc check -p 8 --interval 0
+
+# Clear cache before running
+visc check --clear-cache
+
+# CI/CD usage (exits with code 1 if changes detected)
+visc check || echo "Visual regressions detected!"
+```
+
+#### Output Structure
+
+The check command creates the following structure:
+
+```
+.visc/
+├── cache/                         # Cached baseline snapshots
+│   ├── home/
+│   │   ├── baseline-375x667.json
+│   │   ├── baseline-768x1024.json
+│   │   └── baseline-1280x800.json
+│   └── about/
+│       └── ...
+└── output/                        # Test results
+    ├── home/
+    │   ├── 375x667.svg           # Current layout visualization
+    │   ├── diff-375x667.svg      # Visual diff
+    │   └── diff-375x667.json     # Diff data
+    ├── about/
+    │   └── ...
+    └── summary.json              # Overall test summary
+```
 
 ### Command Details
 
@@ -217,14 +434,16 @@ Options:
 - `--viewport <size>` - Viewport size (e.g., `--viewport=1920x1080`)
 - `--strictness <level>` - Strictness: low, medium, high
 
-#### `visc check <settings>`
-Checks a URL against calibrated settings.
-
-Arguments:
-- `settings` - Settings file (check.json)
+#### `visc check`
+Runs visual regression tests based on configuration file.
 
 Options:
-- `--url <url>` - URL to check (overrides settings)
+- `-c, --config <path>` - Configuration file path (default: visc.config.json)
+- `-o, --outdir <path>` - Output directory (overrides config)
+- `-p, --parallel [concurrency]` - Run tests in parallel (default: 1)
+- `--interval <ms>` - Interval between requests in milliseconds (default: 300)
+- `-u, --update` - Update baseline snapshots
+- `--clear-cache` - Clear cache before running tests
 
 #### `visc compare <source1> <source2>`
 Compares two sources (files or URLs).
@@ -396,6 +615,183 @@ matrix-output/
 └── summary.json                    # Overall test summary
 ```
 
+
+### Network Request Overrides and Blocking
+
+The visual checker supports advanced network control features to improve test stability and enable CSS regression testing.
+
+#### Network Blocking
+
+The `networkBlocks` option allows you to block specific network requests entirely. This is particularly useful for:
+- Blocking analytics scripts (GTM, Google Analytics) to speed up page loads
+- Removing third-party widgets that cause test flakiness
+- Eliminating ads and tracking pixels
+
+#### Request Overrides
+
+The `overrides` option allows you to intercept and replace network requests during page capture. This is useful for:
+- Testing with modified CSS/JS files to detect visual regressions
+- Redirecting CDN resources to local versions
+- Mocking external dependencies
+
+#### Phase-Specific Configuration
+
+You can configure different network settings for capture and comparison phases:
+
+```json
+{
+  "captureOptions": {
+    "networkBlocks": [
+      "**/gtm.js",
+      "**/gtag/**",
+      "**/google-analytics.com/**",
+      "**/googletagmanager.com/**",
+      "**/facebook.com/tr/**"
+    ]
+  },
+  "compareOptions": {
+    "networkBlocks": [
+      "**/gtm.js",
+      "**/gtag/**"
+    ],
+    "overrides": {
+      "**/main.css": "./tests/fixtures/test-overrides/modified.css",
+      "**/theme.css": "./tests/fixtures/test-overrides/broken-theme.css"
+    }
+  }
+}
+```
+
+This configuration:
+1. During **capture phase**: Blocks all analytics and tracking to speed up baseline capture
+2. During **comparison phase**: Blocks analytics AND replaces CSS files to test for visual regressions
+
+#### Pattern Matching
+
+- Patterns support glob-style wildcards:
+  - `*` matches any characters except `/`
+  - `**` matches any characters including `/`
+  - `?` matches a single character
+- Patterns are tested against the full request URL
+- First matching pattern wins
+
+#### Replacement Types
+
+1. **Local file replacement**: Use relative paths starting with `./` or absolute paths
+   ```json
+   { "**/main.css": "./tests/fixtures/test-overrides/custom.css" }
+   ```
+   
+2. **URL redirection**: Use another URL to redirect the request
+   ```json
+   { "https://cdn.example.com/lib.js": "https://localhost:8080/lib.js" }
+   ```
+
+#### Example Override Files
+
+Create an empty JS file to neutralize tracking scripts:
+```javascript
+// tests/fixtures/test-overrides/empty.js
+// Empty file to replace analytics/tracking scripts
+```
+
+Create a custom CSS file for testing:
+```css
+/* tests/fixtures/test-overrides/custom.css */
+body {
+  background-color: #f0f0f0 !important;
+}
+```
+
+### CI/CD Integration
+
+The `visc check` command is designed for easy CI/CD integration:
+
+```yaml
+# GitHub Actions example
+name: Visual Regression Tests
+on: [push, pull_request]
+
+jobs:
+  visual-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - run: npm install -g @mizchi/visc
+      
+      - name: Run visual regression tests
+        run: visc check
+        
+      - name: Upload diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: visual-diffs
+          path: .visc/output/
+```
+
+```yaml
+# GitLab CI example
+visual-tests:
+  stage: test
+  script:
+    - npm install -g @mizchi/visc
+    - visc check
+  artifacts:
+    when: on_failure
+    paths:
+      - .visc/output/
+    expire_in: 1 week
+```
+
+### Best Practices
+
+1. **Baseline Management**
+   - Commit `visc.config.json` to version control
+   - Do NOT commit `.visc/` directory (already in .gitignore)
+   - Update baselines intentionally with `visc check --update`
+   - Review diff SVGs before updating baselines
+
+2. **Configuration Tips**
+   - Start with conservative thresholds (threshold: 5, similarityThreshold: 98)
+   - Use test-specific overrides for problematic pages
+   - Increase `additionalWait` for pages with animations
+   - Use `ignoreElements` for dynamic content (ads, timestamps)
+
+3. **Performance Optimization**
+   - Use specific viewports rather than testing all sizes
+   - Run tests in parallel with `-p` flag for faster execution
+   - For external sites: Use sequential mode with interval (`--interval 500`)
+   - For local/internal sites: Use parallel mode with no interval (`-p 8 --interval 0`)
+   - Default settings (sequential with 300ms interval) are safe for most sites
+   - Cache Puppeteer browser downloads
+
+## Testing
+
+This project includes comprehensive test suites:
+
+### Unit Tests
+```bash
+npm test
+```
+
+### Test Fixtures
+Test fixtures are organized under `tests/fixtures/`:
+- `test-overrides/` - CSS/JS files for testing network request overrides
+- `test-configs/` - Example configuration files for integration tests
+- `calibration-samples/` - Sample data for calibration testing
+
+### Network Controls Testing
+The project includes tests for network blocking and request overrides:
+```bash
+npm test tests/network-controls.test.ts
+npm test tests/integration/check-command.test.ts
+```
 
 ## License
 

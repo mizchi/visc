@@ -1,0 +1,10 @@
+/* Modified CSS to simulate style changes for comparison phase */
+body {
+  background-color: #ffeeee !important;
+  margin: 20px !important;
+}
+
+.modified-test {
+  border: 2px solid red !important;
+  padding: 10px !important;
+}

@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "cacheDir": ".visc-test/cache",
+  "outputDir": ".visc-test/output",
+  "viewports": {
+    "desktop": {
+      "name": "Desktop",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    }
+  },
+  "testCases": [
+    {
+      "id": "example",
+      "url": "https://example.com",
+      "description": "Example.com test"
+    }
+  ],
+  "captureOptions": {
+    "waitUntil": "networkidle0",
+    "waitForLCP": true,
+    "additionalWait": 100,
+    "networkBlocks": [
+      "**/gtag/**",
+      "**/google-analytics.com/**",
+      "**/googletagmanager.com/**",
+      "**/facebook.com/tr/**"
+    ]
+  },
+  "compareOptions": {
+    "ignoreText": true,
+    "threshold": 5,
+    "similarityThreshold": 98,
+    "networkBlocks": [
+      "**/gtag/**"
+    ],
+    "overrides": {
+      "**/*.css": "./tests/fixtures/test-overrides/custom.css"
+    }
+  }
+}

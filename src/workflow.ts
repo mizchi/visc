@@ -57,6 +57,8 @@ export type CaptureOptions = {
   waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
   waitForLCP?: boolean;
   additionalWait?: number; // Additional wait time after LCP in milliseconds
+  overrides?: Record<string, string>;
+  networkBlocks?: string[];
 };
 
 export type CompareOptions = {
@@ -188,6 +190,89 @@ export async function captureLayout(
   });
   await page.setUserAgent(viewport.userAgent);
 
+  // Set up request interception if overrides or networkBlocks are provided
+  const needsInterception = (options.overrides && Object.keys(options.overrides).length > 0) || 
+                          (options.networkBlocks && options.networkBlocks.length > 0);
+  
+  if (needsInterception) {
+    // Pre-import modules to avoid async issues
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    
+    await page.setRequestInterception(true);
+    
+    page.on('request', async (request) => {
+      const url = request.url();
+      
+      try {
+        // Check if URL should be blocked
+        if (options.networkBlocks) {
+          for (const blockPattern of options.networkBlocks) {
+            const escapedPattern = blockPattern
+              .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+              .replace(/\*/g, '.*')
+              .replace(/\?/g, '.');
+            const regex = new RegExp(escapedPattern);
+            
+            if (regex.test(url)) {
+              await request.abort();
+              return;
+            }
+          }
+        }
+        
+        // Check if URL matches any override pattern
+        if (options.overrides) {
+          for (const [pattern, replacement] of Object.entries(options.overrides)) {
+            // Convert glob pattern to regex
+            // Escape special regex characters except * and ?
+            const escapedPattern = pattern
+              .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+              .replace(/\*/g, '.*')
+              .replace(/\?/g, '.');
+            const regex = new RegExp(escapedPattern);
+            
+            if (regex.test(url)) {
+              // If replacement is a local file path, read and respond with its content
+              if (replacement.startsWith('./') || replacement.startsWith('/')) {
+                try {
+                  const content = await fs.readFile(path.resolve(replacement), 'utf-8');
+                  const contentType = replacement.endsWith('.css') ? 'text/css' : 
+                                     replacement.endsWith('.js') ? 'application/javascript' : 
+                                     'text/plain';
+                  
+                  await request.respond({
+                    status: 200,
+                    contentType,
+                    body: content,
+                  });
+                  return;
+                } catch (error) {
+                  console.error(`Failed to read override file ${replacement}:`, error);
+                  // Fall through to continue normally
+                }
+              } else {
+                // Redirect to another URL
+                await request.continue({ url: replacement });
+                return;
+              }
+            }
+          }
+        }
+        
+        // Continue normally if no override matches
+        await request.continue();
+      } catch (error) {
+        // If there's any error, try to continue the request
+        try {
+          await request.continue();
+        } catch (continueError) {
+          // Request was already handled, ignore
+        }
+      }
+    });
+  }
+
   // Use provided waitUntil option or default to networkidle0
   await page.goto(url, { waitUntil: options.waitUntil || "networkidle0" });
   
@@ -208,7 +293,7 @@ export async function captureLayout(
   }
   
   // Additional wait time if specified
-  const additionalWait = options.additionalWait || 1000;
+  const additionalWait = options.additionalWait !== undefined ? options.additionalWait : 500;
   await new Promise((resolve) => setTimeout(resolve, additionalWait));
 
   const rawData = await fetchRawLayoutData(page);

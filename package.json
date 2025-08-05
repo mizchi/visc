@@ -19,7 +19,8 @@
     }
   },
   "scripts": {
-    "build": "tsc --emitDeclarationOnly && tsdown && npx tsx --build src/cli.ts -o dist/cli.js || npx esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
+    "build": "tsc --emitDeclarationOnly && tsdown && npx tsx --build src/cli/cli.ts -o dist/cli.js || npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
+    "build:cli": "npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
     "build:watch": "tsdown --watch",
     "dev": "tsdown --watch",
     "test": "vitest --run",

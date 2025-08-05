@@ -1,0 +1,9 @@
+/* Custom CSS override for testing */
+body {
+  background-color: #f0f0f0 !important;
+}
+
+.override-test {
+  color: red !important;
+  font-size: 20px !important;
+}

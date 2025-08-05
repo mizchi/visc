@@ -6,10 +6,7 @@ export type {
 } from "./layout/extractor.js";
 
 // Core APIs - データ取得と変換
-export { 
-  fetchRawLayoutData,
-  extractLayoutTree,
-} from "./browser/puppeteer.js";
+export { fetchRawLayoutData, extractLayoutTree } from "./browser/puppeteer.js";
 export {
   withBrowser,
   withPage,
@@ -80,3 +77,14 @@ export {
   type CaptureOptions,
   type CompareOptions,
 } from "./workflow.js";
+
+// Configuration APIs
+export {
+  type ViscConfig,
+  type ViewportConfig,
+  type TestCaseConfig,
+  DEFAULT_CONFIG,
+} from "./cli/config.js";
+
+// Storage APIs
+export { CacheStorage } from "./cli/cache-storage.js";

@@ -8,13 +8,14 @@ import {
   fetchRawLayoutData,
   extractLayoutTree,
   compareLayoutTrees,
-} from "./index.js";
+} from "../index.js";
 import puppeteer from "puppeteer";
-import type { ComparisonSettings, VisualTreeAnalysis } from "./index.js";
+import type { ComparisonSettings, VisualTreeAnalysis } from "../index.js";
 import fs from "fs/promises";
 import path from "path";
 import chalk from "chalk";
 import ora from "ora";
+import { check as checkCommand } from "./commands/check.js";
 
 const program = new Command();
 
@@ -36,6 +37,17 @@ program
   )
   .option("-f, --full", "Capture full page (default: viewport only)")
   .option("--headless", "Run browser in headless mode", true)
+  .option(
+    "--wait-until <event>",
+    "Wait strategy: load, domcontentloaded, networkidle0, networkidle2",
+    "networkidle0"
+  )
+  .option("--no-wait-lcp", "Disable waiting for Largest Contentful Paint")
+  .option(
+    "--additional-wait <ms>",
+    "Additional wait time after LCP in milliseconds",
+    "500"
+  )
   .action(async (url, options) => {
     const spinner = options.output
       ? ora("Fetching layout data...").start()
@@ -47,6 +59,9 @@ program
         viewport,
         headless: options.headless,
         captureFullPage: options.full,
+        waitUntil: options.waitUntil,
+        waitForLCP: options.waitLcp !== false,
+        additionalWait: parseInt(options.additionalWait),
       });
 
       const jsonOutput = JSON.stringify(layout, null, 2);
@@ -224,54 +239,63 @@ program
     }
   });
 
-// visc check - URLを設定と比較
+// visc check - 設定ファイルベースの視覚回帰テスト
 program
   .command("check")
-  .description("Check URL against settings")
-  .argument("<settings>", "Settings file (check.json)")
-  .option("--url <url>", "URL to check (overrides settings)")
-  .action(async (settingsPath, options) => {
-    const spinner = ora("Loading settings...").start();
-
+  .description("Run visual regression tests based on configuration file")
+  .option("-c, --config <path>", "Configuration file path", "visc.config.json")
+  .option("-o, --outdir <path>", "Output directory (overrides config)")
+  .option("-p, --parallel [concurrency]", "Run tests in parallel (default: 1)")
+  .option(
+    "--interval <ms>",
+    "Interval between requests in milliseconds (default: 300)"
+  )
+  .option("-u, --update", "Update baseline snapshots")
+  .option("--clear-cache", "Clear cache before running tests")
+  .action(async (options) => {
     try {
-      const checkData = JSON.parse(await fs.readFile(settingsPath, "utf-8"));
-      const url = options.url || checkData.url;
-      const settings: ComparisonSettings = checkData.settings;
-      const viewport = checkData.calibration?.viewport || {
-        width: 1280,
-        height: 800,
-      };
-
-      spinner.text = "Fetching current layout...";
-      const currentLayout = await fetchLayoutFromUrl(url, { viewport });
-
-      // ベースラインを作成（キャリブレーション時の最初のサンプルと同等）
-      spinner.text = "Fetching baseline...";
-      const baselineLayout = await fetchLayoutFromUrl(url, { viewport });
-
-      spinner.text = "Validating...";
-      const validationResult = validateWithSettings(
-        currentLayout,
-        baselineLayout,
-        settings
-      );
-
-      if (validationResult.isValid) {
-        spinner.succeed(chalk.green("Check passed!"));
-        console.log(`Similarity: ${Math.round(validationResult.similarity)}%`);
-        process.exit(0);
-      } else {
-        spinner.fail(chalk.red("Check failed!"));
-        console.log(`Similarity: ${Math.round(validationResult.similarity)}%`);
-        console.log(
-          `Critical Violations: ${validationResult.summary.criticalViolations}`
-        );
-        console.log(`Warnings: ${validationResult.summary.warnings}`);
-        process.exit(1);
+      // Parse parallel option
+      let parallelConcurrency = 1; // Default to sequential
+      if (options.parallel !== undefined) {
+        if (options.parallel === true) {
+          parallelConcurrency = 1; // No longer default to 4
+        } else if (typeof options.parallel === "string") {
+          // Handle string values (e.g., "4" from -p 4)
+          // Commander includes the = in the value for -p=4, so we need to strip it
+          const value = options.parallel.startsWith("=")
+            ? options.parallel.slice(1)
+            : options.parallel;
+          parallelConcurrency = parseInt(value, 10);
+          if (isNaN(parallelConcurrency) || parallelConcurrency < 1) {
+            throw new Error(
+              `Invalid parallel concurrency value: ${options.parallel}`
+            );
+          }
+        } else {
+          throw new Error(
+            `Unexpected parallel option type: ${typeof options.parallel}`
+          );
+        }
       }
+
+      // Parse interval option
+      let interval = 300; // Default interval in ms
+      if (options.interval !== undefined) {
+        interval = parseInt(options.interval, 10);
+        if (isNaN(interval) || interval < 0) {
+          throw new Error(`Invalid interval value: ${options.interval}`);
+        }
+      }
+
+      await checkCommand(options.config, {
+        update: options.update,
+        clearCache: options.clearCache,
+        outputDir: options.outdir,
+        parallelConcurrency,
+        interval,
+      });
     } catch (error) {
-      spinner.fail(chalk.red("Check failed"));
-      console.error(error);
+      console.error(chalk.red("Check failed:"), error);
       process.exit(1);
     }
   });
@@ -446,12 +470,18 @@ async function fetchLayoutFromUrl(
     viewport?: { width: number; height: number };
     headless?: boolean;
     captureFullPage?: boolean;
+    waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
+    waitForLCP?: boolean;
+    additionalWait?: number;
   } = {}
 ): Promise<VisualTreeAnalysis> {
   const {
     viewport = { width: 1280, height: 800 },
     headless = true,
     captureFullPage = false,
+    waitUntil = "networkidle0",
+    waitForLCP = true,
+    additionalWait = 500,
   } = options;
 
   const browser = await puppeteer.launch({ headless });
@@ -459,7 +489,29 @@ async function fetchLayoutFromUrl(
   await page.setViewport(viewport);
 
   try {
-    await page.goto(url, { waitUntil: "networkidle0" });
+    await page.goto(url, { waitUntil });
+
+    // Wait for LCP if enabled
+    if (waitForLCP) {
+      await page.evaluate(() => {
+        return new Promise((resolve) => {
+          new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1];
+            resolve(lastEntry);
+          }).observe({ entryTypes: ["largest-contentful-paint"] });
+
+          // Fallback if LCP doesn't fire within 15 seconds
+          setTimeout(resolve, 15000);
+        });
+      });
+    }
+
+    // Additional wait time
+    if (additionalWait > 0) {
+      await new Promise((resolve) => setTimeout(resolve, additionalWait));
+    }
+
     const rawData = await fetchRawLayoutData(page, {
       waitForContent: false,
       captureFullPage,

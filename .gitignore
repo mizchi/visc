@@ -12,3 +12,8 @@ tmp/
 examples/output/
 output/
 .visc
+
+# Test outputs
+.visc-test/
+tests/fixtures/test-output/
+tests/fixtures/matrix-output/
