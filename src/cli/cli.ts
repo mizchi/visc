@@ -239,6 +239,22 @@ program
     }
   });
 
+// visc init - Initialize configuration
+program
+  .command("init")
+  .description("Initialize visc configuration file")
+  .option("-f, --force", "Overwrite existing configuration")
+  .option("-m, --minimal", "Create minimal configuration")
+  .action(async (options) => {
+    try {
+      const { init } = await import("./commands/init.js");
+      await init(options);
+    } catch (error) {
+      console.error(chalk.red("Error:"), error);
+      process.exit(1);
+    }
+  });
+
 // visc check - 設定ファイルベースの視覚回帰テスト
 program
   .command("check")
@@ -253,6 +269,8 @@ program
   .option("-u, --update", "Update baseline snapshots")
   .option("--clear-cache", "Clear cache before running tests")
   .option("--tui", "Use interactive TUI for progress display")
+  .option("--only-failed", "Output SVG only for failed tests")
+  .option("--id <testId>", "Run specific test by ID")
   .action(async (options) => {
     try {
       // Parse parallel option
@@ -295,6 +313,8 @@ program
         parallelConcurrency,
         interval,
         tui: options.tui,
+        onlyFailed: options.onlyFailed,
+        testId: options.id,
       });
     } catch (error) {
       console.error(chalk.red("Check failed:"), error);

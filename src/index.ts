@@ -6,13 +6,11 @@ export type {
 } from "./layout/extractor.js";
 
 // Core APIs - データ取得と変換
-export { fetchRawLayoutData, extractLayoutTree } from "./browser/puppeteer.js";
 export {
-  withBrowser,
-  withPage,
-  getLayoutsParallel,
-  getLayoutsSamples,
-} from "./browser/helpers.js";
+  fetchRawLayoutData,
+  fetchRawLayoutDataViewportMatrix,
+  extractLayoutTree,
+} from "./browser/puppeteer.js";
 export {
   getExtractLayoutScript,
   organizeIntoVisualNodeGroups,
@@ -66,6 +64,7 @@ export { renderComparisonToSvg } from "./renderer/comparison-renderer.js";
 export {
   captureLayouts,
   captureLayout,
+  captureLayoutMatrix,
   compareLayouts,
   collectCaptures,
   generateSummary,

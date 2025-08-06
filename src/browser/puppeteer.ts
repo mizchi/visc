@@ -1,9 +1,8 @@
-import puppeteer from "puppeteer";
-import { analyzeLayout } from "../layout/extractor.js";
+import type { Page } from "puppeteer";
 import type { VisualTreeAnalysis } from "../layout/extractor.js";
 
 // 遅延ロードされる要素を待つためのシンプルな待機戦略
-async function waitForLazyContent(page: any): Promise<void> {
+async function waitForLazyContent(page: Page): Promise<void> {
   // 少し待つ
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -75,6 +74,61 @@ export async function fetchRawLayoutData(
 }
 
 /**
+ * Fetch layout data for multiple viewports in a single session
+ * This is more efficient than opening multiple browser sessions
+ */
+export async function fetchRawLayoutDataViewportMatrix(
+  page: Page,
+  viewports: Array<{
+    key: string;
+    width: number;
+    height: number;
+    deviceScaleFactor?: number;
+    userAgent?: string;
+  }>,
+  options: {
+    waitForContent?: boolean;
+    captureFullPage?: boolean;
+  } = {}
+): Promise<Map<string, any>> {
+  const { waitForContent = false } = options;
+  const results = new Map<string, any>();
+
+  // 遅延ロードされる要素を確実に取得（最初のviewportで一度だけ実行）
+  if (waitForContent && viewports.length > 0) {
+    console.log("Waiting for content to load...");
+    await waitForLazyContent(page);
+    console.log("Content loading complete");
+  }
+
+  // Each viewport captures the layout data
+  for (const viewport of viewports) {
+    // Set viewport size
+    await page.setViewport({
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: viewport.deviceScaleFactor || 1,
+    });
+
+    // Set user agent if provided
+    if (viewport.userAgent) {
+      await page.setUserAgent(viewport.userAgent);
+    }
+
+    // Wait a bit for layout to stabilize after resize
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Capture layout data for this viewport
+    const { getExtractLayoutScript } = await import("../layout/extractor.js");
+    const rawData = await page.evaluate(getExtractLayoutScript());
+
+    results.set(viewport.key, rawData);
+  }
+
+  return results;
+}
+
+/**
  * 生データからレイアウトツリーを抽出
  */
 export async function extractLayoutTree(
@@ -85,7 +139,9 @@ export async function extractLayoutTree(
     viewportOnly?: boolean;
   } = {}
 ): Promise<VisualTreeAnalysis> {
-  const { organizeIntoVisualNodeGroups } = await import("../layout/extractor.js");
+  const { organizeIntoVisualNodeGroups } = await import(
+    "../layout/extractor.js"
+  );
 
   // ビジュアルノードグループに整理
   const visualNodeGroups = organizeIntoVisualNodeGroups(rawData.elements, {

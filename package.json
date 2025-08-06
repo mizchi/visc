@@ -1,6 +1,6 @@
 {
   "name": "@mizchi/visc",
-  "version": "0.1.5",
+  "version": "0.1.8",
   "description": "Visual regression testing CLI tool",
   "repository": {
     "type": "git",
@@ -19,12 +19,13 @@
     }
   },
   "scripts": {
-    "build": "tsc --emitDeclarationOnly && tsdown && npx tsx --build src/cli/cli.ts -o dist/cli.js || npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
+    "build": "tsc --emitDeclarationOnly && tsdown && (npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander)",
     "build:cli": "npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
     "build:watch": "tsdown --watch",
     "dev": "tsdown --watch",
     "test": "vitest --run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:schema": "tsx scripts/generate-schema.ts"
   },
   "keywords": [
     "visual-regression",
@@ -40,11 +41,13 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
+    "ink": "^5.0.1",
+    "ink-spinner": "^5.0.0",
     "ora": "^8.0.1",
     "puppeteer": "^24.15.0",
-    "ink": "^5.0.1",
     "react": "^18.2.0",
-    "ink-spinner": "^5.0.0"
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
   },
   "publishConfig": {
     "access": "public"
@@ -63,6 +66,7 @@
     "vitest": "^1.6.1"
   },
   "files": [
-    "dist"
+    "dist",
+    "schema.json"
   ]
 }

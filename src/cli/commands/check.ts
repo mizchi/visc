@@ -113,41 +113,59 @@ async function runCalibration(
       calibrationResults[testCase.id] = {};
       
       try {
-        for (const [viewportKey, viewport] of Object.entries(viewports)) {
-          log(`  - ${viewport.width}x${viewport.height}: Collecting ${samples} samples`);
+        const captureOptions = {
+          ...config.captureOptions,
+          ...testCase.captureOptions,
+        };
+        
+        // Import the matrix capture function
+        const { captureLayoutMatrix } = await import("../../workflow.js");
+        
+        // Collect samples for all viewports at once
+        const allSamples: Map<string, VisualTreeAnalysis[]> = new Map();
+        
+        // Initialize sample arrays for each viewport
+        for (const viewportKey of Object.keys(viewports)) {
+          allSamples.set(viewportKey, []);
+        }
+        
+        // Capture multiple samples for all viewports
+        for (let i = 0; i < samples; i++) {
+          if (i > 0) {
+            await page.reload();
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait between samples
+          }
           
-          const captureOptions = {
-            ...config.captureOptions,
-            ...testCase.captureOptions,
-          };
+          log(`  - Sample ${i + 1}/${samples}`);
           
-          const layoutSamples: VisualTreeAnalysis[] = [];
+          // Capture all viewports at once
+          const layoutsForAllViewports = await captureLayoutMatrix(
+            page,
+            testCase.url,
+            viewports,
+            captureOptions
+          );
           
-          // Capture multiple samples (raw layout data)
-          for (let i = 0; i < samples; i++) {
-            if (i > 0) {
-              await page.reload();
-              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait between samples
-            }
+          // Add each viewport's layout to its sample array
+          for (const [viewportKey, layout] of layoutsForAllViewports.entries()) {
+            allSamples.get(viewportKey)!.push(layout);
             
-            const layout = await captureLayout(
-              page,
-              testCase.url,
-              viewport,
-              captureOptions
-            );
-            
-            layoutSamples.push(layout);
             if (progressDisplay) {
+              const viewport = viewports[viewportKey];
               progressDisplay.showCalibration(testCase.id, `${viewport.width}x${viewport.height}`, i + 1, samples);
             } else {
               process.stdout.write(".");
             }
           }
+        }
+        
+        log(" ✓");
+        
+        // Calculate calibration settings for each viewport
+        for (const [viewportKey, layoutSamples] of allSamples.entries()) {
+          const viewport = viewports[viewportKey];
+          log(`  - ${viewport.width}x${viewport.height}: Calculating calibration...`);
           
-          log(" ✓");
-          
-          // Calculate calibration settings based on raw layout data
           const calibration = calibrateComparisonSettings(layoutSamples, { strictness });
           
           // Store calibration results per test case and viewport
@@ -194,23 +212,29 @@ async function runCalibration(
 async function loadConfig(configPath: string): Promise<ViscConfig> {
   try {
     const content = await fs.readFile(configPath, "utf-8");
-    const config = JSON.parse(content) as ViscConfig;
+    const rawConfig = JSON.parse(content);
+    
+    // Import validation function from schema
+    const { validateConfig } = await import("../../schema/config.js");
+    
+    // Validate config with Zod schema
+    const validatedConfig = validateConfig(rawConfig);
 
     // Merge with defaults and ensure all viewports have required fields
     const mergedConfig = {
       ...DEFAULT_CONFIG,
-      ...config,
+      ...validatedConfig,
       captureOptions: {
         ...DEFAULT_CONFIG.captureOptions,
-        ...config.captureOptions,
+        ...validatedConfig.captureOptions,
       },
       compareOptions: {
         ...DEFAULT_CONFIG.compareOptions,
-        ...config.compareOptions,
+        ...validatedConfig.compareOptions,
       },
       browserOptions: {
         ...DEFAULT_CONFIG.browserOptions,
-        ...config.browserOptions,
+        ...validatedConfig.browserOptions,
       },
     } as ViscConfig;
 
@@ -226,6 +250,14 @@ async function loadConfig(configPath: string): Promise<ViscConfig> {
 
     return mergedConfig;
   } catch (error) {
+    // Check if it's a Zod validation error
+    if (error && typeof error === 'object' && 'issues' in error) {
+      const zodError = error as any;
+      const issues = zodError.issues.map((issue: any) => 
+        `  - ${issue.path.join('.')}: ${issue.message}`
+      ).join('\n');
+      throw new Error(`Invalid configuration in ${configPath}:\n${issues}`);
+    }
     throw new Error(`Failed to load config from ${configPath}: ${error}`);
   }
 }
@@ -315,22 +347,24 @@ async function runCapture(
 
           const previousLayouts = previousResults.get(testCase.id);
 
+          // Import the matrix capture function
+          const { captureLayoutMatrix } = await import("../../workflow.js");
+          
+          // Check which viewports need to be captured
+          const viewportsToCapture: Record<string, any> = {};
+          const cachedViewports: string[] = [];
+          
           for (const [viewportKey, viewport] of Object.entries(viewports)) {
-            currentStep++;
-            const label = `${testCase.id} ${viewport.width}x${viewport.height}`;
-
             const previousLayout = previousLayouts?.get(viewportKey);
-
             const taskId = `${testCase.id}-${viewportKey}`;
             
             if (previousLayout && !options.forceUpdate) {
+              cachedViewports.push(viewportKey);
               if (progressDisplay) {
                 progressDisplay.updateTask(taskId, { 
                   status: 'completed', 
                   message: 'using cache' 
                 });
-              } else {
-                renderProgressBar(currentStep, totalSteps, `${label} (using cache)`);
               }
               captures.push({
                 testCase,
@@ -338,7 +372,36 @@ async function runCapture(
                 layout: previousLayout,
               });
             } else {
+              viewportsToCapture[viewportKey] = viewport;
+            }
+          }
+          
+          // Capture all needed viewports at once
+          if (Object.keys(viewportsToCapture).length > 0) {
+            const layoutMatrix = await captureLayoutMatrix(
+              page,
+              testCase.url,
+              viewportsToCapture,
+              {
+                ...captureOptions,
+                onStateChange: progressDisplay ? (state) => {
+                  // Update all viewport tasks with the same state
+                  for (const viewportKey of Object.keys(viewportsToCapture)) {
+                    const taskId = `${testCase.id}-${viewportKey}`;
+                    progressDisplay?.updateTaskState(taskId, state as any);
+                  }
+                } : undefined
+              }
+            );
+            
+            for (const [viewportKey, layout] of layoutMatrix.entries()) {
+              const viewport = viewports[viewportKey];
+              const taskId = `${testCase.id}-${viewportKey}`;
+              currentStep++;
+              
               const action = options.forceUpdate ? "updating baseline" : "creating baseline";
+              const label = `${testCase.id} ${viewport.width}x${viewport.height}`;
+              
               if (progressDisplay) {
                 progressDisplay.startTask(taskId, action);
               } else {
@@ -348,20 +411,7 @@ async function runCapture(
                   `${label} (${action}...)`
                 );
               }
-
-              // Capture new layout
-              const layout = await captureLayout(
-                page,
-                testCase.url,
-                viewport,
-                {
-                  ...captureOptions,
-                  onStateChange: progressDisplay ? (state) => {
-                    progressDisplay?.updateTaskState(taskId, state as any);
-                  } : undefined
-                }
-              );
-
+              
               // Save to cache
               await storage.writeSnapshot(
                 testCase.id,
@@ -385,11 +435,17 @@ async function runCapture(
                 progressDisplay.completeTask(taskId, 'captured');
               }
             }
-
-            // Add interval between captures in sequential mode
-            if (interval > 0 && currentStep < totalSteps) {
-              await new Promise((resolve) => setTimeout(resolve, interval));
+          } else {
+            // Update progress for cached viewports
+            currentStep += cachedViewports.length;
+            if (!progressDisplay) {
+              renderProgressBar(currentStep, totalSteps, `${testCase.id} (all cached)`);
             }
+          }
+          
+          // Add interval between test cases in sequential mode
+          if (interval > 0 && currentStep < totalSteps) {
+            await new Promise((resolve) => setTimeout(resolve, interval));
           }
         } finally {
           await page.close();
@@ -498,7 +554,7 @@ async function runCompare(
     string,
     Map<string, import("../../index.js").VisualTreeAnalysis>
   >,
-  options: { parallelConcurrency?: number; interval?: number } = {}
+  options: { parallelConcurrency?: number; interval?: number; onlyFailed?: boolean } = {}
 ): Promise<TestResult[]> {
   console.log(`📊 Compare Phase\n`);
 
@@ -734,7 +790,8 @@ async function runCompare(
             viewport,
             comparison.raw,
             previousLayout,
-            currentLayout
+            currentLayout,
+            { onlyFailed: options.onlyFailed }
           );
         }
       } else {
@@ -759,6 +816,8 @@ export async function check(
     parallelConcurrency?: number;
     interval?: number;
     tui?: boolean;
+    onlyFailed?: boolean;
+    testId?: string;
   }
 ) {
   // Initialize progress display if TUI mode is enabled
@@ -770,15 +829,43 @@ export async function check(
   }
 
   // Load config
-  const config = await loadConfig(configPath);
-  console.log(
-    `📋 Config loaded: ${config.testCases.length} test cases × ${
-      Object.keys(config.viewports).length
-    } viewports\n`
-  );
+  let config = await loadConfig(configPath);
+  
+  // Filter by testId if specified
+  if (options.testId) {
+    const targetTestCase = config.testCases.find(tc => tc.id === options.testId);
+    if (!targetTestCase) {
+      console.error(`❌ Test case with ID '${options.testId}' not found`);
+      console.log(`Available test IDs:`);
+      config.testCases.forEach(tc => console.log(`  - ${tc.id}`));
+      process.exit(1);
+    }
+    config = { ...config, testCases: [targetTestCase] };
+    console.log(
+      `📋 Running single test: ${options.testId} × ${
+        Object.keys(config.viewports).length
+      } viewports
+`
+    );
+  } else {
+    console.log(
+      `📋 Config loaded: ${config.testCases.length} test cases × ${
+        Object.keys(config.viewports).length
+      } viewports
+`
+    );
+  }
 
   // Override output directory if specified
   const outputDir = options.outputDir || config.outputDir!;
+
+  // Clean output directory before running tests (remove and recreate)
+  try {
+    await fs.rm(outputDir, { recursive: true, force: true });
+  } catch {
+    // Directory might not exist, that's fine
+  }
+  await fs.mkdir(outputDir, { recursive: true });
 
   // Initialize storage
   const storage = new CacheStorage(config.cacheDir!, outputDir);
@@ -817,23 +904,37 @@ export async function check(
       await runCalibration(config, storage);
     }
   } else if (newTestCases.length > 0 && !options.update) {
-    console.log(`🆕 New URLs detected (${newTestCases.length}):
+    console.log(`🆕 New test cases detected (${newTestCases.length}):
 `);
     for (const testCase of newTestCases) {
       console.log(`  - ${testCase.id}: ${testCase.url}`);
     }
-    console.log(`
-🔧 Running calibration for new URLs...
-`);
     
-    // Run calibration only for new test cases if enabled
-    if (config.calibrationOptions?.enabled !== false) {
-      const newConfig = { ...config, testCases: newTestCases };
-      await runCalibration(newConfig, storage);
-    }
+    // Always run calibration for new test cases
+    console.log(`
+🔧 Auto-calibrating new test cases...
+`);
+    const newConfig = { ...config, testCases: newTestCases };
+    await runCalibration(newConfig, storage);
   } else if (options.update) {
     console.log(`🔄 Update mode - refreshing baseline snapshots...
 `);
+  }
+  
+  // Check if calibration exists for each test case when not in update mode
+  if (!options.update && !isInitialRun) {
+    const calibrationData = await storage.readCalibration();
+    const uncalibratedTestCases = config.testCases.filter(tc => 
+      !calibrationData?.results?.[tc.id] || 
+      Object.keys(calibrationData.results[tc.id]).length === 0
+    );
+    
+    if (uncalibratedTestCases.length > 0) {
+      console.log(`🔧 Auto-calibrating ${uncalibratedTestCases.length} uncalibrated test case(s)...
+`);
+      const calibrationConfig = { ...config, testCases: uncalibratedTestCases };
+      await runCalibration(calibrationConfig, storage);
+    }
   }
 
   // Always capture (with or without cache)
@@ -864,10 +965,12 @@ export async function check(
   const results = await runCompare(config, storage, previousResults, {
     parallelConcurrency: options.parallelConcurrency,
     interval: options.interval,
+    onlyFailed: options.onlyFailed,
   });
 
   // Display results
-  const diffPaths: string[] = [];
+  const failedTests: { testCase: any; viewport: any; comparison: any }[] = [];
+  
   for (const result of results) {
     if (result.comparisons.length > 0) {
       console.log(`\n${result.testCase.id}:`);
@@ -885,9 +988,11 @@ export async function check(
           console.log(
             `     Changes: ${comp.comparison.differences} | Added: ${comp.comparison.addedElements} | Removed: ${comp.comparison.removedElements}`
           );
-          // Collect diff file paths
-          const diffPath = path.join(outputDir, result.testCase.id, `diff-${comp.viewport.width}x${comp.viewport.height}.svg`);
-          diffPaths.push(diffPath);
+          failedTests.push({
+            testCase: result.testCase,
+            viewport: comp.viewport,
+            comparison: comp.comparison
+          });
         }
       }
     }
@@ -897,21 +1002,39 @@ export async function check(
   const summary = generateSummary(results);
   await storage.writeSummary(summary);
 
+  const passedTests = summary.totalTests - summary.testsWithIssues;
   console.log(
-    `\n✨ Complete: ${summary.testsWithIssues}/${summary.totalTests} tests with issues`
+    `
+✅ Passed: ${passedTests}/${summary.totalTests} tests`
   );
 
   if (summary.testsWithIssues > 0) {
-    if (diffPaths.length > 0) {
+    console.log(`\n🔍 Failed tests summary:`);
+    console.log(`━${'━'.repeat(60)}`);
+    
+    for (const failed of failedTests) {
+      const svgFilename = `diff-${failed.testCase.id}-${failed.viewport.width}x${failed.viewport.height}.svg`;
+      const svgPath = path.join(outputDir, svgFilename);
       console.log(`
-🔍 Failed test diff files:`);
-      for (const diffPath of diffPaths) {
-        // Get absolute path for easy copy-paste
-        const absolutePath = path.resolve(diffPath);
-        console.log(`   ${absolutePath}`);
+📊 ${failed.testCase.id} @ ${failed.viewport.width}x${failed.viewport.height}`);
+      console.log(`   Similarity: ${failed.comparison.similarity.toFixed(1)}%`);
+      console.log(`   Changes: ${failed.comparison.differences} elements`);
+      console.log(`   Added: ${failed.comparison.addedElements} | Removed: ${failed.comparison.removedElements}`);
+      
+      // Show diff path when onlyFailed option is used or when test failed
+      if (options.onlyFailed || failed.comparison.similarity < (failed.comparison.threshold || 90)) {
+        console.log(`   📁 Diff: ${path.resolve(svgPath)}`);
       }
     }
     
+    console.log(`\n━${'━'.repeat(60)}`);
+    console.log(`\n💡 To fix visual differences:`);
+    console.log(`   1. Review the diff SVGs in: ${path.resolve(outputDir)}`);
+    console.log(`   2. If changes are intentional, run: visc check --update`);
+    console.log(`   3. If changes are unintended, fix the source and re-run: visc check`);
+    
     process.exit(1); // Exit with error if there are issues
+  } else {
+    console.log(`\n📁 Output directory: ${path.resolve(outputDir)}`);
   }
 }

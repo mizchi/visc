@@ -1,4 +1,5 @@
 {
+  "$schema": "./schema.json",
   "version": "1.0",
   "viewports": {
     "mobile": {
@@ -17,13 +18,11 @@
   "testCases": [
     {
       "id": "home",
-      "url": "https://example.com",
-      "description": "Homepage"
+      "url": "https://example.com"
     },
     {
       "id": "zenn",
-      "url": "https://zenn.dev",
-      "description": "zenn"
+      "url": "https://zenn.dev"
     }
   ]
 }

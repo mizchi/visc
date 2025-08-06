@@ -20,14 +20,7 @@ export class CacheStorage {
     return path.join(this.cacheDir, testId, filename);
   }
 
-  private getOutputPath(
-    testId: string,
-    viewport: Viewport,
-    extension: string
-  ): string {
-    const filename = `${viewport.width}x${viewport.height}.${extension}`;
-    return path.join(this.outputDir, testId, filename);
-  }
+
 
   private getDiffPath(
     testId: string,
@@ -61,7 +54,15 @@ export class CacheStorage {
     const cachePath = this.getCachePath(testId, viewport, type);
     const cacheDir = path.dirname(cachePath);
     await fs.mkdir(cacheDir, { recursive: true });
+    
+    // Write JSON
     await fs.writeFile(cachePath, JSON.stringify(layout, null, 2));
+    
+    // Also write SVG to cache
+    const svgFilename = `${type}-${viewport.width}x${viewport.height}.svg`;
+    const svgPath = path.join(cacheDir, svgFilename);
+    const svg = renderLayoutToSvg(layout, { showLabels: true });
+    await fs.writeFile(svgPath, svg);
   }
 
   async writeOutput(
@@ -69,15 +70,14 @@ export class CacheStorage {
     viewport: Viewport,
     layout: VisualTreeAnalysis
   ): Promise<void> {
-    const outputDir = path.join(this.outputDir, testId);
-    await fs.mkdir(outputDir, { recursive: true });
-
-    // Write JSON
-    const jsonPath = this.getOutputPath(testId, viewport, "json");
-    await fs.writeFile(jsonPath, JSON.stringify(layout, null, 2));
-
-    // Write SVG
-    const svgPath = this.getOutputPath(testId, viewport, "svg");
+    // Generate flat filename: <testId>-<viewport>.svg in output directory
+    const filename = `${testId}-${viewport.width}x${viewport.height}.svg`;
+    const svgPath = path.join(this.outputDir, filename);
+    
+    // Ensure output directory exists
+    await fs.mkdir(this.outputDir, { recursive: true });
+    
+    // Write SVG only (no JSON)
     const svg = renderLayoutToSvg(layout, { showLabels: true });
     await fs.writeFile(svgPath, svg);
   }
@@ -87,17 +87,26 @@ export class CacheStorage {
     viewport: Viewport,
     comparison: any,
     previousLayout: VisualTreeAnalysis,
-    currentLayout: VisualTreeAnalysis
+    currentLayout: VisualTreeAnalysis,
+    options: { onlyFailed?: boolean } = {}
   ): Promise<void> {
-    const outputDir = path.join(this.outputDir, testId);
-    await fs.mkdir(outputDir, { recursive: true });
+    // Skip successful tests if onlyFailed is true
+    const threshold = comparison.threshold || 90;
+    const hasFailed = comparison.similarity < threshold;
+    
+    if (options.onlyFailed && !hasFailed) {
+      return;
+    }
 
-    // Write comparison JSON
-    const jsonPath = this.getDiffPath(testId, viewport, "json");
-    await fs.writeFile(jsonPath, JSON.stringify(comparison, null, 2));
+    // Ensure output directory exists (flat structure)
+    await fs.mkdir(this.outputDir, { recursive: true });
 
-    // Write diff SVG
-    const svgPath = this.getDiffPath(testId, viewport, "svg");
+    // Generate flat SVG filename: diff-<testId>-<viewport>.svg
+    const viewportKey = `${viewport.width}x${viewport.height}`;
+    const svgFilename = `diff-${testId}-${viewportKey}.svg`;
+    const svgPath = path.join(this.outputDir, svgFilename);
+
+    // Generate diff SVG
     const svg = renderComparisonToSvg(
       comparison,
       previousLayout,
@@ -107,6 +116,7 @@ export class CacheStorage {
         highlightLevel: "moderate",
       }
     );
+    
     await fs.writeFile(svgPath, svg);
   }
 
@@ -145,18 +155,60 @@ export class CacheStorage {
   }
 
   async writeCalibration(calibration: any): Promise<void> {
+    // Write global calibration for backward compatibility
     await fs.mkdir(this.cacheDir, { recursive: true });
     const calibrationPath = path.join(this.cacheDir, "calibration.json");
     await fs.writeFile(calibrationPath, JSON.stringify(calibration, null, 2));
+    
+    // Also write individual calibration files for each test case
+    if (calibration.results) {
+      for (const [testId, testCalibration] of Object.entries(calibration.results)) {
+        const testCacheDir = path.join(this.cacheDir, testId);
+        await fs.mkdir(testCacheDir, { recursive: true });
+        const testCalibrationPath = path.join(testCacheDir, "calibration.json");
+        await fs.writeFile(testCalibrationPath, JSON.stringify({
+          version: calibration.version,
+          strictness: calibration.strictness,
+          timestamp: calibration.timestamp,
+          results: testCalibration
+        }, null, 2));
+      }
+    }
   }
 
   async readCalibration(): Promise<any | null> {
     try {
+      // First try to read global calibration file
       const calibrationPath = path.join(this.cacheDir, "calibration.json");
       const content = await fs.readFile(calibrationPath, "utf-8");
       return JSON.parse(content);
     } catch {
-      return null;
+      // If global file doesn't exist, try to reconstruct from individual files
+      try {
+        const calibrationData: any = {
+          version: "1.0",
+          results: {},
+          timestamp: new Date().toISOString()
+        };
+        
+        const dirs = await fs.readdir(this.cacheDir);
+        for (const dir of dirs) {
+          const testCalibrationPath = path.join(this.cacheDir, dir, "calibration.json");
+          try {
+            const testContent = await fs.readFile(testCalibrationPath, "utf-8");
+            const testCalibration = JSON.parse(testContent);
+            if (testCalibration.results) {
+              calibrationData.results[dir] = testCalibration.results;
+            }
+          } catch {
+            // Skip if no calibration for this test case
+          }
+        }
+        
+        return Object.keys(calibrationData.results).length > 0 ? calibrationData : null;
+      } catch {
+        return null;
+      }
     }
   }
 

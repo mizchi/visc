@@ -1,0 +1,374 @@
+{
+  "$ref": "#/definitions/ViscConfig",
+  "definitions": {
+    "ViscConfig": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "description": "JSON Schema reference",
+          "markdownDescription": "JSON Schema reference"
+        },
+        "version": {
+          "type": "string",
+          "description": "Configuration version for future compatibility",
+          "markdownDescription": "Configuration version for future compatibility"
+        },
+        "cacheDir": {
+          "type": "string",
+          "description": "Cache directory (default: .visc/cache)",
+          "markdownDescription": "Cache directory (default: .visc/cache)"
+        },
+        "outputDir": {
+          "type": "string",
+          "description": "Output directory for results (default: .visc/output)",
+          "markdownDescription": "Output directory for results (default: .visc/output)"
+        },
+        "viewports": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the viewport",
+                "markdownDescription": "Name of the viewport"
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "description": "Width in pixels",
+                "markdownDescription": "Width in pixels"
+              },
+              "height": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "description": "Height in pixels",
+                "markdownDescription": "Height in pixels"
+              },
+              "deviceScaleFactor": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Device scale factor (default: 1)",
+                "markdownDescription": "Device scale factor (default: 1)"
+              },
+              "userAgent": {
+                "type": "string",
+                "description": "Custom user agent string",
+                "markdownDescription": "Custom user agent string"
+              }
+            },
+            "required": [
+              "name",
+              "width",
+              "height"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Viewport configurations keyed by viewport ID",
+          "markdownDescription": "Viewport configurations keyed by viewport ID"
+        },
+        "testCases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the test case",
+                "markdownDescription": "Unique identifier for the test case"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL to test",
+                "markdownDescription": "URL to test"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the test case",
+                "markdownDescription": "Description of the test case"
+              },
+              "captureOptions": {
+                "type": "object",
+                "properties": {
+                  "waitUntil": {
+                    "type": "string",
+                    "enum": [
+                      "load",
+                      "domcontentloaded",
+                      "networkidle0",
+                      "networkidle2"
+                    ],
+                    "description": "When to consider the page loaded",
+                    "markdownDescription": "When to consider the page loaded"
+                  },
+                  "waitForLCP": {
+                    "type": "boolean",
+                    "description": "Wait for Largest Contentful Paint",
+                    "markdownDescription": "Wait for Largest Contentful Paint"
+                  },
+                  "additionalWait": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Additional wait time in milliseconds",
+                    "markdownDescription": "Additional wait time in milliseconds"
+                  },
+                  "overrides": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "CSS selector overrides for specific elements",
+                    "markdownDescription": "CSS selector overrides for specific elements"
+                  },
+                  "networkBlocks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "URLs or patterns to block during capture",
+                    "markdownDescription": "URLs or patterns to block during capture"
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Override capture options for this test case",
+                "markdownDescription": "Override capture options for this test case"
+              },
+              "compareOptions": {
+                "type": "object",
+                "properties": {
+                  "ignoreText": {
+                    "type": "boolean",
+                    "description": "Ignore text differences",
+                    "markdownDescription": "Ignore text differences"
+                  },
+                  "threshold": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Similarity threshold (0-1)",
+                    "markdownDescription": "Similarity threshold (0-1)"
+                  },
+                  "similarityThreshold": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Element similarity threshold (0-1)",
+                    "markdownDescription": "Element similarity threshold (0-1)"
+                  },
+                  "overrides": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "CSS selector overrides for comparison",
+                    "markdownDescription": "CSS selector overrides for comparison"
+                  },
+                  "networkBlocks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "URLs or patterns to block during comparison",
+                    "markdownDescription": "URLs or patterns to block during comparison"
+                  },
+                  "useVisualGroups": {
+                    "type": "boolean",
+                    "description": "Use visual group comparison instead of element-level",
+                    "markdownDescription": "Use visual group comparison instead of element-level"
+                  }
+                },
+                "additionalProperties": false,
+                "description": "Override compare options for this test case",
+                "markdownDescription": "Override compare options for this test case"
+              }
+            },
+            "required": [
+              "id",
+              "url"
+            ],
+            "additionalProperties": false
+          },
+          "description": "List of test cases to run",
+          "markdownDescription": "List of test cases to run"
+        },
+        "captureOptions": {
+          "type": "object",
+          "properties": {
+            "waitUntil": {
+              "type": "string",
+              "enum": [
+                "load",
+                "domcontentloaded",
+                "networkidle0",
+                "networkidle2"
+              ],
+              "description": "When to consider the page loaded",
+              "markdownDescription": "When to consider the page loaded"
+            },
+            "waitForLCP": {
+              "type": "boolean",
+              "description": "Wait for Largest Contentful Paint",
+              "markdownDescription": "Wait for Largest Contentful Paint"
+            },
+            "additionalWait": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Additional wait time in milliseconds",
+              "markdownDescription": "Additional wait time in milliseconds"
+            },
+            "overrides": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "CSS selector overrides for specific elements",
+              "markdownDescription": "CSS selector overrides for specific elements"
+            },
+            "networkBlocks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "URLs or patterns to block during capture",
+              "markdownDescription": "URLs or patterns to block during capture"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Global capture options",
+          "markdownDescription": "Global capture options"
+        },
+        "compareOptions": {
+          "type": "object",
+          "properties": {
+            "ignoreText": {
+              "type": "boolean",
+              "description": "Ignore text differences",
+              "markdownDescription": "Ignore text differences"
+            },
+            "threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Similarity threshold (0-1)",
+              "markdownDescription": "Similarity threshold (0-1)"
+            },
+            "similarityThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Element similarity threshold (0-1)",
+              "markdownDescription": "Element similarity threshold (0-1)"
+            },
+            "overrides": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "CSS selector overrides for comparison",
+              "markdownDescription": "CSS selector overrides for comparison"
+            },
+            "networkBlocks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "URLs or patterns to block during comparison",
+              "markdownDescription": "URLs or patterns to block during comparison"
+            },
+            "useVisualGroups": {
+              "type": "boolean",
+              "description": "Use visual group comparison instead of element-level",
+              "markdownDescription": "Use visual group comparison instead of element-level"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Global compare options",
+          "markdownDescription": "Global compare options"
+        },
+        "calibrationOptions": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable auto-calibration on first run",
+              "markdownDescription": "Enable auto-calibration on first run"
+            },
+            "samples": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "description": "Number of samples to take for calibration (default: 3)",
+              "markdownDescription": "Number of samples to take for calibration (default: 3)"
+            },
+            "strictness": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ],
+              "description": "Calibration strictness level",
+              "markdownDescription": "Calibration strictness level"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Calibration settings for initial setup",
+          "markdownDescription": "Calibration settings for initial setup"
+        },
+        "browserOptions": {
+          "type": "object",
+          "properties": {
+            "headless": {
+              "type": "boolean",
+              "description": "Run browser in headless mode",
+              "markdownDescription": "Run browser in headless mode"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Additional browser launch arguments",
+              "markdownDescription": "Additional browser launch arguments"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Browser launch options",
+          "markdownDescription": "Browser launch options"
+        },
+        "outputOptions": {
+          "type": "object",
+          "properties": {
+            "onlyFailed": {
+              "type": "boolean",
+              "description": "Output SVG only for failed tests",
+              "markdownDescription": "Output SVG only for failed tests"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "flat",
+                "nested"
+              ],
+              "description": "Output directory structure (default: flat)",
+              "markdownDescription": "Output directory structure (default: flat)"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Output format and filtering options",
+          "markdownDescription": "Output format and filtering options"
+        }
+      },
+      "required": [
+        "viewports",
+        "testCases"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/mizchi/visc/schema/visc.config.json",
+  "title": "Visual Checker (visc) Configuration",
+  "description": "Configuration schema for visc visual regression testing tool"
+}

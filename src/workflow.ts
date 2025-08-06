@@ -61,6 +61,18 @@ export type CaptureOptions = {
   overrides?: Record<string, string>;
   networkBlocks?: string[];
   onStateChange?: (state: 'requesting' | 'waiting-lcp' | 'extracting' | 'completed') => void;
+  
+  // Additional options for captureLayoutMatrix
+  requestOverrides?: Record<string, {
+    status?: number;
+    headers?: Record<string, string>;
+    body?: string;
+  }>;
+  waitForNavigation?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
+  timeout?: number;
+  executeScript?: string;
+  waitForContent?: boolean;
+  captureFullPage?: boolean;
 };
 
 export type CompareOptions = {
@@ -84,30 +96,46 @@ export async function* captureLayouts(
   viewports: Record<string, Viewport>,
   browser: Browser,
   previousResults: Map<string, Map<string, VisualTreeAnalysis>>,
-  options: CaptureOptions = {}
-): AsyncGenerator<CaptureResult> {
+  options: CaptureOptions & { forceUpdate?: boolean } = {}
+): AsyncGenerator<CaptureResult, void, unknown> {
   for (const testCase of testCases) {
     const page = await browser.newPage();
     
     try {
       const previousLayouts = previousResults.get(testCase.id);
       
+      // Check if we need to capture any viewport for this test case
+      const viewportsToCapture: Record<string, Viewport> = {};
+      const cachedLayouts: Array<{ key: string; layout: VisualTreeAnalysis }> = [];
+      
       for (const [viewportKey, viewport] of Object.entries(viewports)) {
         const previousLayout = previousLayouts?.get(viewportKey);
         
         // Use cached layout if available and not forced to update
         if (previousLayout && !options.forceUpdate) {
-          yield {
-            testCase,
-            viewport,
-            layout: previousLayout,
-          };
+          cachedLayouts.push({ key: viewportKey, layout: previousLayout });
         } else {
-          // Capture new layout
-          const layout = await captureLayout(page, testCase.url, viewport, options);
+          viewportsToCapture[viewportKey] = viewport;
+        }
+      }
+      
+      // Yield cached layouts immediately
+      for (const { key, layout } of cachedLayouts) {
+        yield {
+          testCase,
+          viewport: viewports[key],
+          layout,
+        };
+      }
+      
+      // If there are viewports to capture, capture them all at once
+      if (Object.keys(viewportsToCapture).length > 0) {
+        const capturedLayouts = await captureLayoutMatrix(page, testCase.url, viewportsToCapture, options);
+        
+        for (const [viewportKey, layout] of capturedLayouts.entries()) {
           yield {
             testCase,
-            viewport,
+            viewport: viewports[viewportKey],
             layout,
           };
         }
@@ -341,6 +369,96 @@ export async function captureLayout(
   options.onStateChange?.('completed');
 
   return layout;
+}
+
+/**
+ * Capture layouts for multiple viewports in a single browser session
+ * More efficient than calling captureLayout multiple times
+ */
+export async function captureLayoutMatrix(
+  page: Page,
+  url: string,
+  viewports: Record<string, Viewport>,
+  options: CaptureOptions = {}
+): Promise<Map<string, VisualTreeAnalysis>> {
+  const results = new Map<string, VisualTreeAnalysis>();
+  
+  // Prepare viewport data for the matrix function
+  const viewportArray = Object.entries(viewports).map(([key, viewport]) => ({
+    key,
+    width: viewport.width,
+    height: viewport.height,
+    deviceScaleFactor: viewport.deviceScaleFactor,
+    userAgent: viewport.userAgent,
+  }));
+
+  // Set up request interception if overrides or networkBlocks are provided
+  const shouldIntercept = 
+    (options.networkBlocks && options.networkBlocks.length > 0) ||
+    (options.requestOverrides && Object.keys(options.requestOverrides).length > 0);
+
+  if (shouldIntercept) {
+    await page.setRequestInterception(true);
+    
+    page.on('request', (request: any) => {
+      const url = request.url();
+      
+      // Check if URL should be blocked
+      if (options.networkBlocks?.some(pattern => {
+        if (pattern.includes('*')) {
+          const regex = new RegExp(pattern.replace(/\*/g, '.*'));
+          return regex.test(url);
+        }
+        return url.includes(pattern);
+      })) {
+        request.abort();
+        return;
+      }
+      
+      // Check for overrides
+      const override = options.requestOverrides?.[url];
+      if (override) {
+        request.respond({
+          status: override.status || 200,
+          headers: override.headers || {},
+          body: override.body || '',
+        });
+        return;
+      }
+      
+      request.continue();
+    });
+  }
+
+  // Navigate to URL
+  await page.goto(url, {
+    waitUntil: options.waitForNavigation || "networkidle0",
+    timeout: options.timeout || 30000,
+  });
+
+  // Execute any custom script if provided
+  if (options.executeScript) {
+    await page.evaluate(options.executeScript);
+  }
+
+  // Capture layout data for all viewports
+  const { fetchRawLayoutDataViewportMatrix } = await import("./browser/puppeteer.js");
+  const rawDataMap = await fetchRawLayoutDataViewportMatrix(page, viewportArray, {
+    waitForContent: options.waitForContent,
+    captureFullPage: options.captureFullPage,
+  });
+
+  // Process each viewport's raw data
+  for (const [key, rawData] of rawDataMap.entries()) {
+    const layout = await extractLayoutTree(rawData, {
+      viewportOnly: true,
+      groupingThreshold: 20,
+      importanceThreshold: 10,
+    });
+    results.set(key, layout);
+  }
+
+  return results;
 }
 
 // Helper to collect captures into a map
