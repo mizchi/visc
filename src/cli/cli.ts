@@ -511,22 +511,36 @@ async function fetchLayoutFromUrl(
   await page.setViewport(viewport);
 
   try {
-    await page.goto(url, { waitUntil });
+    try {
+      await page.goto(url, { waitUntil, timeout: 30000 });
+    } catch (error: any) {
+      // Handle navigation timeout errors but continue with data extraction
+      if (error.name === 'TimeoutError') {
+        console.warn(`Navigation timeout for ${url}, continuing with data extraction...`);
+      } else {
+        // Re-throw non-timeout errors
+        throw error;
+      }
+    }
 
     // Wait for LCP if enabled
     if (waitForLCP) {
-      await page.evaluate(() => {
-        return new Promise((resolve) => {
-          new PerformanceObserver((list) => {
-            const entries = list.getEntries();
-            const lastEntry = entries[entries.length - 1];
-            resolve(lastEntry);
-          }).observe({ entryTypes: ["largest-contentful-paint"] });
+      try {
+        await page.evaluate(() => {
+          return new Promise((resolve) => {
+            new PerformanceObserver((list) => {
+              const entries = list.getEntries();
+              const lastEntry = entries[entries.length - 1];
+              resolve(lastEntry);
+            }).observe({ entryTypes: ["largest-contentful-paint"] });
 
-          // Fallback if LCP doesn't fire within 15 seconds
-          setTimeout(resolve, 15000);
+            // Fallback if LCP doesn't fire within 15 seconds
+            setTimeout(resolve, 15000);
+          });
         });
-      });
+      } catch (error) {
+        console.warn('Failed to wait for LCP, continuing...', error);
+      }
     }
 
     // Additional wait time
@@ -534,13 +548,36 @@ async function fetchLayoutFromUrl(
       await new Promise((resolve) => setTimeout(resolve, additionalWait));
     }
 
-    const rawData = await fetchRawLayoutData(page, {
-      waitForContent: false,
-      captureFullPage,
-    });
-    return extractLayoutTree(rawData, {
-      viewportOnly: !captureFullPage,
-    });
+    try {
+      const rawData = await fetchRawLayoutData(page, {
+        waitForContent: false,
+        captureFullPage,
+      });
+      return extractLayoutTree(rawData, {
+        viewportOnly: !captureFullPage,
+      });
+    } catch (error) {
+      console.error('Failed to extract layout data:', error);
+      // Return a minimal layout structure to allow the process to continue
+      return {
+        elements: [],
+        statistics: {
+          totalElements: 0,
+          visibleElements: 0,
+          interactiveElements: 0,
+          textElements: 0,
+          imageElements: 0,
+          averageDepth: 0,
+          maxDepth: 0
+        },
+        viewportInfo: {
+          width: viewport.width,
+          height: viewport.height,
+          deviceScaleFactor: 1
+        },
+        visualNodeGroups: []
+      };
+    }
   } finally {
     await browser.close();
   }

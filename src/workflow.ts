@@ -330,25 +330,42 @@ export async function captureLayout(
   options.onStateChange?.('requesting');
   
   // Use provided waitUntil option or default to networkidle0
-  await page.goto(url, { waitUntil: options.waitUntil || "networkidle0" });
+  try {
+    await page.goto(url, { 
+      waitUntil: options.waitUntil || "networkidle0",
+      timeout: options.timeout || 30000
+    });
+  } catch (error: any) {
+    // Handle navigation timeout errors but continue with data extraction
+    if (error.name === 'TimeoutError') {
+      console.warn(`Navigation timeout for ${url}, continuing with data extraction...`);
+    } else {
+      // Re-throw non-timeout errors
+      throw error;
+    }
+  }
   
   // Notify state: waiting-lcp
   options.onStateChange?.('waiting-lcp');
   
   // Wait for LCP by default (unless explicitly disabled)
   if (options.waitForLCP !== false) {
-    await page.evaluate(() => {
-      return new Promise((resolve) => {
-        new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1];
-          resolve(lastEntry);
-        }).observe({ entryTypes: ['largest-contentful-paint'] });
-        
-        // Fallback if LCP doesn't fire within 15 seconds
-        setTimeout(resolve, 15000);
+    try {
+      await page.evaluate(() => {
+        return new Promise((resolve) => {
+          new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1];
+            resolve(lastEntry);
+          }).observe({ entryTypes: ['largest-contentful-paint'] });
+          
+          // Fallback if LCP doesn't fire within 15 seconds
+          setTimeout(resolve, 15000);
+        });
       });
-    });
+    } catch (error) {
+      console.warn('Failed to wait for LCP, continuing...', error);
+    }
   }
   
   // Additional wait time if specified
@@ -358,17 +375,41 @@ export async function captureLayout(
   // Notify state: extracting
   options.onStateChange?.('extracting');
 
-  const rawData = await fetchRawLayoutData(page);
-  const layout = await extractLayoutTree(rawData, {
-    viewportOnly: true,
-    groupingThreshold: 20,
-    importanceThreshold: 10,
-  });
+  try {
+    const rawData = await fetchRawLayoutData(page);
+    const layout = await extractLayoutTree(rawData, {
+      viewportOnly: true,
+      groupingThreshold: 20,
+      importanceThreshold: 10,
+    });
 
-  // Notify state: completed
-  options.onStateChange?.('completed');
+    // Notify state: completed
+    options.onStateChange?.('completed');
 
-  return layout;
+    return layout;
+  } catch (error) {
+    console.error('Failed to extract layout data:', error);
+    // Return a minimal layout structure to allow the process to continue
+    options.onStateChange?.('completed');
+    return {
+      elements: [],
+      statistics: {
+        totalElements: 0,
+        visibleElements: 0,
+        interactiveElements: 0,
+        textElements: 0,
+        imageElements: 0,
+        averageDepth: 0,
+        maxDepth: 0
+      },
+      viewportInfo: {
+        width: viewport.width,
+        height: viewport.height,
+        deviceScaleFactor: viewport.deviceScaleFactor
+      },
+      visualNodeGroups: []
+    };
+  }
 }
 
 /**
@@ -431,10 +472,20 @@ export async function captureLayoutMatrix(
   }
 
   // Navigate to URL
-  await page.goto(url, {
-    waitUntil: options.waitForNavigation || "networkidle0",
-    timeout: options.timeout || 30000,
-  });
+  try {
+    await page.goto(url, {
+      waitUntil: options.waitForNavigation || "networkidle0",
+      timeout: options.timeout || 30000,
+    });
+  } catch (error: any) {
+    // Handle navigation timeout errors but continue with data extraction
+    if (error.name === 'TimeoutError') {
+      console.warn(`Navigation timeout for ${url}, continuing with data extraction...`);
+    } else {
+      // Re-throw non-timeout errors
+      throw error;
+    }
+  }
 
   // Execute any custom script if provided
   if (options.executeScript) {
@@ -442,20 +493,69 @@ export async function captureLayoutMatrix(
   }
 
   // Capture layout data for all viewports
-  const { fetchRawLayoutDataViewportMatrix } = await import("./browser/puppeteer.js");
-  const rawDataMap = await fetchRawLayoutDataViewportMatrix(page, viewportArray, {
-    waitForContent: options.waitForContent,
-    captureFullPage: options.captureFullPage,
-  });
-
-  // Process each viewport's raw data
-  for (const [key, rawData] of rawDataMap.entries()) {
-    const layout = await extractLayoutTree(rawData, {
-      viewportOnly: true,
-      groupingThreshold: 20,
-      importanceThreshold: 10,
+  try {
+    const { fetchRawLayoutDataViewportMatrix } = await import("./browser/puppeteer.js");
+    const rawDataMap = await fetchRawLayoutDataViewportMatrix(page, viewportArray, {
+      waitForContent: options.waitForContent,
+      captureFullPage: options.captureFullPage,
     });
-    results.set(key, layout);
+
+    // Process each viewport's raw data
+    for (const [key, rawData] of rawDataMap.entries()) {
+      try {
+        const layout = await extractLayoutTree(rawData, {
+          viewportOnly: true,
+          groupingThreshold: 20,
+          importanceThreshold: 10,
+        });
+        results.set(key, layout);
+      } catch (error) {
+        console.error(`Failed to extract layout for viewport ${key}:`, error);
+        // Set a minimal layout structure for this viewport
+        const viewport = viewports[key];
+        results.set(key, {
+          elements: [],
+          statistics: {
+            totalElements: 0,
+            visibleElements: 0,
+            interactiveElements: 0,
+            textElements: 0,
+            imageElements: 0,
+            averageDepth: 0,
+            maxDepth: 0
+          },
+          viewportInfo: {
+            width: viewport.width,
+            height: viewport.height,
+            deviceScaleFactor: viewport.deviceScaleFactor
+          },
+          visualNodeGroups: []
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Failed to capture layout data:', error);
+    // Return empty results for all viewports
+    for (const [key, viewport] of Object.entries(viewports)) {
+      results.set(key, {
+        elements: [],
+        statistics: {
+          totalElements: 0,
+          visibleElements: 0,
+          interactiveElements: 0,
+          textElements: 0,
+          imageElements: 0,
+          averageDepth: 0,
+          maxDepth: 0
+        },
+        viewportInfo: {
+          width: viewport.width,
+          height: viewport.height,
+          deviceScaleFactor: viewport.deviceScaleFactor
+        },
+        visualNodeGroups: []
+      });
+    }
   }
 
   return results;
