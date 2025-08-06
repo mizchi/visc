@@ -1,6 +1,16 @@
 # visc - Visual Regression Testing Library & CLI
 
-A visual regression testing library and CLI tool that captures and compares web page layouts.
+A visual regression testing library and CLI tool that captures and compares web page layouts using semantic visual groups for more stable and meaningful comparisons.
+
+## Key Features
+
+- **Semantic Visual Groups**: Compares layouts based on meaningful visual groups rather than individual DOM elements
+- **Auto-Calibration**: Automatically determines optimal comparison thresholds on first run
+- **Smart Waiting**: Waits for Largest Contentful Paint (LCP) for more stable captures
+- **Network Control**: Block or override network requests during capture
+- **Interactive TUI**: Real-time progress visualization with state tracking
+- **Parallel Execution**: Run multiple tests concurrently for faster results
+- **Flexible Output**: Generate SVG visualizations and JSON reports
 
 ## Installation
 
@@ -46,11 +56,14 @@ cat > visc.config.json << 'EOF'
 }
 EOF
 
-# 3. Run initial capture (creates baseline)
+# 3. Run initial capture (creates baseline with auto-calibration)
 visc check
 
 # 4. Run again to detect changes
 visc check
+
+# Optional: Use interactive TUI for better progress visualization
+visc check --tui
 ```
 
 ## Library API
@@ -67,7 +80,8 @@ import {
   renderLayoutToSvg,
   renderComparisonToSvg,
   calibrateComparisonSettings,
-  captureLayout
+  captureLayout,
+  compareVisualNodeGroups
 } from '@mizchi/visc';
 ```
 
@@ -133,6 +147,9 @@ const layout = await captureLayout(page, url, viewport, {
   overrides: {  // Network request overrides
     '**/analytics.js': './tests/fixtures/test-overrides/empty.js',
     'https://cdn.example.com/lib.js': 'https://localhost:8080/lib.js'
+  },
+  onStateChange: (state) => {  // Optional: Track capture progress
+    console.log(`State: ${state}`); // 'requesting' | 'waiting-lcp' | 'extracting' | 'completed'
   }
 });
 ```
@@ -173,6 +190,10 @@ Options:
 - `additionalWait`: Additional wait time after LCP in ms (default: 500)
 - `overrides`: Network request overrides (key: URL pattern, value: replacement file/URL)
 - `networkBlocks`: Array of URL patterns to block entirely
+- `onStateChange`: Callback for tracking capture progress states
+
+#### `compareVisualNodeGroups(baseline: VisualTreeAnalysis, current: VisualTreeAnalysis): ComparisonResult`
+Compares two layouts using semantic visual groups for more stable comparisons.
 
 See [examples/basic-usage.ts](examples/basic-usage.ts) and [examples/responsive-matrix.ts](examples/responsive-matrix.ts) for complete examples.
 
@@ -335,9 +356,15 @@ Create a `visc.config.json` file:
     "ignoreText": true,
     "threshold": 5,
     "similarityThreshold": 98,
+    "useVisualGroups": true,
     "overrides": {
       "**/styles.css": "./tests/fixtures/test-overrides/modified.css"
     }
+  },
+  "calibrationOptions": {
+    "enabled": true,
+    "samples": 3,
+    "strictness": "medium"
   }
 }
 ```
@@ -351,6 +378,9 @@ visc check
 # Update baseline snapshots
 visc check --update
 
+# Use interactive TUI mode for better progress visualization
+visc check --tui
+
 # Use custom config file
 visc check -c my-tests.config.json
 
@@ -358,7 +388,7 @@ visc check -c my-tests.config.json
 visc check -o test-results/
 
 # Run tests in parallel with 4 concurrent pages
-visc check -p 4
+visc check -p 4 --tui
 
 # Run sequentially with 500ms interval
 visc check --interval 500
@@ -386,6 +416,7 @@ The check command creates the following structure:
 │   │   └── baseline-1280x800.json
 │   └── about/
 │       └── ...
+├── calibration.json               # Auto-calibration data
 └── output/                        # Test results
     ├── home/
     │   ├── 375x667.svg           # Current layout visualization
@@ -444,6 +475,7 @@ Options:
 - `--interval <ms>` - Interval between requests in milliseconds (default: 300)
 - `-u, --update` - Update baseline snapshots
 - `--clear-cache` - Clear cache before running tests
+- `--tui` - Use interactive TUI for real-time progress display with state tracking
 
 #### `visc compare <source1> <source2>`
 Compares two sources (files or URLs).
@@ -549,11 +581,13 @@ The package includes a comprehensive example for testing responsive designs acro
 - **Multiple Viewport Testing**: Test your pages across Mobile (375x667), Tablet (768x1024), and Desktop (1280x800) viewports
 - **Visual Diff Generation**: Automatically generates visual diffs showing added (red), removed (red dashed), and changed elements
 - **Progress Tracking**: Real-time progress bars for both capture and comparison phases
+- **TUI Mode**: Interactive terminal UI showing capture states (requesting → waiting-lcp → extracting → completed)
 - **Smart Page Loading**: 
   - Waits for Largest Contentful Paint (LCP) by default with 15s timeout
   - Configurable additional wait time for dynamic content
   - URL-specific calibration (e.g., longer waits for article pages)
 - **Batch Processing**: Test multiple URLs in a single run
+- **Semantic Visual Groups**: Compares meaningful visual groups instead of individual DOM elements
 
 ### Example Configuration
 
@@ -759,6 +793,7 @@ visual-tests:
 
 2. **Configuration Tips**
    - Start with conservative thresholds (threshold: 5, similarityThreshold: 98)
+   - Enable `useVisualGroups: true` for more stable comparisons
    - Use test-specific overrides for problematic pages
    - Increase `additionalWait` for pages with animations
    - Use `ignoreElements` for dynamic content (ads, timestamps)
@@ -770,6 +805,12 @@ visual-tests:
    - For local/internal sites: Use parallel mode with no interval (`-p 8 --interval 0`)
    - Default settings (sequential with 300ms interval) are safe for most sites
    - Cache Puppeteer browser downloads
+
+4. **Auto-Calibration**
+   - Calibration runs automatically on first run (unless disabled)
+   - Calibration analyzes multiple samples to determine optimal thresholds
+   - Higher confidence scores indicate more stable layouts
+   - Re-run calibration after major layout changes
 
 ## Testing
 

@@ -252,6 +252,7 @@ program
   )
   .option("-u, --update", "Update baseline snapshots")
   .option("--clear-cache", "Clear cache before running tests")
+  .option("--tui", "Use interactive TUI for progress display")
   .action(async (options) => {
     try {
       // Parse parallel option
@@ -293,6 +294,7 @@ program
         outputDir: options.outdir,
         parallelConcurrency,
         interval,
+        tui: options.tui,
       });
     } catch (error) {
       console.error(chalk.red("Check failed:"), error);

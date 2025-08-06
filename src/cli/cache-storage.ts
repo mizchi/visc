@@ -144,6 +144,22 @@ export class CacheStorage {
     await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
   }
 
+  async writeCalibration(calibration: any): Promise<void> {
+    await fs.mkdir(this.cacheDir, { recursive: true });
+    const calibrationPath = path.join(this.cacheDir, "calibration.json");
+    await fs.writeFile(calibrationPath, JSON.stringify(calibration, null, 2));
+  }
+
+  async readCalibration(): Promise<any | null> {
+    try {
+      const calibrationPath = path.join(this.cacheDir, "calibration.json");
+      const content = await fs.readFile(calibrationPath, "utf-8");
+      return JSON.parse(content);
+    } catch {
+      return null;
+    }
+  }
+
   async clearCache(): Promise<void> {
     try {
       await fs.rm(this.cacheDir, { recursive: true, force: true });

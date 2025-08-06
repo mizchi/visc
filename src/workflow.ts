@@ -10,6 +10,7 @@ import {
   extractLayoutTree,
   compareLayoutTrees,
 } from "./index.js";
+import { compareVisualNodeGroups } from "./layout/visual-comparator.js";
 
 // Types
 export type Viewport = {
@@ -59,12 +60,14 @@ export type CaptureOptions = {
   additionalWait?: number; // Additional wait time after LCP in milliseconds
   overrides?: Record<string, string>;
   networkBlocks?: string[];
+  onStateChange?: (state: 'requesting' | 'waiting-lcp' | 'extracting' | 'completed') => void;
 };
 
 export type CompareOptions = {
   ignoreText?: boolean;
   threshold?: number;
   similarityThreshold?: number;
+  useVisualGroups?: boolean;
 };
 
 // Default options
@@ -72,6 +75,7 @@ const DEFAULT_COMPARE_OPTIONS: Required<CompareOptions> = {
   ignoreText: true,
   threshold: 5,
   similarityThreshold: 98,
+  useVisualGroups: true,
 };
 
 // Capture layouts for all test cases
@@ -138,11 +142,32 @@ export async function* compareLayouts(
       const previousLayout = previousTestLayouts.get(viewportKey);
       
       if (currentLayout && previousLayout) {
-        const comparison = compareLayoutTrees(previousLayout, currentLayout, {
-          threshold: opts.threshold,
-          ignoreText: opts.ignoreText,
-          ignoreElements: [],
-        });
+        // Use visual group comparison if enabled and available
+        let comparison;
+        let differences = 0;
+        let addedElements = 0;
+        let removedElements = 0;
+        
+        if (opts.useVisualGroups && previousLayout.visualNodeGroups && currentLayout.visualNodeGroups) {
+          // Use semantic group-based comparison (more stable and meaningful)
+          // This compares visual groups rather than individual elements
+          const groupComparison = compareVisualNodeGroups(previousLayout, currentLayout);
+          comparison = groupComparison;
+          differences = groupComparison.differences.length;
+          addedElements = groupComparison.addedGroups.length;
+          removedElements = groupComparison.removedGroups.length;
+        } else {
+          // Fall back to raw element-level comparison
+          // This compares individual DOM elements
+          comparison = compareLayoutTrees(previousLayout, currentLayout, {
+            threshold: opts.threshold,
+            ignoreText: opts.ignoreText,
+            ignoreElements: [],
+          });
+          differences = comparison.differences.length;
+          addedElements = comparison.addedElements.length;
+          removedElements = comparison.removedElements.length;
+        }
 
         const hasIssues = comparison.similarity < opts.similarityThreshold;
         const comparisonResult: ComparisonResult = {
@@ -150,9 +175,9 @@ export async function* compareLayouts(
           viewport,
           comparison: {
             similarity: comparison.similarity,
-            differences: comparison.differences.length,
-            addedElements: comparison.addedElements.length,
-            removedElements: comparison.removedElements.length,
+            differences,
+            addedElements,
+            removedElements,
             hasIssues,
             raw: comparison,
           },
@@ -273,8 +298,14 @@ export async function captureLayout(
     });
   }
 
+  // Notify state: requesting
+  options.onStateChange?.('requesting');
+  
   // Use provided waitUntil option or default to networkidle0
   await page.goto(url, { waitUntil: options.waitUntil || "networkidle0" });
+  
+  // Notify state: waiting-lcp
+  options.onStateChange?.('waiting-lcp');
   
   // Wait for LCP by default (unless explicitly disabled)
   if (options.waitForLCP !== false) {
@@ -296,12 +327,18 @@ export async function captureLayout(
   const additionalWait = options.additionalWait !== undefined ? options.additionalWait : 500;
   await new Promise((resolve) => setTimeout(resolve, additionalWait));
 
+  // Notify state: extracting
+  options.onStateChange?.('extracting');
+
   const rawData = await fetchRawLayoutData(page);
   const layout = await extractLayoutTree(rawData, {
     viewportOnly: true,
     groupingThreshold: 20,
     importanceThreshold: 10,
   });
+
+  // Notify state: completed
+  options.onStateChange?.('completed');
 
   return layout;
 }

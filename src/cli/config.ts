@@ -29,6 +29,7 @@ export type TestCaseConfig = {
     similarityThreshold?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
+    useVisualGroups?: boolean;
   };
 };
 
@@ -64,6 +65,14 @@ export type ViscConfig = {
     similarityThreshold?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
+    useVisualGroups?: boolean; // Use visual group comparison instead of element-level
+  };
+
+  // Calibration options for initial setup
+  calibrationOptions?: {
+    enabled?: boolean; // Enable auto-calibration on first run
+    samples?: number; // Number of samples to take for calibration (default: 3)
+    strictness?: "low" | "medium" | "high"; // Calibration strictness
   };
 
   // Browser options
@@ -87,6 +96,12 @@ export const DEFAULT_CONFIG: Partial<ViscConfig> = {
     ignoreText: true,
     threshold: 5,
     similarityThreshold: 98,
+    useVisualGroups: true,
+  },
+  calibrationOptions: {
+    enabled: true,
+    samples: 3,
+    strictness: "medium",
   },
   browserOptions: {
     headless: true,

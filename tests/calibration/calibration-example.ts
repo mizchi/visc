@@ -14,7 +14,7 @@ import {
   calibrateComparisonSettings,
   detectFlakiness,
   type ComparisonSettings,
-  type LayoutAnalysisResult,
+  type VisualTreeAnalysis,
 } from '../../src/index.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -81,14 +81,14 @@ async function main() {
     
     let bestSettings: ComparisonSettings | null = null;
     let bestScore = Infinity;
-    let bestLayouts: LayoutAnalysisResult[] = [];
+    let bestLayouts: VisualTreeAnalysis[] = [];
     
     for (const groupingThreshold of thresholdCandidates.grouping) {
       for (const importanceThreshold of thresholdCandidates.importance) {
         console.log(`\nTesting thresholds: grouping=${groupingThreshold}, importance=${importanceThreshold}`);
         
         // 現在の閾値で全サンプルを要約
-        const layouts: LayoutAnalysisResult[] = [];
+        const layouts: VisualTreeAnalysis[] = [];
         for (const rawData of rawDataSamples) {
           const layout = await extractLayoutTree(rawData, {
             groupingThreshold,
@@ -100,7 +100,7 @@ async function main() {
         
         // フレーキーネス分析
         const flakiness = detectFlakiness(layouts);
-        const avgGroups = layouts.reduce((sum, l) => sum + (l.semanticGroups?.length || 0), 0) / layouts.length;
+        const avgGroups = layouts.reduce((sum, l) => sum + (l.visualNodeGroups?.length || 0), 0) / layouts.length;
         
         // スコア計算（フレーキーネスが低く、適度なグループ数）
         const targetGroups = 20; // 理想的なグループ数
@@ -158,7 +158,7 @@ async function main() {
       }
       
       console.log(`  - Elements: ${rawData.elements.length}`);
-      console.log(`  - Groups: ${layout.semanticGroups?.length || 0}`);
+      console.log(`  - Groups: ${layout.visualNodeGroups?.length || 0}`);
       console.log(`  - Max differences: ${maxDifferences}`);
     }
     
@@ -207,7 +207,7 @@ async function main() {
       console.log('\n⚠️  Top Flaky Elements:');
       finalFlakiness.flakyElements.slice(0, 5).forEach((element, i) => {
         console.log(`  ${i + 1}. ${element.elementId}`);
-        console.log(`     - Score: ${element.flakinessScore.toFixed(1)}%`);
+        console.log(`     - Score: ${element.score.toFixed(1)}%`);
         console.log(`     - Changes: ${element.changeFrequency}/${element.totalComparisons}`);
       });
     }

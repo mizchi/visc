@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "cacheDir": ".visc-test/cache-phase",
+  "outputDir": ".visc-test/output-phase",
+  "viewports": {
+    "desktop": {
+      "name": "Desktop",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1,
+      "userAgent": "Mozilla/5.0"
+    }
+  },
+  "testCases": [
+    {
+      "id": "phase-test",
+      "url": "https://example.com",
+      "description": "Phase-specific test",
+      "captureOptions": {
+        "networkBlocks": [
+          "**/ads/**"
+        ]
+      },
+      "compareOptions": {
+        "overrides": {
+          "**/*.css": "./tests/fixtures/test-overrides/modified.css"
+        }
+      }
+    }
+  ],
+  "captureOptions": {
+    "waitUntil": "networkidle0",
+    "additionalWait": 100
+  },
+  "compareOptions": {
+    "ignoreText": true,
+    "threshold": 5,
+    "similarityThreshold": 98
+  }
+}
