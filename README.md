@@ -268,6 +268,18 @@ visc check --update
 
 # Clear cache and start fresh
 visc check --clear-cache --update
+
+# Run only tests that failed in the previous run
+visc check --only-failed
+
+# Run failed tests and new tests (incremental mode)
+visc check --incremental
+
+# Run with retry on failure (retry up to 3 times)
+visc check --retry 3
+
+# Run a specific test by ID
+visc check --id homepage
 ```
 
 #### 2. Using the Example Script
@@ -343,7 +355,8 @@ Create a `visc.config.json` file:
       "compareOptions": {
         "threshold": 10,
         "similarityThreshold": 90
-      }
+      },
+      "retry": 3
     }
   ],
   "captureOptions": {
@@ -365,7 +378,8 @@ Create a `visc.config.json` file:
     "enabled": true,
     "samples": 3,
     "strictness": "medium"
-  }
+  },
+  "retry": 2
 }
 ```
 
@@ -476,6 +490,10 @@ Options:
 - `-u, --update` - Update baseline snapshots
 - `--clear-cache` - Clear cache before running tests
 - `--tui` - Use interactive TUI for real-time progress display with state tracking
+- `--only-failed` - Run only tests that failed in the previous run
+- `--incremental` - Run only failed tests and tests without baselines
+- `--retry <count>` - Number of retries for failed tests (default: 0)
+- `--id <testId>` - Run a specific test by ID
 
 #### `visc compare <source1> <source2>`
 Compares two sources (files or URLs).

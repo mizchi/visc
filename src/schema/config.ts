@@ -48,6 +48,7 @@ export const TestCaseConfigSchema = z.object({
   description: z.string().optional().describe('Description of the test case'),
   captureOptions: CaptureOptionsSchema.describe('Override capture options for this test case'),
   compareOptions: CompareOptionsSchema.describe('Override compare options for this test case'),
+  retry: z.number().int().min(0).max(10).optional().describe('Number of retries for this test case (default: 0)'),
 });
 
 // Calibration options schema
@@ -86,6 +87,7 @@ export const ViscConfigSchema = z.object({
   // Global options (can be overridden per test case)
   captureOptions: CaptureOptionsSchema.describe('Global capture options'),
   compareOptions: CompareOptionsSchema.describe('Global compare options'),
+  retry: z.number().int().min(0).max(10).optional().describe('Default number of retries for all test cases (default: 0)'),
   
   // Additional options
   calibrationOptions: CalibrationOptionsSchema.describe('Calibration settings for initial setup'),

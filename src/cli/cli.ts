@@ -275,7 +275,9 @@ program
   .option("-u, --update", "Update baseline snapshots")
   .option("--clear-cache", "Clear cache before running tests")
   .option("--tui", "Use interactive TUI for progress display")
-  .option("--only-failed", "Output SVG only for failed tests")
+  .option("--only-failed", "Run only tests that failed in the previous run")
+  .option("--incremental", "Run only tests that failed or haven't been run yet")
+  .option("--retry <count>", "Number of retries for failed tests (default: 0)")
   .option("--id <testId>", "Run specific test by ID")
   .action(async (options) => {
     try {
@@ -320,6 +322,8 @@ program
         interval,
         tui: options.tui,
         onlyFailed: options.onlyFailed,
+        incremental: options.incremental,
+        retry: options.retry ? parseInt(options.retry, 10) : 0,
         testId: options.id,
       });
     } catch (error) {

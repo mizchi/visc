@@ -188,6 +188,13 @@
                 "additionalProperties": false,
                 "description": "Override compare options for this test case",
                 "markdownDescription": "Override compare options for this test case"
+              },
+              "retry": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Number of retries for this test case (default: 0)",
+                "markdownDescription": "Number of retries for this test case (default: 0)"
               }
             },
             "required": [
@@ -298,6 +305,13 @@
           "additionalProperties": false,
           "description": "Global compare options",
           "markdownDescription": "Global compare options"
+        },
+        "retry": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Default number of retries for all test cases (default: 0)",
+          "markdownDescription": "Default number of retries for all test cases (default: 0)"
         },
         "calibrationOptions": {
           "type": "object",

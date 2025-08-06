@@ -233,4 +233,37 @@ export class CacheStorage {
       // Ignore errors if directory doesn't exist
     }
   }
+
+  // Save failed test IDs for incremental testing
+  async saveFailedTests(failedTestIds: string[]): Promise<void> {
+    await fs.mkdir(this.outputDir, { recursive: true });
+    const failedTestsPath = path.join(this.outputDir, "failed-tests.json");
+    const data = {
+      timestamp: new Date().toISOString(),
+      failedTestIds,
+    };
+    await fs.writeFile(failedTestsPath, JSON.stringify(data, null, 2));
+  }
+
+  // Load previously failed test IDs
+  async loadFailedTests(): Promise<string[] | null> {
+    try {
+      const failedTestsPath = path.join(this.outputDir, "failed-tests.json");
+      const content = await fs.readFile(failedTestsPath, "utf-8");
+      const data = JSON.parse(content);
+      return data.failedTestIds || [];
+    } catch {
+      return null;
+    }
+  }
+
+  // Clear failed tests record
+  async clearFailedTests(): Promise<void> {
+    try {
+      const failedTestsPath = path.join(this.outputDir, "failed-tests.json");
+      await fs.unlink(failedTestsPath);
+    } catch {
+      // Ignore if file doesn't exist
+    }
+  }
 }

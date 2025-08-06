@@ -84,6 +84,33 @@ async function executeWithConcurrency<T>(
   return results;
 }
 
+// Execute a function with retry logic
+async function executeWithRetry<T>(
+  fn: () => Promise<T>,
+  retries: number,
+  onRetry?: (attempt: number, error: Error) => void
+): Promise<T> {
+  let lastError: Error | undefined;
+  
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+      if (attempt < retries) {
+        if (onRetry) {
+          onRetry(attempt + 1, error);
+        }
+        // Wait before retry (exponential backoff)
+        const delay = Math.min(1000 * Math.pow(2, attempt), 10000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+  
+  throw lastError;
+}
+
 // Generate JSON summary from test results
 function generateJSONSummary(results: TestResult[]): any {
   const totalTests = results.length;
@@ -332,6 +359,7 @@ async function runCapture(
     forceUpdate?: boolean;
     parallelConcurrency?: number;
     interval?: number;
+    retry?: number;
   }
 ): Promise<CaptureResult[]> {
   const browser = await puppeteer.launch(config.browserOptions);
@@ -441,24 +469,36 @@ async function runCapture(
           // Capture all needed viewports at once
           if (Object.keys(viewportsToCapture).length > 0) {
             let layoutMatrix;
+            
+            // Determine retry count for this test
+            const retryCount = testCase.retry ?? config.retry ?? options.retry ?? 0;
+            
             try {
-              layoutMatrix = await captureLayoutMatrix(
-              page,
-              testCase.url,
-              viewportsToCapture,
-              {
-                ...captureOptions,
-                onStateChange: progressDisplay ? (state) => {
-                  // Update all viewport tasks with the same state
-                  for (const viewportKey of Object.keys(viewportsToCapture)) {
-                    const taskId = `${testCase.id}-${viewportKey}`;
-                    progressDisplay?.updateTaskState(taskId, state as any);
-                  }
-                } : undefined
-              }
-            );
+              layoutMatrix = await executeWithRetry(
+                async () => {
+                  return await captureLayoutMatrix(
+                    page,
+                    testCase.url,
+                    viewportsToCapture,
+                    {
+                      ...captureOptions,
+                      onStateChange: progressDisplay ? (state) => {
+                        // Update all viewport tasks with the same state
+                        for (const viewportKey of Object.keys(viewportsToCapture)) {
+                          const taskId = `${testCase.id}-${viewportKey}`;
+                          progressDisplay?.updateTaskState(taskId, state as any);
+                        }
+                      } : undefined
+                    }
+                  );
+                },
+                retryCount,
+                (attempt, error) => {
+                  log(`⚠️ Retry ${attempt}/${retryCount} for ${testCase.id}: ${error.message}`);
+                }
+              );
             } catch (error: any) {
-              console.error(`⚠️ Error capturing layouts for ${testCase.id}: ${error.message}`);
+              console.error(`⚠️ Error capturing layouts for ${testCase.id} after ${retryCount} retries: ${error.message}`);
               // Create empty layouts for all viewports on error
               layoutMatrix = new Map();
               for (const [viewportKey, viewport] of Object.entries(viewportsToCapture)) {
@@ -578,20 +618,32 @@ async function runCapture(
               } else {
                 const taskId = `${testCase.id}-${viewportKey}`;
                 let layout;
+                
+                // Determine retry count for this test
+                const retryCount = testCase.retry ?? config.retry ?? options.retry ?? 0;
+                
                 try {
-                  layout = await captureLayout(
-                    page,
-                    testCase.url,
-                    viewport,
-                    {
-                      ...captureOptions,
-                      onStateChange: progressDisplay ? (state) => {
-                        progressDisplay?.updateTaskState(taskId, state as any);
-                      } : undefined
+                  layout = await executeWithRetry(
+                    async () => {
+                      return await captureLayout(
+                        page,
+                        testCase.url,
+                        viewport,
+                        {
+                          ...captureOptions,
+                          onStateChange: progressDisplay ? (state) => {
+                            progressDisplay?.updateTaskState(taskId, state as any);
+                          } : undefined
+                        }
+                      );
+                    },
+                    retryCount,
+                    (attempt, error) => {
+                      log(`⚠️ Retry ${attempt}/${retryCount} for ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
                     }
                   );
                 } catch (error: any) {
-                  console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
+                  console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height} after ${retryCount} retries: ${error.message}`);
                   // Use empty layout on error
                   layout = {
                     url: testCase.url,
@@ -990,6 +1042,8 @@ export async function check(
     interval?: number;
     tui?: boolean;
     onlyFailed?: boolean;
+    incremental?: boolean;
+    retry?: number;
     testId?: string;
   }
 ) {
@@ -1004,33 +1058,89 @@ export async function check(
   // Load config
   let config = await loadConfig(configPath);
   
+  // Initialize storage early to access failed tests
+  const outputDir = options.outputDir || config.outputDir!;
+  const storage = new CacheStorage(config.cacheDir!, outputDir);
+  
+  // Filter test cases based on options
+  let filteredTestCases = config.testCases;
+  
   // Filter by testId if specified
   if (options.testId) {
-    const targetTestCase = config.testCases.find(tc => tc.id === options.testId);
+    const targetTestCase = filteredTestCases.find(tc => tc.id === options.testId);
     if (!targetTestCase) {
       console.error(`❌ Test case with ID '${options.testId}' not found`);
       console.log(`Available test IDs:`);
       config.testCases.forEach(tc => console.log(`  - ${tc.id}`));
       process.exit(1);
     }
-    config = { ...config, testCases: [targetTestCase] };
+    filteredTestCases = [targetTestCase];
     console.log(
       `📋 Running single test: ${options.testId} × ${
         Object.keys(config.viewports).length
       } viewports
 `
     );
-  } else {
+  }
+  // Filter by failed tests if --only-failed is specified
+  else if (options.onlyFailed) {
+    const failedTestIds = await storage.loadFailedTests();
+    if (!failedTestIds || failedTestIds.length === 0) {
+      console.log(`✅ No failed tests from previous run`);
+      process.exit(0);
+    }
+    filteredTestCases = filteredTestCases.filter(tc => failedTestIds.includes(tc.id));
     console.log(
-      `📋 Config loaded: ${config.testCases.length} test cases × ${
+      `🔄 Re-running ${filteredTestCases.length} failed tests × ${
         Object.keys(config.viewports).length
       } viewports
 `
     );
   }
-
-  // Override output directory if specified
-  const outputDir = options.outputDir || config.outputDir!;
+  // Filter by incremental if specified (failed + not tested)
+  else if (options.incremental) {
+    const failedTestIds = await storage.loadFailedTests() || [];
+    const hasBaseline = new Set<string>();
+    
+    // Check which tests have baselines
+    for (const testCase of config.testCases) {
+      for (const viewport of Object.values(config.viewports)) {
+        try {
+          const baseline = await storage.readSnapshot(testCase.id, viewport as any);
+          if (baseline) {
+            hasBaseline.add(testCase.id);
+          }
+        } catch {
+          // No baseline
+        }
+      }
+    }
+    
+    // Include failed tests and tests without baselines
+    filteredTestCases = filteredTestCases.filter(tc => 
+      failedTestIds.includes(tc.id) || !hasBaseline.has(tc.id)
+    );
+    
+    const failedCount = filteredTestCases.filter(tc => failedTestIds.includes(tc.id)).length;
+    const newCount = filteredTestCases.length - failedCount;
+    
+    console.log(
+      `📊 Incremental mode: ${failedCount} failed + ${newCount} new tests × ${
+        Object.keys(config.viewports).length
+      } viewports
+`
+    );
+  } else {
+    console.log(
+      `📋 Config loaded: ${filteredTestCases.length} test cases × ${
+        Object.keys(config.viewports).length
+      } viewports
+`
+    );
+  }
+  
+  // Update config with filtered test cases
+  config = { ...config, testCases: filteredTestCases };
 
   // Clean output directory before running tests (remove and recreate)
   try {
@@ -1039,9 +1149,6 @@ export async function check(
     // Directory might not exist, that's fine
   }
   await fs.mkdir(outputDir, { recursive: true });
-
-  // Initialize storage
-  const storage = new CacheStorage(config.cacheDir!, outputDir);
 
   // Clear cache if requested
   if (options.clearCache) {
@@ -1115,6 +1222,7 @@ export async function check(
     forceUpdate: options.update || isInitialRun,
     parallelConcurrency: options.parallelConcurrency,
     interval: options.interval,
+    retry: options.retry,
   });
 
   if (isInitialRun) {
@@ -1179,6 +1287,18 @@ export async function check(
   // Also save JSON summary for backward compatibility
   const summary = generateJSONSummary(results);
   await storage.writeSummary(summary);
+  
+  // Save failed test IDs for incremental testing
+  const failedTestIds = results
+    .filter(r => r.hasIssues)
+    .map(r => r.testCase.id);
+  
+  if (failedTestIds.length > 0) {
+    await storage.saveFailedTests(failedTestIds);
+  } else {
+    // Clear failed tests if all passed
+    await storage.clearFailedTests();
+  }
 
   const passedTests = summary.totalTests - summary.testsWithIssues;
   console.log(

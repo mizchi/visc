@@ -14,6 +14,7 @@ export type TestCaseConfig = {
   id: string;
   url: string;
   description?: string;
+  retry?: number; // Number of retries for this test case
   // Override capture options for specific test case
   captureOptions?: {
     waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
@@ -82,6 +83,9 @@ export type ViscConfig = {
     headless?: boolean;
     args?: string[];
   };
+  
+  // Global retry count for all test cases
+  retry?: number;
 };
 
 // Default config values
