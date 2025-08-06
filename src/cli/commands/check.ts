@@ -153,6 +153,8 @@ async function runCalibration(
             layoutsForAllViewports = new Map();
             for (const [viewportKey, viewport] of Object.entries(viewports)) {
               layoutsForAllViewports.set(viewportKey, {
+                url: testCase.url,
+                timestamp: new Date().toISOString(),
                 elements: [],
                 statistics: {
                   totalElements: 0,
@@ -163,10 +165,11 @@ async function runCalibration(
                   averageDepth: 0,
                   maxDepth: 0
                 },
-                viewportInfo: {
+                viewport: {
                   width: viewport.width,
                   height: viewport.height,
-                  deviceScaleFactor: viewport.deviceScaleFactor
+                  scrollX: 0,
+                  scrollY: 0
                 },
                 visualNodeGroups: []
               });
@@ -428,6 +431,8 @@ async function runCapture(
               layoutMatrix = new Map();
               for (const [viewportKey, viewport] of Object.entries(viewportsToCapture)) {
                 layoutMatrix.set(viewportKey, {
+                  url: testCase.url,
+                  timestamp: new Date().toISOString(),
                   elements: [],
                   statistics: {
                     totalElements: 0,
@@ -438,10 +443,11 @@ async function runCapture(
                     averageDepth: 0,
                     maxDepth: 0
                   },
-                  viewportInfo: {
+                  viewport: {
                     width: viewport.width,
                     height: viewport.height,
-                    deviceScaleFactor: viewport.deviceScaleFactor
+                    scrollX: 0,
+                    scrollY: 0
                   },
                   visualNodeGroups: []
                 });
@@ -556,6 +562,8 @@ async function runCapture(
                   console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
                   // Use empty layout on error
                   layout = {
+                    url: testCase.url,
+                    timestamp: new Date().toISOString(),
                     elements: [],
                     statistics: {
                       totalElements: 0,
@@ -566,10 +574,11 @@ async function runCapture(
                       averageDepth: 0,
                       maxDepth: 0
                     },
-                    viewportInfo: {
+                    viewport: {
                       width: viewport.width,
                       height: viewport.height,
-                      deviceScaleFactor: viewport.deviceScaleFactor
+                      scrollX: 0,
+                      scrollY: 0
                     },
                     visualNodeGroups: []
                   };
@@ -701,6 +710,8 @@ async function runCompare(
               console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
               // Use empty layout on error
               layout = {
+                url: testCase.url,
+                timestamp: new Date().toISOString(),
                 elements: [],
                 statistics: {
                   totalElements: 0,
@@ -711,10 +722,11 @@ async function runCompare(
                   averageDepth: 0,
                   maxDepth: 0
                 },
-                viewportInfo: {
+                viewport: {
                   width: viewport.width,
                   height: viewport.height,
-                  deviceScaleFactor: 1
+                  scrollX: 0,
+                  scrollY: 0
                 },
                 visualNodeGroups: []
               };
@@ -783,6 +795,8 @@ async function runCompare(
                 console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
                 // Use empty layout on error
                 layout = {
+                  url: testCase.url,
+                  timestamp: new Date().toISOString(),
                   elements: [],
                   statistics: {
                     totalElements: 0,
@@ -793,10 +807,11 @@ async function runCompare(
                     averageDepth: 0,
                     maxDepth: 0
                   },
-                  viewportInfo: {
+                  viewport: {
                     width: viewport.width,
                     height: viewport.height,
-                    deviceScaleFactor: 1
+                    scrollX: 0,
+                    scrollY: 0
                   },
                   visualNodeGroups: []
                 };

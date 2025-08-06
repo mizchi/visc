@@ -35,9 +35,10 @@ const DEFAULT_CONFIG = {
     "headless": true
   },
   "captureOptions": {
-    "waitUntil": "networkidle0",
+    "waitUntil": "networkidle2",
     "waitForLCP": true,
-    "additionalWait": 500
+    "additionalWait": 500,
+    "timeout": 30000
   },
   "compareOptions": {
     "threshold": 10,

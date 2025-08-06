@@ -19,6 +19,7 @@ export type TestCaseConfig = {
     waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
     waitForLCP?: boolean;
     additionalWait?: number;
+    timeout?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
   };
@@ -54,6 +55,7 @@ export type ViscConfig = {
     waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
     waitForLCP?: boolean;
     additionalWait?: number;
+    timeout?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
   };
@@ -88,9 +90,10 @@ export const DEFAULT_CONFIG: Partial<ViscConfig> = {
   cacheDir: ".visc/cache",
   outputDir: ".visc/output",
   captureOptions: {
-    waitUntil: "networkidle0",
+    waitUntil: "networkidle2",
     waitForLCP: true,
     additionalWait: 500,
+    timeout: 30000,
   },
   compareOptions: {
     ignoreText: true,

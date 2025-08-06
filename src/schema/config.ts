@@ -26,6 +26,7 @@ export const CaptureOptionsSchema = z.object({
   waitUntil: WaitUntilSchema.optional(),
   waitForLCP: z.boolean().optional().describe('Wait for Largest Contentful Paint'),
   additionalWait: z.number().min(0).optional().describe('Additional wait time in milliseconds'),
+  timeout: z.number().min(0).optional().describe('Navigation timeout in milliseconds (default: 30000)'),
   overrides: z.record(z.string()).optional().describe('CSS selector overrides for specific elements'),
   networkBlocks: z.array(z.string()).optional().describe('URLs or patterns to block during capture'),
 }).optional();

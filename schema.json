@@ -114,6 +114,12 @@
                     "description": "Additional wait time in milliseconds",
                     "markdownDescription": "Additional wait time in milliseconds"
                   },
+                  "timeout": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Navigation timeout in milliseconds (default: 30000)",
+                    "markdownDescription": "Navigation timeout in milliseconds (default: 30000)"
+                  },
                   "overrides": {
                     "type": "object",
                     "additionalProperties": {
@@ -217,6 +223,12 @@
               "minimum": 0,
               "description": "Additional wait time in milliseconds",
               "markdownDescription": "Additional wait time in milliseconds"
+            },
+            "timeout": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Navigation timeout in milliseconds (default: 30000)",
+              "markdownDescription": "Navigation timeout in milliseconds (default: 30000)"
             },
             "overrides": {
               "type": "object",

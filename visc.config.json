@@ -15,14 +15,19 @@
       "deviceScaleFactor": 1
     }
   },
+  "captureOptions": {
+    "waitUntil": "networkidle2",
+    "waitForLCP": true,
+    "timeout": 30000
+  },
   "testCases": [
     {
-      "id": "home",
+      "id": "example",
       "url": "https://example.com"
     },
     {
-      "id": "zenn",
-      "url": "https://zenn.dev"
+      "id": "github",
+      "url": "https://github.com"
     }
   ]
 }

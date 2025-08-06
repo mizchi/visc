@@ -329,10 +329,10 @@ export async function captureLayout(
   // Notify state: requesting
   options.onStateChange?.('requesting');
   
-  // Use provided waitUntil option or default to networkidle0
+  // Use provided waitUntil option or default to networkidle2
   try {
     await page.goto(url, { 
-      waitUntil: options.waitUntil || "networkidle0",
+      waitUntil: options.waitUntil || "networkidle2",
       timeout: options.timeout || 30000
     });
   } catch (error: any) {
@@ -392,6 +392,8 @@ export async function captureLayout(
     // Return a minimal layout structure to allow the process to continue
     options.onStateChange?.('completed');
     return {
+      url: url,
+      timestamp: new Date().toISOString(),
       elements: [],
       statistics: {
         totalElements: 0,
@@ -402,10 +404,11 @@ export async function captureLayout(
         averageDepth: 0,
         maxDepth: 0
       },
-      viewportInfo: {
+      viewport: {
         width: viewport.width,
         height: viewport.height,
-        deviceScaleFactor: viewport.deviceScaleFactor
+        scrollX: 0,
+        scrollY: 0
       },
       visualNodeGroups: []
     };
@@ -474,7 +477,7 @@ export async function captureLayoutMatrix(
   // Navigate to URL
   try {
     await page.goto(url, {
-      waitUntil: options.waitForNavigation || "networkidle0",
+      waitUntil: options.waitForNavigation || options.waitUntil || "networkidle2",
       timeout: options.timeout || 30000,
     });
   } catch (error: any) {
@@ -514,6 +517,8 @@ export async function captureLayoutMatrix(
         // Set a minimal layout structure for this viewport
         const viewport = viewports[key];
         results.set(key, {
+          url: url,
+          timestamp: new Date().toISOString(),
           elements: [],
           statistics: {
             totalElements: 0,
@@ -524,10 +529,11 @@ export async function captureLayoutMatrix(
             averageDepth: 0,
             maxDepth: 0
           },
-          viewportInfo: {
+          viewport: {
             width: viewport.width,
             height: viewport.height,
-            deviceScaleFactor: viewport.deviceScaleFactor
+            scrollX: 0,
+            scrollY: 0
           },
           visualNodeGroups: []
         });
@@ -538,6 +544,8 @@ export async function captureLayoutMatrix(
     // Return empty results for all viewports
     for (const [key, viewport] of Object.entries(viewports)) {
       results.set(key, {
+        url: url,
+        timestamp: new Date().toISOString(),
         elements: [],
         statistics: {
           totalElements: 0,
@@ -548,10 +556,11 @@ export async function captureLayoutMatrix(
           averageDepth: 0,
           maxDepth: 0
         },
-        viewportInfo: {
+        viewport: {
           width: viewport.width,
           height: viewport.height,
-          deviceScaleFactor: viewport.deviceScaleFactor
+          scrollX: 0,
+          scrollY: 0
         },
         visualNodeGroups: []
       });

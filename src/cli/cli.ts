@@ -40,13 +40,18 @@ program
   .option(
     "--wait-until <event>",
     "Wait strategy: load, domcontentloaded, networkidle0, networkidle2",
-    "networkidle0"
+    "networkidle2"
   )
   .option("--no-wait-lcp", "Disable waiting for Largest Contentful Paint")
   .option(
     "--additional-wait <ms>",
     "Additional wait time after LCP in milliseconds",
     "500"
+  )
+  .option(
+    "--timeout <ms>",
+    "Navigation timeout in milliseconds",
+    "30000"
   )
   .action(async (url, options) => {
     const spinner = options.output
@@ -62,6 +67,7 @@ program
         waitUntil: options.waitUntil,
         waitForLCP: options.waitLcp !== false,
         additionalWait: parseInt(options.additionalWait),
+        timeout: parseInt(options.timeout),
       });
 
       const jsonOutput = JSON.stringify(layout, null, 2);
@@ -495,15 +501,17 @@ async function fetchLayoutFromUrl(
     waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2";
     waitForLCP?: boolean;
     additionalWait?: number;
+    timeout?: number;
   } = {}
 ): Promise<VisualTreeAnalysis> {
   const {
     viewport = { width: 1280, height: 800 },
     headless = true,
     captureFullPage = false,
-    waitUntil = "networkidle0",
+    waitUntil = "networkidle2",
     waitForLCP = true,
     additionalWait = 500,
+    timeout = 30000,
   } = options;
 
   const browser = await puppeteer.launch({ headless });
@@ -512,7 +520,7 @@ async function fetchLayoutFromUrl(
 
   try {
     try {
-      await page.goto(url, { waitUntil, timeout: 30000 });
+      await page.goto(url, { waitUntil, timeout });
     } catch (error: any) {
       // Handle navigation timeout errors but continue with data extraction
       if (error.name === 'TimeoutError') {
@@ -560,6 +568,8 @@ async function fetchLayoutFromUrl(
       console.error('Failed to extract layout data:', error);
       // Return a minimal layout structure to allow the process to continue
       return {
+        url: url,
+        timestamp: new Date().toISOString(),
         elements: [],
         statistics: {
           totalElements: 0,
@@ -570,10 +580,11 @@ async function fetchLayoutFromUrl(
           averageDepth: 0,
           maxDepth: 0
         },
-        viewportInfo: {
+        viewport: {
           width: viewport.width,
           height: viewport.height,
-          deviceScaleFactor: 1
+          scrollX: 0,
+          scrollY: 0
         },
         visualNodeGroups: []
       };
