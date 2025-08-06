@@ -139,12 +139,39 @@ async function runCalibration(
           log(`  - Sample ${i + 1}/${samples}`);
           
           // Capture all viewports at once
-          const layoutsForAllViewports = await captureLayoutMatrix(
-            page,
-            testCase.url,
-            viewports,
-            captureOptions
-          );
+          let layoutsForAllViewports;
+          try {
+            layoutsForAllViewports = await captureLayoutMatrix(
+              page,
+              testCase.url,
+              viewports,
+              captureOptions
+            );
+          } catch (error: any) {
+            log(`  ⚠️ Error capturing layouts: ${error.message}`);
+            // Create empty layouts for all viewports on error
+            layoutsForAllViewports = new Map();
+            for (const [viewportKey, viewport] of Object.entries(viewports)) {
+              layoutsForAllViewports.set(viewportKey, {
+                elements: [],
+                statistics: {
+                  totalElements: 0,
+                  visibleElements: 0,
+                  interactiveElements: 0,
+                  textElements: 0,
+                  imageElements: 0,
+                  averageDepth: 0,
+                  maxDepth: 0
+                },
+                viewportInfo: {
+                  width: viewport.width,
+                  height: viewport.height,
+                  deviceScaleFactor: viewport.deviceScaleFactor
+                },
+                visualNodeGroups: []
+              });
+            }
+          }
           
           // Add each viewport's layout to its sample array
           for (const [viewportKey, layout] of layoutsForAllViewports.entries()) {
@@ -378,7 +405,9 @@ async function runCapture(
           
           // Capture all needed viewports at once
           if (Object.keys(viewportsToCapture).length > 0) {
-            const layoutMatrix = await captureLayoutMatrix(
+            let layoutMatrix;
+            try {
+              layoutMatrix = await captureLayoutMatrix(
               page,
               testCase.url,
               viewportsToCapture,
@@ -393,6 +422,31 @@ async function runCapture(
                 } : undefined
               }
             );
+            } catch (error: any) {
+              console.error(`⚠️ Error capturing layouts for ${testCase.id}: ${error.message}`);
+              // Create empty layouts for all viewports on error
+              layoutMatrix = new Map();
+              for (const [viewportKey, viewport] of Object.entries(viewportsToCapture)) {
+                layoutMatrix.set(viewportKey, {
+                  elements: [],
+                  statistics: {
+                    totalElements: 0,
+                    visibleElements: 0,
+                    interactiveElements: 0,
+                    textElements: 0,
+                    imageElements: 0,
+                    averageDepth: 0,
+                    maxDepth: 0
+                  },
+                  viewportInfo: {
+                    width: viewport.width,
+                    height: viewport.height,
+                    deviceScaleFactor: viewport.deviceScaleFactor
+                  },
+                  visualNodeGroups: []
+                });
+              }
+            }
             
             for (const [viewportKey, layout] of layoutMatrix.entries()) {
               const viewport = viewports[viewportKey];
@@ -485,17 +539,41 @@ async function runCapture(
                 });
               } else {
                 const taskId = `${testCase.id}-${viewportKey}`;
-                const layout = await captureLayout(
-                  page,
-                  testCase.url,
-                  viewport,
-                  {
-                    ...captureOptions,
-                    onStateChange: progressDisplay ? (state) => {
-                      progressDisplay?.updateTaskState(taskId, state as any);
-                    } : undefined
-                  }
-                );
+                let layout;
+                try {
+                  layout = await captureLayout(
+                    page,
+                    testCase.url,
+                    viewport,
+                    {
+                      ...captureOptions,
+                      onStateChange: progressDisplay ? (state) => {
+                        progressDisplay?.updateTaskState(taskId, state as any);
+                      } : undefined
+                    }
+                  );
+                } catch (error: any) {
+                  console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
+                  // Use empty layout on error
+                  layout = {
+                    elements: [],
+                    statistics: {
+                      totalElements: 0,
+                      visibleElements: 0,
+                      interactiveElements: 0,
+                      textElements: 0,
+                      imageElements: 0,
+                      averageDepth: 0,
+                      maxDepth: 0
+                    },
+                    viewportInfo: {
+                      width: viewport.width,
+                      height: viewport.height,
+                      deviceScaleFactor: viewport.deviceScaleFactor
+                    },
+                    visualNodeGroups: []
+                  };
+                }
                 await storage.writeSnapshot(
                   testCase.id,
                   viewport,
@@ -611,12 +689,36 @@ async function runCompare(
             const label = `${testCase.id} ${viewport.width}x${viewport.height}`;
             renderProgressBar(currentStep, totalSteps, label);
 
-            const layout = await captureLayout(
-              page,
-              testCase.url,
-              viewport,
-              captureOptions
-            );
+            let layout;
+            try {
+              layout = await captureLayout(
+                page,
+                testCase.url,
+                viewport,
+                captureOptions
+              );
+            } catch (error: any) {
+              console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
+              // Use empty layout on error
+              layout = {
+                elements: [],
+                statistics: {
+                  totalElements: 0,
+                  visibleElements: 0,
+                  interactiveElements: 0,
+                  textElements: 0,
+                  imageElements: 0,
+                  averageDepth: 0,
+                  maxDepth: 0
+                },
+                viewportInfo: {
+                  width: viewport.width,
+                  height: viewport.height,
+                  deviceScaleFactor: 1
+                },
+                visualNodeGroups: []
+              };
+            }
 
             // Save current snapshot to cache
             await storage.writeSnapshot(
@@ -669,12 +771,36 @@ async function runCompare(
             };
 
             for (const [, viewport] of Object.entries(viewports)) {
-              const layout = await captureLayout(
-                page,
-                testCase.url,
-                viewport,
-                captureOptions
-              );
+              let layout;
+              try {
+                layout = await captureLayout(
+                  page,
+                  testCase.url,
+                  viewport,
+                  captureOptions
+                );
+              } catch (error: any) {
+                console.error(`⚠️ Error capturing ${testCase.id} @ ${viewport.width}x${viewport.height}: ${error.message}`);
+                // Use empty layout on error
+                layout = {
+                  elements: [],
+                  statistics: {
+                    totalElements: 0,
+                    visibleElements: 0,
+                    interactiveElements: 0,
+                    textElements: 0,
+                    imageElements: 0,
+                    averageDepth: 0,
+                    maxDepth: 0
+                  },
+                  viewportInfo: {
+                    width: viewport.width,
+                    height: viewport.height,
+                    deviceScaleFactor: 1
+                  },
+                  visualNodeGroups: []
+                };
+              }
               await storage.writeSnapshot(
                 testCase.id,
                 viewport,
