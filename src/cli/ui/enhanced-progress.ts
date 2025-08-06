@@ -3,7 +3,6 @@
  */
 
 import chalk from 'chalk';
-import ora from 'ora';
 import { stdout } from 'process';
 
 export type TaskState = 
@@ -106,7 +105,7 @@ export class EnhancedProgressDisplay {
     const running = Array.from(this.tasks.values()).filter(t => t.status === 'running');
     const completed = Array.from(this.tasks.values()).filter(t => t.status === 'completed');
     const failed = Array.from(this.tasks.values()).filter(t => t.status === 'failed');
-    const pending = Array.from(this.tasks.values()).filter(t => t.status === 'pending');
+    // const pending = Array.from(this.tasks.values()).filter(t => t.status === 'pending');
 
     // Show completed tasks
     completed.forEach(task => {
@@ -120,10 +119,8 @@ export class EnhancedProgressDisplay {
       
       // Show state if available
       if (task.state && task.state !== 'pending' && task.state !== 'completed') {
-        const stateColor = this.getStateColor(task.state);
         const stateText = this.getStateText(task.state);
-        // Use type assertion to access chalk color methods
-        line += ` ${(chalk as any)[stateColor](`[${stateText}]`)}`;
+        line += ` ${this.colorizeState(task.state, `[${stateText}]`)}`;
       }
       
       if (task.progress !== undefined && task.total) {
@@ -168,22 +165,22 @@ export class EnhancedProgressDisplay {
     return `[${filledChar.repeat(filled)}${emptyChar.repeat(empty)}]`;
   }
 
-  private getStateColor(state: TaskState): string {
-    switch (state) {
-      case 'requesting': return 'cyan';
-      case 'waiting-lcp': return 'yellow';
-      case 'extracting': return 'magenta';
-      case 'failed': return 'red';
-      default: return 'gray';
-    }
-  }
-
   private getStateText(state: TaskState): string {
     switch (state) {
       case 'requesting': return 'Requesting';
       case 'waiting-lcp': return 'Waiting LCP';
       case 'extracting': return 'Extracting';
       default: return state;
+    }
+  }
+
+  private colorizeState(state: TaskState, text: string): string {
+    switch (state) {
+      case 'requesting': return chalk.cyan(text);
+      case 'waiting-lcp': return chalk.yellow(text);
+      case 'extracting': return chalk.magenta(text);
+      case 'failed': return chalk.red(text);
+      default: return chalk.gray(text);
     }
   }
 
@@ -242,8 +239,11 @@ export class EnhancedProgressDisplay {
       line += ` ${current}/${total}`;
       
       if (confidence !== undefined) {
-        const color = confidence > 90 ? 'green' : confidence > 70 ? 'yellow' : 'red';
-        line += ` ${chalk[color](`(${confidence.toFixed(1)}% confidence)`)}`;
+        const confidenceText = `(${confidence.toFixed(1)}% confidence)`;
+        const coloredText = confidence > 90 ? chalk.green(confidenceText) : 
+                           confidence > 70 ? chalk.yellow(confidenceText) : 
+                           chalk.red(confidenceText);
+        line += ` ${coloredText}`;
       }
       
       stdout.write(line);
