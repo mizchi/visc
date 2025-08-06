@@ -148,10 +148,16 @@ export class CacheStorage {
     return results;
   }
 
-  async writeSummary(summary: any): Promise<void> {
+  async writeSummary(summary: any, format: 'json' | 'markdown' = 'json'): Promise<void> {
     await fs.mkdir(this.outputDir, { recursive: true });
-    const summaryPath = path.join(this.outputDir, "summary.json");
-    await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
+    
+    if (format === 'markdown') {
+      const summaryPath = path.join(this.outputDir, "summary.md");
+      await fs.writeFile(summaryPath, summary);
+    } else {
+      const summaryPath = path.join(this.outputDir, "summary.json");
+      await fs.writeFile(summaryPath, JSON.stringify(summary, null, 2));
+    }
   }
 
   async writeCalibration(calibration: any): Promise<void> {

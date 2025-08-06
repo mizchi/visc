@@ -100,7 +100,7 @@ function generateElementId(identifier: any): string {
   if (identifier.id) {
     parts.push(identifier.id);
   }
-  if (identifier.className) {
+  if (identifier.className && typeof identifier.className === 'string') {
     parts.push(identifier.className.split(' ')[0]); // 最初のクラスのみ
   }
   if (identifier.label) {

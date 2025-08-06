@@ -429,7 +429,7 @@ function generateSelector(
     parts.push(`#${identifier.id}`);
   }
   
-  if (identifier.className) {
+  if (identifier.className && typeof identifier.className === 'string') {
     // クラス名をスペースで分割して最初のクラスを使用
     const classes = identifier.className.split(' ').filter(c => c);
     if (classes.length > 0) {

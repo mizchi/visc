@@ -84,6 +84,38 @@ async function executeWithConcurrency<T>(
   return results;
 }
 
+// Generate JSON summary from test results
+function generateJSONSummary(results: TestResult[]): any {
+  const totalTests = results.length;
+  const testsWithIssues = results.filter(r => r.hasIssues).length;
+  const totalComparisons = results.reduce((sum, r) => sum + r.comparisons.length, 0);
+  const failedComparisons = results.reduce(
+    (sum, r) => sum + r.comparisons.filter(c => c.comparison.hasIssues).length,
+    0
+  );
+
+  return {
+    timestamp: new Date().toISOString(),
+    totalTests,
+    testsWithIssues,
+    totalComparisons,
+    failedComparisons,
+    tests: results.map(r => ({
+      id: r.testCase.id,
+      url: r.testCase.url,
+      hasIssues: r.hasIssues,
+      comparisons: r.comparisons.map(c => ({
+        viewport: `${c.viewport.width}x${c.viewport.height}`,
+        similarity: c.comparison.similarity,
+        hasIssues: c.comparison.hasIssues,
+        differences: c.comparison.differences,
+        addedElements: c.comparison.addedElements,
+        removedElements: c.comparison.removedElements
+      }))
+    }))
+  };
+}
+
 // Run calibration for initial setup
 async function runCalibration(
   config: ViscConfig,
@@ -1139,8 +1171,13 @@ export async function check(
     }
   }
 
-  // Summary
-  const summary = generateSummary(results);
+  // Generate and save summary
+  const { generateSummary } = await import('../summary-generator.js');
+  const markdownSummary = generateSummary(results);
+  await storage.writeSummary(markdownSummary, 'markdown');
+  
+  // Also save JSON summary for backward compatibility
+  const summary = generateJSONSummary(results);
   await storage.writeSummary(summary);
 
   const passedTests = summary.totalTests - summary.testsWithIssues;
