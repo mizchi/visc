@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "viewports": {
+    "mobile": {
+      "name": "Mobile",
+      "width": 375,
+      "height": 667,
+      "deviceScaleFactor": 2
+    },
+    "desktop": {
+      "name": "Desktop",
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1
+    }
+  },
+  "screenshotOptions": {
+    "fullPage": false,
+    "format": "jpeg",
+    "quality": 70,
+    "cacheDir": ".visc/test-cache/screenshots"
+  },
+  "captureOptions": {
+    "waitUntil": "networkidle2",
+    "waitForLCP": false,
+    "timeout": 10000
+  },
+  "testCases": [
+    {
+      "id": "baseline",
+      "url": "http://localhost:8080/baseline/basic-layout.html"
+    },
+    {
+      "id": "text-change",
+      "url": "http://localhost:8080/changed/basic-layout-text-change.html"
+    },
+    {
+      "id": "style-change",
+      "url": "http://localhost:8080/changed/basic-layout-style-change.html"
+    },
+    {
+      "id": "structure-change",
+      "url": "http://localhost:8080/changed/basic-layout-structure-change.html"
+    },
+    {
+      "id": "position-shift",
+      "url": "http://localhost:8080/patterns/position-shift.html"
+    },
+    {
+      "id": "z-index",
+      "url": "http://localhost:8080/patterns/z-index-changes.html"
+    },
+    {
+      "id": "overflow",
+      "url": "http://localhost:8080/patterns/overflow-scroll.html"
+    },
+    {
+      "id": "accessibility",
+      "url": "http://localhost:8080/patterns/accessibility-based.html"
+    }
+  ]
+}

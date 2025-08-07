@@ -26,7 +26,8 @@
     "dev": "tsdown --watch",
     "test": "vitest --run",
     "typecheck": "tsc --noEmit",
-    "generate:schema": "tsx scripts/generate-schema.ts"
+    "generate:schema": "tsx scripts/generate-schema.ts",
+    "check-visc": "tsx scripts/check-visc.ts"
   },
   "keywords": [
     "visual-regression",
