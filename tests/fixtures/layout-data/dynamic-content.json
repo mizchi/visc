@@ -1,0 +1,202 @@
+{
+  "description": "Layout with dynamic content (text changes, element appears/disappears)",
+  "samples": [
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:00Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "container",
+          "id": "",
+          "rect": {
+            "x": 100,
+            "y": 100,
+            "width": 1080,
+            "height": 600,
+            "top": 100,
+            "right": 1180,
+            "bottom": 700,
+            "left": 100
+          }
+        },
+        {
+          "tagName": "span",
+          "className": "timestamp",
+          "id": "",
+          "rect": {
+            "x": 120,
+            "y": 120,
+            "width": 200,
+            "height": 20,
+            "top": 120,
+            "right": 320,
+            "bottom": 140,
+            "left": 120
+          },
+          "text": "Last updated: 10:30:45"
+        },
+        {
+          "tagName": "div",
+          "className": "notification",
+          "id": "",
+          "rect": {
+            "x": 500,
+            "y": 300,
+            "width": 280,
+            "height": 100,
+            "top": 300,
+            "right": 780,
+            "bottom": 400,
+            "left": 500
+          },
+          "text": "New message"
+        }
+      ],
+      "statistics": {
+        "totalElements": 3,
+        "visibleElements": 3,
+        "interactiveElements": 0,
+        "textElements": 2,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 2
+      }
+    },
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:01Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "container",
+          "id": "",
+          "rect": {
+            "x": 100,
+            "y": 100,
+            "width": 1080,
+            "height": 600,
+            "top": 100,
+            "right": 1180,
+            "bottom": 700,
+            "left": 100
+          }
+        },
+        {
+          "tagName": "span",
+          "className": "timestamp",
+          "id": "",
+          "rect": {
+            "x": 120,
+            "y": 120,
+            "width": 200,
+            "height": 20,
+            "top": 120,
+            "right": 320,
+            "bottom": 140,
+            "left": 120
+          },
+          "text": "Last updated: 10:30:46"
+        }
+      ],
+      "statistics": {
+        "totalElements": 2,
+        "visibleElements": 2,
+        "interactiveElements": 0,
+        "textElements": 1,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 2
+      }
+    },
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:02Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "container",
+          "id": "",
+          "rect": {
+            "x": 100,
+            "y": 100,
+            "width": 1080,
+            "height": 600,
+            "top": 100,
+            "right": 1180,
+            "bottom": 700,
+            "left": 100
+          }
+        },
+        {
+          "tagName": "span",
+          "className": "timestamp",
+          "id": "",
+          "rect": {
+            "x": 120,
+            "y": 120,
+            "width": 200,
+            "height": 20,
+            "top": 120,
+            "right": 320,
+            "bottom": 140,
+            "left": 120
+          },
+          "text": "Last updated: 10:30:47"
+        },
+        {
+          "tagName": "div",
+          "className": "notification",
+          "id": "",
+          "rect": {
+            "x": 500,
+            "y": 300,
+            "width": 280,
+            "height": 100,
+            "top": 300,
+            "right": 780,
+            "bottom": 400,
+            "left": 500
+          },
+          "text": "Another message"
+        }
+      ],
+      "statistics": {
+        "totalElements": 3,
+        "visibleElements": 3,
+        "interactiveElements": 0,
+        "textElements": 2,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 2
+      }
+    }
+  ],
+  "expectedAnalysis": {
+    "flakyElements": ["span.timestamp", "div.notification"],
+    "flakinessTypes": {
+      "span.timestamp": "content",
+      "div.notification": "existence"
+    },
+    "dynamicElements": ["div.notification"],
+    "suggestedIgnore": ["span.timestamp"]
+  }
+}

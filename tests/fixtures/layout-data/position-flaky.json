@@ -1,0 +1,167 @@
+{
+  "description": "Layout with position variations (small movements)",
+  "samples": [
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:00Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "header",
+          "id": "main-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 60,
+            "top": 0,
+            "right": 1280,
+            "bottom": 60,
+            "left": 0
+          }
+        },
+        {
+          "tagName": "button",
+          "className": "floating-btn",
+          "id": "action-btn",
+          "rect": {
+            "x": 1200,
+            "y": 700,
+            "width": 60,
+            "height": 60,
+            "top": 700,
+            "right": 1260,
+            "bottom": 760,
+            "left": 1200
+          },
+          "text": "+"
+        }
+      ],
+      "statistics": {
+        "totalElements": 2,
+        "visibleElements": 2,
+        "interactiveElements": 1,
+        "textElements": 1,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 1
+      }
+    },
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:01Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "header",
+          "id": "main-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 60,
+            "top": 0,
+            "right": 1280,
+            "bottom": 60,
+            "left": 0
+          }
+        },
+        {
+          "tagName": "button",
+          "className": "floating-btn",
+          "id": "action-btn",
+          "rect": {
+            "x": 1202,
+            "y": 702,
+            "width": 60,
+            "height": 60,
+            "top": 702,
+            "right": 1262,
+            "bottom": 762,
+            "left": 1202
+          },
+          "text": "+"
+        }
+      ],
+      "statistics": {
+        "totalElements": 2,
+        "visibleElements": 2,
+        "interactiveElements": 1,
+        "textElements": 1,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 1
+      }
+    },
+    {
+      "url": "http://example.com",
+      "timestamp": "2024-01-01T00:00:02Z",
+      "viewport": {
+        "width": 1280,
+        "height": 800,
+        "scrollX": 0,
+        "scrollY": 0
+      },
+      "elements": [
+        {
+          "tagName": "div",
+          "className": "header",
+          "id": "main-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1280,
+            "height": 60,
+            "top": 0,
+            "right": 1280,
+            "bottom": 60,
+            "left": 0
+          }
+        },
+        {
+          "tagName": "button",
+          "className": "floating-btn",
+          "id": "action-btn",
+          "rect": {
+            "x": 1201,
+            "y": 701,
+            "width": 60,
+            "height": 60,
+            "top": 701,
+            "right": 1261,
+            "bottom": 761,
+            "left": 1201
+          },
+          "text": "+"
+        }
+      ],
+      "statistics": {
+        "totalElements": 2,
+        "visibleElements": 2,
+        "interactiveElements": 1,
+        "textElements": 1,
+        "imageElements": 0,
+        "averageDepth": 1,
+        "maxDepth": 1
+      }
+    }
+  ],
+  "expectedAnalysis": {
+    "flakyElements": ["button.floating-btn"],
+    "flakinessType": "position",
+    "maxPositionDiff": 2,
+    "suggestedTolerance": 3
+  }
+}
