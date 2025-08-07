@@ -137,3 +137,11 @@ export {
   generateElementDiffSummary,
   type ElementDiff,
 } from "./analysis/element-diff-analyzer.js";
+
+// Selector Generator APIs
+export {
+  generateRootSelector,
+  generateNodeSelector,
+  isSelectorLikelyUnique,
+  generateRobustSelector,
+} from "./layout/selector-generator.js";

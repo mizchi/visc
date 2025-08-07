@@ -9,6 +9,7 @@ import type {
   VisualPattern,
   VisualTreeAnalysis,
 } from "../types.js";
+import { generateRootSelector } from "./selector-generator.js";
 
 export type {
   BoundingRect,
@@ -291,6 +292,11 @@ export function organizeIntoVisualNodeGroups(
       // 既存グループに追加
       group.children.push(element as VisualNode | VisualNodeGroup);
       assignedToGroup.add(element);
+      
+      // グループのルート要素セレクタを更新（最初の要素を基準に）
+      if (!group.rootSelector) {
+        group.rootSelector = generateRootSelector(group);
+      }
       // グループの境界を更新
       const newX = Math.min(group.bounds.x, element.rect.x);
       const newY = Math.min(group.bounds.y, element.rect.y);
@@ -314,6 +320,10 @@ export function organizeIntoVisualNodeGroups(
         importance: element.importance || 0,
         children: [element as VisualNode | VisualNodeGroup],
       };
+      
+      // グループのルート要素セレクタを生成
+      newGroup.rootSelector = generateRootSelector(newGroup);
+      
       groups.push(newGroup);
       assignedToGroup.add(element);
     }

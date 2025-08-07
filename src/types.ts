@@ -64,6 +64,7 @@ export interface VisualNodeGroup {
   bounds: BoundingRect;
   importance: number;
   children: (VisualNode | VisualNodeGroup)[];
+  rootSelector?: string; // CSS selector to find the root element of this group
 }
 
 export interface VisualPattern {
