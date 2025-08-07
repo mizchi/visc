@@ -375,6 +375,9 @@ export function analyzeGroupDiffs(
     const group = previousGroup || currentGroup!;
     const isRemoved = !currentGroup;
     
+    // Check if children exists before iterating
+    if (!group.children) return diffs;
+    
     group.children.forEach(child => {
       if ('tagName' in child) {
         const diff = analyzeElementDiff(
@@ -394,8 +397,8 @@ export function analyzeGroupDiffs(
   
   // Match elements by ID, class, or position
   const matched = new Map<number, number>();
-  const prevNodes = previousGroup.children.filter(c => 'tagName' in c) as VisualNode[];
-  const currNodes = currentGroup.children.filter(c => 'tagName' in c) as VisualNode[];
+  const prevNodes = previousGroup.children?.filter(c => 'tagName' in c) as VisualNode[] || [];
+  const currNodes = currentGroup.children?.filter(c => 'tagName' in c) as VisualNode[] || [];
   
   // First pass: match by ID
   prevNodes.forEach((prev, prevIdx) => {
