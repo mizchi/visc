@@ -320,17 +320,15 @@ program
         }
       }
 
-      await checkCommand(options.config, {
+      await checkCommand({
+        config: options.config,
         update: options.update,
-        clearCache: options.clearCache,
-        outputDir: options.outdir,
+        only: options.id,
+        onlyFailed: options.onlyFailed,
         parallelConcurrency,
         interval,
-        tui: options.tui,
-        onlyFailed: options.onlyFailed,
-        incremental: options.incremental,
         retry: options.retry ? parseInt(options.retry, 10) : 0,
-        testId: options.id,
+        tui: options.tui
       });
     } catch (error) {
       console.error(chalk.red("Check failed:"), error);

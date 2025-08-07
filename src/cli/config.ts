@@ -23,6 +23,7 @@ export type TestCaseConfig = {
     timeout?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
+    captureFullPage?: boolean; // Capture full page instead of just viewport
   };
   // Override compare options for specific test case
   compareOptions?: {
@@ -59,6 +60,7 @@ export type ViscConfig = {
     timeout?: number;
     overrides?: Record<string, string>;
     networkBlocks?: string[];
+    captureFullPage?: boolean; // Capture full page instead of just viewport
   };
 
   // Global compare options (can be overridden per test case)
