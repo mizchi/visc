@@ -138,17 +138,21 @@ function generateStyles(
   return `
     <defs>
       <style>
-        .unchanged { fill: #e9ecef; stroke: #6c757d; stroke-width: 1; opacity: 0.5; }
-        .changed-position { fill: #ffd43b; stroke: #fab005; stroke-width: 2; opacity: ${opacity}; }
-        .changed-size { fill: #ff8787; stroke: #fa5252; stroke-width: 2; opacity: ${opacity}; }
-        .changed-both { fill: #ff6b6b; stroke: #c92a2a; stroke-width: 3; opacity: ${opacity}; }
-        .added { fill: #ff4444; stroke: #cc0000; stroke-width: 2; opacity: ${opacity}; }
-        .removed { fill: #ff6666; stroke: #dd0000; stroke-width: 2; opacity: ${opacity}; stroke-dasharray: 5,5; }
+        .unchanged { fill: #e9ecef; stroke: #6c757d; stroke-width: 1; opacity: 0.3; }
+        .changed-position { fill: #ffd43b; stroke: #ff0000; stroke-width: 2; opacity: ${opacity}; }
+        .changed-size { fill: #ff8787; stroke: #ff0000; stroke-width: 2; opacity: ${opacity}; }
+        .changed-both { fill: #ff6b6b; stroke: #ff0000; stroke-width: 3; opacity: ${opacity}; }
+        .added { fill: #ff4444; stroke: #ff0000; stroke-width: 3; opacity: ${opacity}; }
+        .removed { fill: #ff6666; stroke: #ff0000; stroke-width: 3; opacity: ${opacity}; stroke-dasharray: 5,5; }
+        .diff-highlight { fill: none; stroke: #ff0000; stroke-width: 4; stroke-opacity: 0.9; }
         .label { font-family: monospace; font-size: 10px; fill: #212529; }
-        .diff-arrow { stroke: #495057; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+        .selector-label { font-family: monospace; font-size: 9px; fill: #ff0000; font-weight: bold; }
+        .diff-arrow { stroke: #ff0000; stroke-width: 2; fill: none; marker-end: url(#arrowhead); opacity: 0.7; }
+        .summary-panel { fill: white; fill-opacity: 0.85; stroke: #dee2e6; stroke-width: 1; }
+        .summary-text { font-family: monospace; font-size: 11px; fill: #495057; }
       </style>
       <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#495057" />
+        <polygon points="0 0, 10 3.5, 0 7" fill="#ff0000" />
       </marker>
     </defs>
   `;
@@ -196,6 +200,15 @@ function renderGroupDiff(
   // グループの境界を描画
   const groupClass = getGroupDiffClass(group, diffMap);
   if (showUnchanged || groupClass !== "unchanged") {
+    // If there's a change, add red highlight border
+    if (groupClass !== "unchanged") {
+      elements.push(`
+        <rect x="${group.bounds.x - 2}" y="${group.bounds.y - 2}" 
+              width="${group.bounds.width + 4}" height="${group.bounds.height + 4}"
+              class="diff-highlight" rx="7" />
+      `);
+    }
+
     elements.push(`
       <g class="visual-group">
         <rect x="${group.bounds.x}" y="${group.bounds.y}" 
@@ -204,6 +217,15 @@ function renderGroupDiff(
     `);
 
     if (showLabels) {
+      // Add root selector if available and group has changes
+      if (groupClass !== "unchanged" && group.rootSelector) {
+        elements.push(`
+          <text x="${group.bounds.x}" y="${group.bounds.y - 3}" class="selector-label">
+            ${escapeXml(group.rootSelector)}
+          </text>
+        `);
+      }
+
       elements.push(`
         <text x="${group.bounds.x + 5}" y="${
         group.bounds.y + 15
@@ -245,6 +267,15 @@ function renderElementDiff(
 
   const className = diff ? getDiffClass(diff) : "unchanged";
 
+  // If there's a diff, add a red highlight border
+  if (diff) {
+    elements.push(`
+      <rect x="${element.rect.x - 2}" y="${element.rect.y - 2}" 
+            width="${element.rect.width + 4}" height="${element.rect.height + 4}"
+            class="diff-highlight" rx="2" />
+    `);
+  }
+
   elements.push(`
     <rect x="${element.rect.x}" y="${element.rect.y}" 
           width="${element.rect.width}" height="${element.rect.height}"
@@ -266,6 +297,18 @@ function renderElementDiff(
     `);
   }
 
+  // Add selector label for changed elements
+  if (diff && showLabels) {
+    const selector = generateSelector(element);
+    if (selector) {
+      elements.push(`
+        <text x="${element.rect.x}" y="${element.rect.y - 3}" class="selector-label">
+          ${escapeXml(selector)}
+        </text>
+      `);
+    }
+  }
+
   if (showLabels && element.text) {
     elements.push(`
       <text x="${element.rect.x + 5}" y="${element.rect.y + 15}" class="label">
@@ -273,6 +316,26 @@ function renderElementDiff(
       </text>
     `);
   }
+}
+
+// Generate CSS selector for element
+function generateSelector(element: VisualNode): string {
+  const parts: string[] = [];
+  
+  if (element.tagName) {
+    parts.push(element.tagName.toLowerCase());
+  }
+  
+  if (element.id) {
+    parts.push(`#${element.id}`);
+  } else if (element.className) {
+    const classes = element.className.split(' ').filter(c => c).slice(0, 2);
+    if (classes.length > 0) {
+      parts.push(`.${classes.join('.')}`);
+    }
+  }
+  
+  return parts.join('');
 }
 
 function renderAddedElement(
@@ -339,15 +402,15 @@ function generateSummary(
 
   return `
     <g id="summary" transform="translate(${x}, ${y})">
-      <rect x="0" y="0" width="240" height="120" fill="white" stroke="#dee2e6" stroke-width="1" rx="5" />
-      <text x="10" y="20" class="label" font-weight="bold">Comparison Summary</text>
-      <text x="10" y="40" class="label">Total Elements: ${
+      <rect x="0" y="0" width="240" height="120" class="summary-panel" rx="5" />
+      <text x="10" y="20" class="summary-text" font-weight="bold">Comparison Summary</text>
+      <text x="10" y="40" class="summary-text">Total Elements: ${
         summary.totalElements
       }</text>
-      <text x="10" y="55" class="label">Changed: ${summary.totalChanged}</text>
-      <text x="10" y="70" class="label">Added: ${summary.totalAdded}</text>
-      <text x="10" y="85" class="label">Removed: ${summary.totalRemoved}</text>
-      <text x="10" y="100" class="label">Similarity: ${Math.round(
+      <text x="10" y="55" class="summary-text">Changed: ${summary.totalChanged}</text>
+      <text x="10" y="70" class="summary-text">Added: ${summary.totalAdded}</text>
+      <text x="10" y="85" class="summary-text">Removed: ${summary.totalRemoved}</text>
+      <text x="10" y="100" class="summary-text">Similarity: ${Math.round(
         comparison.similarity
       )}%</text>
     </g>
