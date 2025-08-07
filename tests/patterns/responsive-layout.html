@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Layout Pattern</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+    
+    /* Responsive Grid */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .card {
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    
+    /* Responsive Navigation */
+    .navbar {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+    }
+    
+    .nav-items {
+      display: flex;
+      list-style: none;
+      gap: 20px;
+    }
+    
+    .hamburger {
+      display: none;
+    }
+    
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .nav-items {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        background: #2c3e50;
+        transition: left 0.3s;
+      }
+      
+      .nav-items.active {
+        left: 0;
+      }
+      
+      .hamburger {
+        display: block;
+        cursor: pointer;
+      }
+      
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .card {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    /* Responsive Images */
+    .responsive-img {
+      width: 100%;
+      height: auto;
+      max-width: 600px;
+    }
+    
+    picture source {
+      display: block;
+    }
+    
+    /* Responsive Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+    
+    table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    
+    /* Flexible Typography */
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-size: clamp(0.875rem, 2vw, 1.125rem);
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="hamburger">☰</div>
+    <ul class="nav-items">
+      <li><a href="#" style="color: white;">Home</a></li>
+      <li><a href="#" style="color: white;">About</a></li>
+      <li><a href="#" style="color: white;">Services</a></li>
+      <li><a href="#" style="color: white;">Contact</a></li>
+    </ul>
+  </nav>
+  
+  <div class="container">
+    <h1>Responsive Design Patterns</h1>
+    
+    <div class="grid">
+      <div class="card">
+        <h2>Flexible Grid</h2>
+        <p>This card adapts to different screen sizes using CSS Grid with auto-fit and minmax.</p>
+      </div>
+      
+      <div class="card">
+        <h2>Media Queries</h2>
+        <p>Layout changes at specific breakpoints: 768px for tablets and 480px for mobile.</p>
+      </div>
+      
+      <div class="card">
+        <h2>Fluid Typography</h2>
+        <p>Text sizes scale smoothly using clamp() function for optimal readability.</p>
+      </div>
+    </div>
+    
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Breakpoint</th>
+            <th>Device</th>
+            <th>Columns</th>
+            <th>Gutter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>&lt; 480px</td>
+            <td>Mobile</td>
+            <td>1</td>
+            <td>10px</td>
+          </tr>
+          <tr>
+            <td>480px - 768px</td>
+            <td>Tablet</td>
+            <td>2</td>
+            <td>15px</td>
+          </tr>
+          <tr>
+            <td>&gt; 768px</td>
+            <td>Desktop</td>
+            <td>3+</td>
+            <td>20px</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <picture>
+      <source media="(max-width: 480px)" srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='270'%3E%3Crect fill='%23ddd' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EMobile Image%3C/text%3E%3C/svg%3E">
+      <source media="(max-width: 768px)" srcset="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='768' height='432'%3E%3Crect fill='%23ddd' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3ETablet Image%3C/text%3E%3C/svg%3E">
+      <img class="responsive-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'%3E%3Crect fill='%23ddd' width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999'%3EDesktop Image%3C/text%3E%3C/svg%3E" alt="Responsive placeholder">
+    </picture>
+  </div>
+</body>
+</html>

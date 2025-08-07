@@ -33,6 +33,7 @@ export type CaptureResult = {
   testCase: TestCase;
   viewport: Viewport;
   layout: VisualTreeAnalysis;
+  screenshotPath?: string;
 };
 
 export type ComparisonResult = {
@@ -49,6 +50,10 @@ export type ComparisonResult = {
   };
   currentLayout?: VisualTreeAnalysis; // For semantic detection
   previousLayout?: VisualTreeAnalysis; // For semantic detection
+  screenshotPaths?: {
+    expected?: string;
+    actual?: string;
+  };
 };
 
 export type TestResult = {
@@ -78,6 +83,12 @@ export type CaptureOptions = {
   executeScript?: string;
   waitForContent?: boolean;
   captureFullPage?: boolean;
+  
+  // Screenshot options
+  saveScreenshots?: boolean;
+  screenshotFormat?: 'png' | 'jpeg';
+  screenshotQuality?: number; // 0-100 for JPEG
+  screenshotDir?: string;
 };
 
 export type CompareOptions = {

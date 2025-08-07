@@ -8,6 +8,8 @@ import * as path from "path";
 import type { TestResult } from "../../../workflow.js";
 import { generateSummary } from "../../../workflow.js";
 import { EnhancedProgressDisplay } from "../../ui/enhanced-progress.js";
+import { renderComparisonToSvg } from "../../../renderer/comparison-renderer.js";
+import { renderLayoutToSvg } from "../../../renderer/layout-renderer.js";
 
 interface ExportContext {
   log: (message: string) => void;
@@ -57,6 +59,8 @@ export async function exportResults(
   options: {
     format?: 'json' | 'html' | 'markdown';
     jsonOutput?: string;
+    saveImages?: boolean;
+    saveScreenshots?: boolean;
   },
   context: ExportContext
 ): Promise<void> {
@@ -79,7 +83,7 @@ export async function exportResults(
 
   // Save results to output directory
   if (outputDir) {
-    await saveResultsToDirectory(results, outputDir, context);
+    await saveResultsToDirectory(results, outputDir, options, context);
   }
 }
 
@@ -89,6 +93,10 @@ export async function exportResults(
 async function saveResultsToDirectory(
   results: TestResult[],
   outputDir: string,
+  options: {
+    saveImages?: boolean;
+    saveScreenshots?: boolean;
+  },
   context: ExportContext
 ): Promise<void> {
   const { log } = context;
@@ -124,6 +132,58 @@ async function saveResultsToDirectory(
 
     const testPath = path.join(testDir, 'result.json');
     await fs.writeFile(testPath, JSON.stringify(testSummary, null, 2));
+
+    // Save comparison images for each viewport if enabled
+    if (options.saveImages !== false) { // default to true
+      for (const comp of result.comparisons) {
+        const viewportName = `${comp.viewport.width}x${comp.viewport.height}`;
+        
+        // Save comparison SVG
+        if (comp.comparison.raw && comp.comparison.raw.expected && comp.comparison.raw.actual) {
+          const svgContent = renderComparisonToSvg(
+            comp.comparison.raw,
+            comp.comparison.raw.expected,
+            comp.comparison.raw.actual
+          );
+          const svgPath = path.join(testDir, `comparison-${viewportName}.svg`);
+          await fs.writeFile(svgPath, svgContent);
+          
+          // Also save individual layout SVGs if available
+          if (comp.comparison.raw.expected) {
+            const expectedSvg = renderLayoutToSvg(comp.comparison.raw.expected);
+            const expectedPath = path.join(testDir, `expected-${viewportName}.svg`);
+            await fs.writeFile(expectedPath, expectedSvg);
+          }
+          
+          if (comp.comparison.raw.actual) {
+            const actualSvg = renderLayoutToSvg(comp.comparison.raw.actual);
+            const actualPath = path.join(testDir, `actual-${viewportName}.svg`);
+            await fs.writeFile(actualPath, actualSvg);
+          }
+        }
+        
+        // Copy screenshots if available and enabled
+        if (options.saveScreenshots && comp.screenshotPaths) {
+          if (comp.screenshotPaths.expected) {
+            try {
+              const expectedScreenshotPath = path.join(testDir, `screenshot-expected-${viewportName}.png`);
+              await fs.copyFile(comp.screenshotPaths.expected, expectedScreenshotPath);
+            } catch (error) {
+              // Ignore if file doesn't exist
+            }
+          }
+          
+          if (comp.screenshotPaths.actual) {
+            try {
+              const actualScreenshotPath = path.join(testDir, `screenshot-actual-${viewportName}.png`);
+              await fs.copyFile(comp.screenshotPaths.actual, actualScreenshotPath);
+            } catch (error) {
+              // Ignore if file doesn't exist
+            }
+          }
+        }
+      }
+    }
   }
 
   log(`\n📁 Results saved to: ${outputDir}`);

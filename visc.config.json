@@ -1,6 +1,9 @@
 {
   "$schema": "./schema.json",
   "version": "1.0",
+  "saveImages": true,
+  "saveScreenshots": true,
+  "outputDir": ".visc/output",
   "viewports": {
     "mobile": {
       "name": "Mobile",

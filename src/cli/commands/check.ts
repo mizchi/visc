@@ -163,7 +163,9 @@ export async function check(options: {
         results,
         config.outputDir || '.visc/output',
         {
-          jsonOutput: options.json
+          jsonOutput: options.json,
+          saveImages: config.saveImages,
+          saveScreenshots: config.saveScreenshots
         },
         context
       )

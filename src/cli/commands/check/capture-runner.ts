@@ -4,6 +4,8 @@
  */
 
 import puppeteer, { type Browser, type Page } from "puppeteer";
+import * as fs from "fs/promises";
+import * as path from "path";
 import type { ViscConfig } from "../../config.js";
 import { CacheStorage } from "../../cache-storage.js";
 import { getEffectiveCaptureOptions, getEffectiveRetryCount, logMergedOptions } from "../../../config/merge.js";
@@ -445,12 +447,39 @@ async function captureViewports(
     }
     
     await storage.writeSnapshot(testCase.id, viewport, layout, "baseline");
+    
+    // Save screenshot if enabled
+    let screenshotPath: string | undefined;
+    if (config.saveScreenshots || captureOptions.saveScreenshots) {
+      const format = config.screenshotOptions?.format || captureOptions.screenshotFormat || 'jpeg';
+      const quality = config.screenshotOptions?.quality || captureOptions.screenshotQuality || 70;
+      const fullPage = config.screenshotOptions?.fullPage || captureOptions.captureFullPage || false;
+      
+      try {
+        const screenshotBuffer = await page.screenshot({
+          fullPage,
+          type: format,
+          quality: format === 'jpeg' ? quality : undefined
+        });
+        
+        // Save screenshot to output directory
+        const screenshotDir = config.outputDir || '.visc/output';
+        const testDir = path.join(screenshotDir, testCase.id);
+        await fs.mkdir(testDir, { recursive: true });
+        
+        const screenshotFilename = `screenshot-${viewport.width}x${viewport.height}.${format}`;
+        screenshotPath = path.join(testDir, screenshotFilename);
+        await fs.writeFile(screenshotPath, screenshotBuffer);
+      } catch (error: any) {
+        log(`⚠️ Failed to save screenshot for ${testCase.id}: ${error.message}`);
+      }
+    }
 
     if (options.forceUpdate) {
       await storage.writeOutput(testCase.id, viewport, layout);
     }
 
-    captures.push({ testCase, viewport, layout });
+    captures.push({ testCase, viewport, layout, screenshotPath });
     
     if (progressDisplay) {
       progressDisplay.completeTask(taskId, 'captured');

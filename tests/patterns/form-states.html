@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form States and Validation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      margin-bottom: 30px;
+      color: #2c3e50;
+    }
+    
+    .form-section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .form-section:last-child {
+      border-bottom: none;
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #34495e;
+      font-size: 1.2rem;
+    }
+    
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+    
+    /* Input States */
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    input:disabled, textarea:disabled, select:disabled {
+      background: #f0f0f0;
+      color: #999;
+      cursor: not-allowed;
+    }
+    
+    input:read-only {
+      background: #fafafa;
+      color: #666;
+    }
+    
+    /* Validation States */
+    .input-valid {
+      border-color: #27ae60 !important;
+    }
+    
+    .input-invalid {
+      border-color: #e74c3c !important;
+    }
+    
+    .input-warning {
+      border-color: #f39c12 !important;
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .input-invalid ~ .error-message {
+      display: block;
+    }
+    
+    .success-message {
+      color: #27ae60;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .input-valid ~ .success-message {
+      display: block;
+    }
+    
+    /* Checkbox and Radio */
+    .checkbox-group, .radio-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .checkbox-item, .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    input[type="checkbox"], input[type="radio"] {
+      width: auto;
+      margin: 0;
+    }
+    
+    input[type="checkbox"]:checked + label,
+    input[type="radio"]:checked + label {
+      color: #3498db;
+      font-weight: 600;
+    }
+    
+    /* Custom Checkbox */
+    .custom-checkbox {
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .custom-checkbox input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      background-color: #fff;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .custom-checkbox:hover input ~ .checkmark {
+      border-color: #3498db;
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark {
+      background-color: #3498db;
+      border-color: #3498db;
+    }
+    
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 30px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #3498db;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(30px);
+    }
+    
+    /* Range Slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 8px;
+      background: #ddd;
+      border-radius: 4px;
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #3498db;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+    
+    .range-value {
+      display: inline-block;
+      margin-left: 10px;
+      padding: 5px 10px;
+      background: #3498db;
+      color: white;
+      border-radius: 4px;
+      min-width: 40px;
+      text-align: center;
+    }
+    
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+    
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+    }
+    
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+    
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Loading State */
+    .btn-loading {
+      position: relative;
+      color: transparent;
+    }
+    
+    .btn-loading::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+    
+    @keyframes spinner {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Progress Indicator */
+    .form-progress {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+    
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    
+    .progress-step::before {
+      content: attr(data-step);
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      border-radius: 50%;
+      background: #ddd;
+      color: white;
+      margin-bottom: 5px;
+    }
+    
+    .progress-step.active::before {
+      background: #3498db;
+    }
+    
+    .progress-step.completed::before {
+      background: #27ae60;
+      content: "✓";
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Form States and Validation Patterns</h1>
+    
+    <div class="form-progress">
+      <div class="progress-step completed" data-step="1">
+        <div>Basic Info</div>
+      </div>
+      <div class="progress-step active" data-step="2">
+        <div>Details</div>
+      </div>
+      <div class="progress-step" data-step="3">
+        <div>Review</div>
+      </div>
+    </div>
+    
+    <form>
+      <div class="form-section">
+        <h2>Input States</h2>
+        
+        <div class="form-group">
+          <label for="normal-input">Normal Input</label>
+          <input type="text" id="normal-input" placeholder="Enter text...">
+        </div>
+        
+        <div class="form-group">
+          <label for="valid-input">Valid Input</label>
+          <input type="email" id="valid-input" class="input-valid" value="user@example.com">
+          <span class="success-message">Email is valid!</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="invalid-input">Invalid Input</label>
+          <input type="text" id="invalid-input" class="input-invalid" value="invalid data">
+          <span class="error-message">This field is required and must be valid</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="warning-input">Warning State</label>
+          <input type="text" id="warning-input" class="input-warning" value="Almost there...">
+        </div>
+        
+        <div class="form-group">
+          <label for="disabled-input">Disabled Input</label>
+          <input type="text" id="disabled-input" disabled value="Cannot edit this">
+        </div>
+        
+        <div class="form-group">
+          <label for="readonly-input">Read-only Input</label>
+          <input type="text" id="readonly-input" readonly value="Read-only value">
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h2>Selection Controls</h2>
+        
+        <div class="form-group">
+          <label>Checkboxes</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="check1" checked>
+              <label for="check1">Option 1</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="check2">
+              <label for="check2">Option 2</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="check3" disabled>
+              <label for="check3">Disabled</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Custom Checkbox</label>
+          <label class="custom-checkbox">
+            <input type="checkbox" checked>
+            <span class="checkmark"></span>
+            Custom styled checkbox
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label>Radio Buttons</label>
+          <div class="radio-group">
+            <div class="radio-item">
+              <input type="radio" id="radio1" name="radio-group" checked>
+              <label for="radio1">Option A</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="radio2" name="radio-group">
+              <label for="radio2">Option B</label>
+            </div>
+            <div class="radio-item">
+              <input type="radio" id="radio3" name="radio-group">
+              <label for="radio3">Option C</label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="toggle">Toggle Switch</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="dropdown">Dropdown Select</label>
+          <select id="dropdown">
+            <option>Choose an option...</option>
+            <option selected>Selected Option</option>
+            <option>Another Option</option>
+            <option disabled>Disabled Option</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h2>Advanced Controls</h2>
+        
+        <div class="form-group">
+          <label for="range">Range Slider</label>
+          <input type="range" id="range" min="0" max="100" value="60">
+          <span class="range-value">60</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="textarea">Textarea</label>
+          <textarea id="textarea" rows="4" placeholder="Enter multiple lines of text..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="date">Date Input</label>
+          <input type="date" id="date" value="2024-01-15">
+        </div>
+        
+        <div class="form-group">
+          <label for="color">Color Picker</label>
+          <input type="color" id="color" value="#3498db">
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="button" class="btn-primary">Save</button>
+        <button type="button" class="btn-secondary">Cancel</button>
+        <button type="button" class="btn-success">Submit</button>
+        <button type="button" class="btn-danger">Delete</button>
+        <button type="button" class="btn-primary btn-loading">Loading</button>
+        <button type="button" disabled>Disabled</button>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    // Update range value display
+    document.getElementById('range').addEventListener('input', function(e) {
+      e.target.nextElementSibling.textContent = e.target.value;
+    });
+  </script>
+</body>
+</html>

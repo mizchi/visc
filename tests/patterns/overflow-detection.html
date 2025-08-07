@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overflow Detection Test Patterns</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #555;
+      font-size: 1.3rem;
+    }
+    
+    .test-case {
+      margin-bottom: 30px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #3498db;
+    }
+    
+    .test-label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    
+    /* Test Case 1: Vertical Scroll with Fixed Height */
+    .vertical-scroll-fixed {
+      width: 100%;
+      height: 200px; /* Fixed pixel height */
+      overflow-y: auto;
+      border: 2px solid #ddd;
+      padding: 10px;
+      background: white;
+    }
+    
+    /* Test Case 2: Horizontal Scroll with Fixed Width */
+    .horizontal-scroll-fixed {
+      width: 400px; /* Fixed pixel width */
+      height: auto;
+      overflow-x: auto;
+      border: 2px solid #ddd;
+      padding: 10px;
+      background: white;
+      white-space: nowrap;
+    }
+    
+    /* Test Case 3: Both Scrolls with Fixed Dimensions */
+    .both-scroll-fixed {
+      width: 300px; /* Fixed width */
+      height: 150px; /* Fixed height */
+      overflow: auto;
+      border: 2px solid #ddd;
+      padding: 10px;
+      background: white;
+    }
+    
+    /* Test Case 4: Viewport-based Dimensions */
+    .viewport-based {
+      width: 50vw; /* Viewport width */
+      height: 30vh; /* Viewport height */
+      overflow: auto;
+      border: 2px solid #e74c3c;
+      padding: 10px;
+      background: white;
+    }
+    
+    /* Test Case 5: Percentage-based with Overflow */
+    .percentage-based {
+      width: 80%; /* Percentage width */
+      height: 300px; /* Fixed height */
+      overflow-y: scroll;
+      border: 2px solid #27ae60;
+      padding: 10px;
+      background: white;
+      margin: 0 auto;
+    }
+    
+    /* Test Case 6: Min/Max Constraints */
+    .constrained-dimensions {
+      min-width: 200px;
+      max-width: 500px;
+      min-height: 100px;
+      max-height: 250px;
+      width: 100%;
+      height: auto;
+      overflow: auto;
+      border: 2px solid #9b59b6;
+      padding: 10px;
+      background: white;
+    }
+    
+    /* Test Case 7: Hidden Overflow */
+    .hidden-overflow {
+      width: 350px;
+      height: 100px;
+      overflow: hidden; /* Content clipped */
+      border: 2px solid #f39c12;
+      padding: 10px;
+      background: white;
+      position: relative;
+    }
+    
+    /* Test Case 8: Overflow Visible (default) */
+    .visible-overflow {
+      width: 300px;
+      height: 100px;
+      overflow: visible; /* Content overflows */
+      border: 2px solid #1abc9c;
+      padding: 10px;
+      background: white;
+      margin-bottom: 50px; /* Space for overflow */
+    }
+    
+    /* Test Case 9: Data Table with Scroll */
+    .table-container {
+      width: 100%;
+      max-width: 600px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    
+    table {
+      width: 800px; /* Wider than container */
+      border-collapse: collapse;
+      background: white;
+    }
+    
+    th, td {
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+      white-space: nowrap;
+    }
+    
+    th {
+      background: #f0f0f0;
+      font-weight: 600;
+    }
+    
+    /* Test Case 10: Code Block with Scroll */
+    .code-block {
+      width: 100%;
+      max-width: 500px;
+      height: 150px;
+      overflow: auto;
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 14px;
+      white-space: pre;
+    }
+    
+    /* Test Case 11: Carousel/Slider Pattern */
+    .carousel-container {
+      width: 400px;
+      height: 200px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border: 2px solid #3498db;
+      position: relative;
+    }
+    
+    .carousel-track {
+      display: flex;
+      height: 100%;
+    }
+    
+    .carousel-item {
+      min-width: 400px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .carousel-item:nth-child(2) {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .carousel-item:nth-child(3) {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    /* Test Case 12: Modal with Internal Scroll */
+    .modal-simulation {
+      width: 500px;
+      height: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 2px solid #34495e;
+      border-radius: 8px;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin: 0 auto;
+    }
+    
+    /* Test Case 13: Nested Scrollable Areas */
+    .parent-scroll {
+      width: 500px;
+      height: 300px;
+      overflow: auto;
+      border: 2px solid #e67e22;
+      padding: 10px;
+      background: #fff5e6;
+    }
+    
+    .child-scroll {
+      width: 100%;
+      height: 200px;
+      overflow-y: auto;
+      border: 2px solid #d35400;
+      padding: 10px;
+      background: white;
+      margin-top: 20px;
+    }
+    
+    /* Test Case 14: Flex Container with Overflow */
+    .flex-overflow {
+      display: flex;
+      width: 400px;
+      height: 150px;
+      overflow-x: auto;
+      gap: 10px;
+      border: 2px solid #8e44ad;
+      padding: 10px;
+      background: white;
+    }
+    
+    .flex-item {
+      min-width: 150px;
+      height: 100%;
+      background: #ecf0f1;
+      border: 1px solid #bdc3c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    /* Test Case 15: Grid with Overflow */
+    .grid-overflow {
+      display: grid;
+      grid-template-columns: repeat(5, 200px);
+      width: 400px;
+      height: 200px;
+      overflow: auto;
+      gap: 10px;
+      border: 2px solid #16a085;
+      padding: 10px;
+      background: white;
+    }
+    
+    .grid-item {
+      background: #ecf0f1;
+      border: 1px solid #bdc3c7;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    /* Helper classes */
+    .long-content {
+      line-height: 1.6;
+    }
+    
+    .wide-content {
+      display: inline-block;
+      padding-right: 20px;
+    }
+    
+    /* Visual indicators */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: rgba(52, 152, 219, 0.8);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Overflow Detection and CSS Fixed Value Test Patterns</h1>
+    
+    <div class="test-section">
+      <h2>Fixed Pixel Dimensions</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Vertical Scroll - Fixed Height (200px)</div>
+        <div class="vertical-scroll-fixed">
+          <div class="long-content">
+            <p>This container has a fixed height of 200px.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
+            <p>Esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident.</p>
+            <p>This content exceeds the fixed height, creating a vertical scroll.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Horizontal Scroll - Fixed Width (400px)</div>
+        <div class="horizontal-scroll-fixed">
+          <span class="wide-content">This</span>
+          <span class="wide-content">container</span>
+          <span class="wide-content">has</span>
+          <span class="wide-content">a</span>
+          <span class="wide-content">fixed</span>
+          <span class="wide-content">width</span>
+          <span class="wide-content">of</span>
+          <span class="wide-content">400px</span>
+          <span class="wide-content">and</span>
+          <span class="wide-content">content</span>
+          <span class="wide-content">that</span>
+          <span class="wide-content">extends</span>
+          <span class="wide-content">horizontally</span>
+          <span class="wide-content">beyond</span>
+          <span class="wide-content">the</span>
+          <span class="wide-content">container</span>
+          <span class="wide-content">width.</span>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Both Scrolls - Fixed Dimensions (300px × 150px)</div>
+        <div class="both-scroll-fixed">
+          <div style="width: 500px;">
+            <p>This container has both fixed width (300px) and height (150px).</p>
+            <p>The content is wider than 300px, creating horizontal scroll.</p>
+            <p>The content is also taller than 150px, creating vertical scroll.</p>
+            <p>This demonstrates detection of both scroll directions.</p>
+            <p>Additional content to ensure vertical scrolling...</p>
+            <p>More content here to test the scroll behavior.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Responsive Dimensions</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Viewport-based Dimensions (50vw × 30vh)</div>
+        <div class="viewport-based">
+          <div class="long-content">
+            <p>This container uses viewport units: 50vw width and 30vh height.</p>
+            <p>These are semi-fixed values that scale with viewport size.</p>
+            <p>Content that overflows will create scrollbars.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Additional content to potentially trigger scrolling...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Percentage Width (80%) with Fixed Height (300px)</div>
+        <div class="percentage-based">
+          <div class="long-content">
+            <p>This container has 80% width (flexible) and 300px height (fixed).</p>
+            <p>This is a semi-fixed pattern common in responsive designs.</p>
+            <p>The width adapts to parent container while height remains constant.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Min/Max Constraints (min: 200px, max: 500px)</div>
+        <div class="constrained-dimensions">
+          <div class="long-content">
+            <p>This container has min-width: 200px, max-width: 500px.</p>
+            <p>Also min-height: 100px, max-height: 250px.</p>
+            <p>These constraints create semi-fixed dimensions.</p>
+            <p>Content can cause overflow within these constraints.</p>
+            <p>Additional content to test constraint behavior...</p>
+            <p>More text to potentially trigger scrolling.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Overflow Behaviors</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Hidden Overflow - Content Clipped</div>
+        <div class="hidden-overflow">
+          <div class="long-content">
+            <p>This container has overflow: hidden.</p>
+            <p>Content that exceeds the container bounds is clipped.</p>
+            <p>This text is partially hidden and not accessible via scroll.</p>
+            <p>This line might be completely hidden from view.</p>
+          </div>
+          <span class="scroll-indicator">Hidden</span>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Visible Overflow - Content Overflows</div>
+        <div class="visible-overflow">
+          <div style="width: 400px; background: rgba(255,0,0,0.1); padding: 10px;">
+            <p>This container has overflow: visible (default).</p>
+            <p>Content exceeds the container bounds but remains visible.</p>
+            <p>This text extends beyond the container border.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Semantic Patterns</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Data Table with Horizontal Scroll</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Supplier</th>
+                <th>Last Updated</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>001</td>
+                <td>Premium Widget</td>
+                <td>Electronics</td>
+                <td>$299.99</td>
+                <td>150</td>
+                <td>TechCorp Inc.</td>
+                <td>2024-01-15</td>
+                <td>Active</td>
+              </tr>
+              <tr>
+                <td>002</td>
+                <td>Standard Gadget</td>
+                <td>Accessories</td>
+                <td>$49.99</td>
+                <td>500</td>
+                <td>GadgetWorld</td>
+                <td>2024-01-14</td>
+                <td>Active</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Code Block with Overflow</div>
+        <div class="code-block">function detectOverflowPatterns(element) {
+  const styles = window.getComputedStyle(element);
+  const rect = element.getBoundingClientRect();
+  
+  const hasVerticalScroll = element.scrollHeight > element.clientHeight;
+  const hasHorizontalScroll = element.scrollWidth > element.clientWidth;
+  
+  const overflow = {
+    x: styles.overflowX,
+    y: styles.overflowY,
+    general: styles.overflow,
+    isScrollable: hasVerticalScroll || hasHorizontalScroll,
+    scrollDimensions: {
+      scrollWidth: element.scrollWidth,
+      scrollHeight: element.scrollHeight,
+      clientWidth: element.clientWidth,
+      clientHeight: element.clientHeight
+    }
+  };
+  
+  return overflow;
+}</div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Carousel Pattern</div>
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <div class="carousel-item">Slide 1</div>
+            <div class="carousel-item">Slide 2</div>
+            <div class="carousel-item">Slide 3</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Modal with Internal Scroll</div>
+        <div class="modal-simulation">
+          <h3>Modal Dialog</h3>
+          <p>This simulates a modal with internal scrolling content.</p>
+          <p>Modals often have max-height with overflow-y: auto.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+          <p>Laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit.</p>
+          <p>Esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Excepteur sint occaecat cupidatat non proident.</p>
+          <p>Additional content to ensure scrolling...</p>
+          <p>More content here...</p>
+          <p>And even more content...</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Complex Patterns</h2>
+      
+      <div class="test-case">
+        <div class="test-label">Nested Scrollable Areas</div>
+        <div class="parent-scroll">
+          <p>Parent container with scroll (500px × 300px)</p>
+          <p>This demonstrates nested scroll detection.</p>
+          
+          <div class="child-scroll">
+            <p>Child container with scroll (100% × 200px)</p>
+            <p>Nested scrollable area within parent.</p>
+            <p>Lorem ipsum dolor sit amet.</p>
+            <p>Consectetur adipiscing elit.</p>
+            <p>Sed do eiusmod tempor incididunt.</p>
+            <p>Ut labore et dolore magna aliqua.</p>
+            <p>Additional content for scrolling...</p>
+          </div>
+          
+          <p>More content in parent after child...</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <p>Additional parent content to ensure parent scrolling.</p>
+          <p>More text here to extend the parent container.</p>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Flex Container with Overflow</div>
+        <div class="flex-overflow">
+          <div class="flex-item">Flex 1</div>
+          <div class="flex-item">Flex 2</div>
+          <div class="flex-item">Flex 3</div>
+          <div class="flex-item">Flex 4</div>
+          <div class="flex-item">Flex 5</div>
+        </div>
+      </div>
+      
+      <div class="test-case">
+        <div class="test-label">Grid with Overflow</div>
+        <div class="grid-overflow">
+          <div class="grid-item">Grid 1</div>
+          <div class="grid-item">Grid 2</div>
+          <div class="grid-item">Grid 3</div>
+          <div class="grid-item">Grid 4</div>
+          <div class="grid-item">Grid 5</div>
+          <div class="grid-item">Grid 6</div>
+          <div class="grid-item">Grid 7</div>
+          <div class="grid-item">Grid 8</div>
+          <div class="grid-item">Grid 9</div>
+          <div class="grid-item">Grid 10</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

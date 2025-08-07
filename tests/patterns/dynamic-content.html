@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Content and AJAX States</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f2f5;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 30px;
+      color: #1c1e21;
+    }
+    
+    /* Lazy Loading Images */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .lazy-image {
+      width: 100%;
+      height: 200px;
+      background: #e4e6eb;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .lazy-image.loading::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      animation: shimmer 1.5s infinite;
+    }
+    
+    @keyframes shimmer {
+      100% { left: 100%; }
+    }
+    
+    .lazy-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .lazy-image.loaded img {
+      opacity: 1;
+    }
+    
+    /* Infinite Scroll */
+    .feed {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .post {
+      padding: 20px;
+      border-bottom: 1px solid #e4e6eb;
+    }
+    
+    .post:last-child {
+      border-bottom: none;
+    }
+    
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #3b5998;
+      margin-right: 10px;
+    }
+    
+    .post-content {
+      color: #1c1e21;
+      line-height: 1.5;
+    }
+    
+    .load-more {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .load-more button {
+      padding: 10px 20px;
+      background: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    /* Live Data Updates */
+    .live-data {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .data-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .metric {
+      padding: 20px;
+      background: #f0f2f5;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #1877f2;
+      margin-bottom: 5px;
+    }
+    
+    .metric-label {
+      color: #65676b;
+      font-size: 0.9rem;
+    }
+    
+    .updating {
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Notification Banner */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transform: translateX(400px);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      max-width: 300px;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.success {
+      border-left: 4px solid #42b883;
+    }
+    
+    .notification.error {
+      border-left: 4px solid #e74c3c;
+    }
+    
+    .notification.warning {
+      border-left: 4px solid #f39c12;
+    }
+    
+    /* Modal/Popup */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+    
+    /* Tooltip */
+    .tooltip-container {
+      position: relative;
+      display: inline-block;
+      margin: 20px;
+    }
+    
+    .tooltip {
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      font-size: 14px;
+    }
+    
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #333;
+    }
+    
+    .tooltip-container:hover .tooltip {
+      opacity: 1;
+    }
+    
+    /* Tabs */
+    .tabs {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .tab-nav {
+      display: flex;
+      background: #f0f2f5;
+    }
+    
+    .tab-button {
+      flex: 1;
+      padding: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    
+    .tab-button:hover {
+      background: #e4e6eb;
+    }
+    
+    .tab-button.active {
+      background: white;
+      border-bottom: 2px solid #1877f2;
+    }
+    
+    .tab-content {
+      padding: 20px;
+    }
+    
+    .tab-pane {
+      display: none;
+    }
+    
+    .tab-pane.active {
+      display: block;
+    }
+    
+    /* Real-time Search */
+    .search-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e4e6eb;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    
+    .search-results {
+      margin-top: 20px;
+    }
+    
+    .result-item {
+      padding: 10px;
+      border-bottom: 1px solid #e4e6eb;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .result-item:hover {
+      background: #f0f2f5;
+    }
+    
+    .no-results {
+      text-align: center;
+      color: #65676b;
+      padding: 20px;
+    }
+    
+    /* Countdown Timer */
+    .countdown {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .countdown-display {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #1877f2;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    /* Dynamic List */
+    .dynamic-list {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #f0f2f5;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+    
+    .list-item.removing {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    
+    .list-item.adding {
+      animation: slideIn 0.3s;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dynamic Content and AJAX States</h1>
+    
+    <!-- Lazy Loading Images -->
+    <div class="image-grid">
+      <div class="lazy-image loading">
+        <img data-src="placeholder.jpg" alt="Lazy loaded image 1">
+      </div>
+      <div class="lazy-image loading">
+        <img data-src="placeholder.jpg" alt="Lazy loaded image 2">
+      </div>
+      <div class="lazy-image loading">
+        <img data-src="placeholder.jpg" alt="Lazy loaded image 3">
+      </div>
+      <div class="lazy-image loading">
+        <img data-src="placeholder.jpg" alt="Lazy loaded image 4">
+      </div>
+    </div>
+    
+    <!-- Live Data Updates -->
+    <div class="live-data">
+      <h2>Real-time Metrics</h2>
+      <div class="data-card">
+        <div class="metric updating">
+          <div class="metric-value" id="users">1,234</div>
+          <div class="metric-label">Active Users</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" id="sales">$45,678</div>
+          <div class="metric-label">Today's Sales</div>
+        </div>
+        <div class="metric updating">
+          <div class="metric-value" id="orders">89</div>
+          <div class="metric-label">New Orders</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" id="conversion">3.4%</div>
+          <div class="metric-label">Conversion Rate</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab-nav">
+        <button class="tab-button active" data-tab="tab1">Overview</button>
+        <button class="tab-button" data-tab="tab2">Details</button>
+        <button class="tab-button" data-tab="tab3">Settings</button>
+      </div>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1">
+          <h3>Overview Content</h3>
+          <p>This is the overview tab content. It's visible by default.</p>
+        </div>
+        <div class="tab-pane" id="tab2">
+          <h3>Details Content</h3>
+          <p>This is the details tab content. It appears when selected.</p>
+        </div>
+        <div class="tab-pane" id="tab3">
+          <h3>Settings Content</h3>
+          <p>This is the settings tab content. Configure your preferences here.</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search for items...">
+      <div class="search-results">
+        <div class="no-results">Start typing to search...</div>
+      </div>
+    </div>
+    
+    <!-- Countdown Timer -->
+    <div class="countdown">
+      <h2>Flash Sale Ends In</h2>
+      <div class="countdown-display" id="timer">00:59:59</div>
+    </div>
+    
+    <!-- Feed with Infinite Scroll -->
+    <div class="feed">
+      <h2>Activity Feed</h2>
+      <div id="posts">
+        <div class="post">
+          <div class="post-header">
+            <div class="avatar"></div>
+            <div>
+              <strong>User 1</strong><br>
+              <small>2 minutes ago</small>
+            </div>
+          </div>
+          <div class="post-content">
+            This is a sample post in the activity feed. Content loads dynamically.
+          </div>
+        </div>
+        <div class="post">
+          <div class="post-header">
+            <div class="avatar"></div>
+            <div>
+              <strong>User 2</strong><br>
+              <small>5 minutes ago</small>
+            </div>
+          </div>
+          <div class="post-content">
+            Another post in the feed. Scroll down to load more content.
+          </div>
+        </div>
+      </div>
+      <div class="load-more">
+        <button onclick="loadMorePosts()">Load More</button>
+      </div>
+    </div>
+    
+    <!-- Dynamic List -->
+    <div class="dynamic-list">
+      <h2>Dynamic Item List</h2>
+      <div id="list">
+        <div class="list-item">
+          <span>Item 1</span>
+          <button onclick="removeItem(this)">Remove</button>
+        </div>
+        <div class="list-item">
+          <span>Item 2</span>
+          <button onclick="removeItem(this)">Remove</button>
+        </div>
+        <div class="list-item">
+          <span>Item 3</span>
+          <button onclick="removeItem(this)">Remove</button>
+        </div>
+      </div>
+      <button onclick="addItem()" style="margin-top: 10px;">Add Item</button>
+    </div>
+    
+    <!-- Tooltip Examples -->
+    <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+      <h2>Hover for Tooltips</h2>
+      <div class="tooltip-container">
+        <button>Hover me</button>
+        <span class="tooltip">This is a helpful tooltip!</span>
+      </div>
+      <div class="tooltip-container">
+        <span style="text-decoration: underline; cursor: help;">Info</span>
+        <span class="tooltip">Additional information appears here</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Notifications -->
+  <div class="notification success" id="notification">
+    <strong>Success!</strong> Operation completed successfully.
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2>Modal Dialog</h2>
+      <p>This is a modal window that appears on top of the main content.</p>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+  
+  <script>
+    // Tab functionality
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.dataset.tab;
+        
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        
+        button.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Simulate live data updates
+    setInterval(() => {
+      const users = document.getElementById('users');
+      const currentUsers = parseInt(users.textContent.replace(',', ''));
+      users.textContent = (currentUsers + Math.floor(Math.random() * 10) - 5).toLocaleString();
+    }, 3000);
+    
+    // Countdown timer
+    let seconds = 3599;
+    setInterval(() => {
+      const hours = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      document.getElementById('timer').textContent = 
+        `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      seconds--;
+      if (seconds < 0) seconds = 3599;
+    }, 1000);
+    
+    // Dynamic list functions
+    function removeItem(button) {
+      const item = button.parentElement;
+      item.classList.add('removing');
+      setTimeout(() => item.remove(), 300);
+    }
+    
+    let itemCount = 3;
+    function addItem() {
+      itemCount++;
+      const newItem = document.createElement('div');
+      newItem.className = 'list-item adding';
+      newItem.innerHTML = `
+        <span>Item ${itemCount}</span>
+        <button onclick="removeItem(this)">Remove</button>
+      `;
+      document.getElementById('list').appendChild(newItem);
+    }
+    
+    function loadMorePosts() {
+      // Simulate loading more posts
+      const postsContainer = document.getElementById('posts');
+      for (let i = 0; i < 2; i++) {
+        const post = document.createElement('div');
+        post.className = 'post';
+        post.innerHTML = `
+          <div class="post-header">
+            <div class="avatar"></div>
+            <div>
+              <strong>User ${Math.floor(Math.random() * 100)}</strong><br>
+              <small>Just now</small>
+            </div>
+          </div>
+          <div class="post-content">
+            Dynamically loaded content ${Date.now()}
+          </div>
+        `;
+        postsContainer.appendChild(post);
+      }
+    }
+    
+    function closeModal() {
+      document.getElementById('modal').classList.remove('show');
+    }
+    
+    // Show notification periodically
+    setInterval(() => {
+      const notification = document.getElementById('notification');
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }, 10000);
+  </script>
+</body>
+</html>

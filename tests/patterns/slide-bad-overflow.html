@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200, height=800">
+    <title>Bad Slide - With Overflow Issues</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Slide container with problematic settings */
+        .slide-container {
+            width: 1200px;
+            height: 800px;
+            /* BAD: Allow overflow instead of hiding it */
+            overflow: auto;
+            position: relative;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header with responsive units (BAD) */
+        .slide-header {
+            position: absolute;
+            top: 5vh; /* BAD: Viewport units */
+            left: 5%;  /* BAD: Percentage */
+            right: 5%;
+            height: 15vh; /* BAD: Viewport units */
+        }
+
+        .slide-title {
+            font-size: 4vw; /* BAD: Viewport width units */
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Content that exceeds boundaries (BAD) */
+        .slide-content {
+            position: absolute;
+            top: 150px;
+            left: 50px;
+            right: 50px;
+            /* BAD: No bottom constraint, content can overflow */
+            min-height: 900px; /* BAD: Exceeds container height */
+        }
+
+        /* Scrollable data table (BAD for slides) */
+        .data-table-container {
+            width: 100%;
+            height: 400px;
+            overflow-y: scroll; /* BAD: Internal scrolling */
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        /* Long list that causes overflow (BAD) */
+        .long-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .long-list li {
+            padding: 15px;
+            margin: 10px 0;
+            background: #e0e0e0;
+            font-size: 18px;
+        }
+
+        /* Code block with horizontal scroll (BAD) */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto; /* BAD: Horizontal scrolling */
+            white-space: nowrap; /* BAD: Forces horizontal scroll */
+            margin: 20px 0;
+        }
+
+        /* Modal/popup that extends beyond slide (BAD) */
+        .modal-overlay {
+            position: absolute;
+            top: -50px; /* BAD: Negative positioning */
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background: rgba(0,0,0,0.5);
+            display: none; /* Hidden by default */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 900px;
+            height: 600px;
+            background: white;
+            padding: 30px;
+            overflow-y: auto; /* BAD: Modal with scroll */
+        }
+
+        /* Responsive image (BAD for fixed slides) */
+        .responsive-image {
+            width: 100%; /* BAD: Percentage width */
+            max-width: 100vw; /* BAD: Viewport units */
+            height: auto;
+        }
+
+        /* Dropdown with scroll (BAD) */
+        .dropdown-menu {
+            position: absolute;
+            top: 100px;
+            right: 50px;
+            width: 200px;
+            max-height: 300px;
+            overflow-y: auto; /* BAD: Dropdown with scroll */
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .dropdown-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Content that extends beyond bottom (BAD) */
+        .overflow-section {
+            position: absolute;
+            top: 600px;
+            left: 50px;
+            right: 50px;
+            height: 400px; /* BAD: Extends beyond 800px container */
+            background: rgba(255,0,0,0.1);
+            padding: 20px;
+        }
+
+        /* Carousel with horizontal scroll (BAD for slides) */
+        .carousel-container {
+            display: flex;
+            overflow-x: auto; /* BAD: Horizontal scrolling */
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .carousel-item {
+            flex: 0 0 300px;
+            height: 200px;
+            background: #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Header with responsive units -->
+        <header class="slide-header">
+            <h1 class="slide-title">Problematic Slide Design</h1>
+            <p style="font-size: 2vh;">This slide has multiple overflow issues</p>
+        </header>
+
+        <!-- Main content that overflows -->
+        <main class="slide-content">
+            <h2>Issues with this slide:</h2>
+            
+            <!-- Scrollable table -->
+            <div class="data-table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Issue Type</th>
+                            <th>Description</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Overflow</td><td>Content exceeds boundaries</td><td>Poor presentation</td></tr>
+                        <tr><td>Scrolling</td><td>Internal scroll areas</td><td>Hidden content</td></tr>
+                        <tr><td>Responsive</td><td>Uses viewport units</td><td>Inconsistent sizing</td></tr>
+                        <tr><td>Percentage</td><td>Relative dimensions</td><td>Unpredictable layout</td></tr>
+                        <tr><td>Overflow</td><td>Content exceeds boundaries</td><td>Poor presentation</td></tr>
+                        <tr><td>Scrolling</td><td>Internal scroll areas</td><td>Hidden content</td></tr>
+                        <tr><td>Responsive</td><td>Uses viewport units</td><td>Inconsistent sizing</td></tr>
+                        <tr><td>Percentage</td><td>Relative dimensions</td><td>Unpredictable layout</td></tr>
+                        <tr><td>Overflow</td><td>Content exceeds boundaries</td><td>Poor presentation</td></tr>
+                        <tr><td>Scrolling</td><td>Internal scroll areas</td><td>Hidden content</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Long code block causing horizontal scroll -->
+            <div class="code-block">
+                const veryLongLineOfCodeThatWillCauseHorizontalScrollingBecauseItExceedsTheContainerWidthAndDoesNotWrapProperly = "This is a problem for slide presentations where all content should be visible without scrolling";
+            </div>
+
+            <!-- Long list that overflows -->
+            <ul class="long-list">
+                <li>Item 1: Content that takes up space</li>
+                <li>Item 2: More content that adds to height</li>
+                <li>Item 3: Even more content</li>
+                <li>Item 4: This list is too long</li>
+                <li>Item 5: It will cause overflow</li>
+                <li>Item 6: Making the slide scrollable</li>
+                <li>Item 7: Which is bad for presentations</li>
+                <li>Item 8: All content should fit</li>
+                <li>Item 9: Within the slide boundaries</li>
+                <li>Item 10: Without any scrolling needed</li>
+            </ul>
+
+            <!-- Carousel with horizontal scroll -->
+            <div class="carousel-container">
+                <div class="carousel-item">Slide 1</div>
+                <div class="carousel-item">Slide 2</div>
+                <div class="carousel-item">Slide 3</div>
+                <div class="carousel-item">Slide 4</div>
+                <div class="carousel-item">Slide 5</div>
+                <div class="carousel-item">Slide 6</div>
+            </div>
+        </main>
+
+        <!-- Dropdown menu with scroll -->
+        <div class="dropdown-menu">
+            <div class="dropdown-item">Option 1</div>
+            <div class="dropdown-item">Option 2</div>
+            <div class="dropdown-item">Option 3</div>
+            <div class="dropdown-item">Option 4</div>
+            <div class="dropdown-item">Option 5</div>
+            <div class="dropdown-item">Option 6</div>
+            <div class="dropdown-item">Option 7</div>
+            <div class="dropdown-item">Option 8</div>
+            <div class="dropdown-item">Option 9</div>
+            <div class="dropdown-item">Option 10</div>
+            <div class="dropdown-item">Option 11</div>
+            <div class="dropdown-item">Option 12</div>
+        </div>
+
+        <!-- Content that extends beyond bottom -->
+        <div class="overflow-section">
+            <h3>This section extends beyond the slide</h3>
+            <p>The container is 800px tall, but this section starts at 600px and has 400px height.</p>
+            <p>This causes it to extend to 1000px, breaking the slide boundaries.</p>
+        </div>
+    </div>
+</body>
+</html>

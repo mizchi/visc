@@ -46,6 +46,20 @@ export type ViscConfig = {
   // Output directory for results (default: .visc/output)
   outputDir?: string;
 
+  // Save comparison images (default: true)
+  saveImages?: boolean;
+
+  // Save actual screenshots (default: false)
+  saveScreenshots?: boolean;
+
+  // Screenshot options
+  screenshotOptions?: {
+    fullPage?: boolean;
+    format?: 'png' | 'jpeg';
+    quality?: number; // 0-100 for JPEG
+    cacheDir?: string;
+  };
+
   // Viewports to test
   viewports: Record<string, ViewportConfig>;
 

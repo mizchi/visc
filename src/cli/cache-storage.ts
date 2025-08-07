@@ -27,6 +27,15 @@ export class CacheStorage {
       return path.join(this.cacheDir, testId, filename);
     }
   }
+  
+  getScreenshotPath(
+    testId: string,
+    viewport: Viewport,
+    type: "expected" | "actual" = "expected"
+  ): string {
+    const filename = `screenshot-${type}-${viewport.width}x${viewport.height}.png`;
+    return path.join(this.outputDir, testId, filename);
+  }
 
 
 

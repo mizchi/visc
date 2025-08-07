@@ -24,6 +24,16 @@
           "description": "Output directory for results (default: .visc/output)",
           "markdownDescription": "Output directory for results (default: .visc/output)"
         },
+        "saveImages": {
+          "type": "boolean",
+          "description": "Save comparison images (SVG) in output directory (default: true)",
+          "markdownDescription": "Save comparison images (SVG) in output directory (default: true)"
+        },
+        "saveScreenshots": {
+          "type": "boolean",
+          "description": "Save actual screenshots (PNG/JPEG) in output directory (default: false)",
+          "markdownDescription": "Save actual screenshots (PNG/JPEG) in output directory (default: false)"
+        },
         "viewports": {
           "type": "object",
           "additionalProperties": {

@@ -10,6 +10,7 @@ import type {
   VisualTreeAnalysis,
 } from "../types.js";
 import { generateRootSelector } from "./selector-generator.js";
+import { enhanceVisualNodeGroups } from "./overflow-grouper.js";
 
 export type {
   BoundingRect,
@@ -394,10 +395,22 @@ export async function analyzeLayout(
   const rawData = await page.evaluate(getExtractLayoutScript());
 
   // セマンティックグループに整理
-  const visualNodeGroups = organizeIntoVisualNodeGroups(rawData.elements, {
+  let visualNodeGroups = organizeIntoVisualNodeGroups(rawData.elements, {
     ...options,
     viewport: options.viewportOnly ? rawData.viewport : undefined,
   });
+
+  // Overflow要素を独立したグループとして検出・追加
+  visualNodeGroups = enhanceVisualNodeGroups(
+    rawData.elements,
+    visualNodeGroups,
+    {
+      includeFixed: true,
+      minScrollRatio: 0.1,
+      semanticGrouping: true,
+      nestingDepth: 2,
+    }
+  );
 
   // パターン検出
   const patterns = detectPatterns(rawData.elements);

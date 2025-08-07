@@ -108,6 +108,23 @@ export type {
   ThresholdConfig,
 } from "./types.js";
 
+// Overflow Detection APIs
+export {
+  detectScrollableElements,
+  detectFixedDimensionElements,
+  analyzeOverflowPatterns,
+  getOverflowRecommendations,
+  type ScrollableElement,
+  type FixedDimensionElement,
+} from "./analysis/overflow-detector.js";
+
+// Overflow Grouping APIs
+export {
+  createOverflowGroups,
+  enhanceVisualNodeGroups,
+  type OverflowGroupOptions,
+} from "./layout/overflow-grouper.js";
+
 // Threshold Evaluation APIs
 export {
   evaluateThresholds,
@@ -145,3 +162,14 @@ export {
   isSelectorLikelyUnique,
   generateRobustSelector,
 } from "./layout/selector-generator.js";
+
+// Slide Detection APIs
+export {
+  detectSlide,
+  validateSlide,
+  getSlideValidationRules,
+  getSlideOptimizationRecommendations,
+  type SlideConfiguration,
+  type SlideDetectionResult,
+  type SlideViolation,
+} from "./analysis/slide-detector.js";

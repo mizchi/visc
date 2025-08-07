@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200, height=800">
+    <title>Slide Presentation Pattern</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Slide container with fixed dimensions */
+        .slide-container {
+            width: 1200px;
+            height: 800px;
+            overflow: hidden; /* No scrolling allowed */
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header section */
+        .slide-header {
+            position: absolute;
+            top: 50px;
+            left: 80px;
+            right: 80px;
+            height: 100px;
+        }
+
+        .slide-title {
+            font-size: 64px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slide-subtitle {
+            font-size: 28px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.9);
+            margin-top: 10px;
+        }
+
+        /* Main content area */
+        .slide-content {
+            position: absolute;
+            top: 200px;
+            left: 80px;
+            right: 80px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Content sections */
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.95);
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bullet-list li {
+            font-size: 24px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .bullet-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 10px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Code block in slide */
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #e6fffa;
+            margin: 20px 0;
+            /* No overflow, content must fit */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Footer */
+        .slide-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 80px;
+            right: 80px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+        }
+
+        .page-number {
+            font-weight: 600;
+        }
+
+        .footer-logo {
+            width: 120px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Emphasis box */
+        .emphasis-box {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .emphasis-text {
+            font-size: 32px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Image placeholder */
+        .slide-image {
+            width: 400px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Data visualization */
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 200px;
+            margin: 30px 0;
+        }
+
+        .chart-bar {
+            width: 60px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .chart-bar:nth-child(1) { height: 80%; }
+        .chart-bar:nth-child(2) { height: 100%; }
+        .chart-bar:nth-child(3) { height: 60%; }
+        .chart-bar:nth-child(4) { height: 90%; }
+        .chart-bar:nth-child(5) { height: 70%; }
+
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Bad practice examples (commented out) */
+        /* 
+        .overflow-content {
+            height: 1000px; /* Would cause overflow */
+        /*}
+        
+        .responsive-element {
+            width: 100vw; /* Viewport units break fixed slides */
+            /*height: 50vh;
+        }
+        
+        .percentage-based {
+            width: 80%; /* Percentage can be inconsistent */
+            /*margin: 5%;
+        }
+        */
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide Header -->
+        <header class="slide-header">
+            <h1 class="slide-title">Introduction to Visual Testing</h1>
+            <p class="slide-subtitle">Ensuring Consistent User Experience</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="slide-content">
+            <!-- Key Points Section -->
+            <section class="content-section">
+                <h2 class="section-title">Key Benefits</h2>
+                <ul class="bullet-list">
+                    <li>Automated detection of visual regressions</li>
+                    <li>Cross-browser compatibility verification</li>
+                    <li>Responsive design validation</li>
+                    <li>Component-level testing capabilities</li>
+                </ul>
+            </section>
+
+            <!-- Code Example -->
+            <div class="code-block">const result = await detectSlide(analysis, {
+    width: 1200,
+    height: 800,
+    allowedOverflow: false
+});</div>
+
+            <!-- Emphasis Box -->
+            <div class="emphasis-box">
+                <p class="emphasis-text">Fixed dimensions ensure consistent presentation</p>
+            </div>
+
+            <!-- Chart Visualization -->
+            <div class="chart-container">
+                <div class="chart-bar">
+                    <span class="chart-label">Q1</span>
+                </div>
+                <div class="chart-bar">
+                    <span class="chart-label">Q2</span>
+                </div>
+                <div class="chart-bar">
+                    <span class="chart-label">Q3</span>
+                </div>
+                <div class="chart-bar">
+                    <span class="chart-label">Q4</span>
+                </div>
+                <div class="chart-bar">
+                    <span class="chart-label">Q5</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="slide-footer">
+            <div class="footer-logo">LOGO</div>
+            <div class="footer-text">Visual Testing Framework</div>
+            <div class="page-number">Slide 1 / 10</div>
+        </footer>
+    </div>
+</body>
+</html>
