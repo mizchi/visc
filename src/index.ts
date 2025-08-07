@@ -60,6 +60,11 @@ export {
 // Rendering APIs - 可視化
 export { renderLayoutToSvg } from "./renderer/layout-renderer.js";
 export { renderComparisonToSvg } from "./renderer/comparison-renderer.js";
+export { 
+  renderMovementToSvg,
+  generateMovementSummary,
+  type MovementRenderOptions 
+} from "./renderer/movement-renderer.js";
 
 // Workflow APIs - 高レベルワークフロー
 export {
@@ -114,3 +119,13 @@ export {
   type ThresholdFailure,
   type ThresholdWarning,
 } from "./threshold-evaluator.js";
+
+// Accessibility Matching APIs
+export {
+  matchGroupsByAccessibility,
+  findCorrespondingGroups,
+  generateAccessibilitySelector,
+  calculateMovementVector,
+  type AccessibilityMatch,
+  type GroupCorrespondence,
+} from "./layout/accessibility-matcher.js";

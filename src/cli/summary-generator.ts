@@ -11,6 +11,12 @@ import {
   calculatePositionDiff,
   calculateSizeDiff 
 } from '../semantic-detector.js';
+import { 
+  findCorrespondingGroups,
+  generateAccessibilitySelector,
+  type GroupCorrespondence 
+} from '../layout/accessibility-matcher.js';
+import { generateMovementSummary } from '../renderer/movement-renderer.js';
 
 interface SummaryData {
   timestamp: string;
@@ -37,6 +43,10 @@ interface ViewportSummary {
   semanticAnalysis?: {
     detection: ReturnType<typeof detectSemanticDifferences>;
     message: ReturnType<typeof generateSemanticMessage>;
+  };
+  movementAnalysis?: {
+    correspondences: GroupCorrespondence[];
+    summary: ReturnType<typeof generateMovementSummary>;
   };
 }
 
@@ -108,6 +118,19 @@ function prepareSummaryData(testResults: TestResult[]): SummaryData {
         semanticAnalysis = { detection, message };
       }
       
+      // Perform accessibility-based movement analysis
+      let movementAnalysis;
+      if (comp.currentLayout && comp.previousLayout) {
+        const correspondences = findCorrespondingGroups(
+          comp.previousLayout,
+          comp.currentLayout
+        );
+        if (correspondences.length > 0) {
+          const summary = generateMovementSummary(correspondences);
+          movementAnalysis = { correspondences, summary };
+        }
+      }
+      
       return {
         name: comp.viewport.name || `${comp.viewport.width}x${comp.viewport.height}`,
         width: comp.viewport.width,
@@ -115,7 +138,8 @@ function prepareSummaryData(testResults: TestResult[]): SummaryData {
         similarity: comp.comparison.similarity,
         status: comp.comparison.hasIssues ? 'failed' : 'passed',
         changes,
-        semanticAnalysis
+        semanticAnalysis,
+        movementAnalysis
       };
     });
 
@@ -403,6 +427,37 @@ function renderMarkdown(data: SummaryData): string {
             }
           }
           lines.push('');
+        }
+        
+        // Add movement analysis if available
+        if (viewport.movementAnalysis && viewport.movementAnalysis.summary.totalMovements > 0) {
+          lines.push('**要素の移動検出 (アクセシビリティベース):**');
+          lines.push('');
+          const { summary } = viewport.movementAnalysis;
+          lines.push(`- 移動した要素数: ${summary.totalMovements}`);
+          lines.push(`- 大幅な移動 (>50px): ${summary.significantMovements}`);
+          lines.push(`- 平均移動距離: ${summary.averageDistance}px`);
+          lines.push(`- 最大移動距離: ${summary.maxDistance}px`);
+          lines.push('');
+          
+          if (summary.movements.length > 0) {
+            lines.push('**主な移動要素:**');
+            lines.push('');
+            lines.push('| セレクタ | ラベル | 移動距離 | 方向 | アクセシビリティID |');
+            lines.push('|----------|--------|----------|------|-------------------|');
+            
+            // Show top 5 movements
+            summary.movements.slice(0, 5).forEach(movement => {
+              lines.push(
+                `| \`${movement.selector || 'N/A'}\` | ${movement.label} | ${movement.distance}px | ${movement.direction} | ${movement.accessibilityId || 'N/A'} |`
+              );
+            });
+            
+            if (summary.movements.length > 5) {
+              lines.push(`| ... and ${summary.movements.length - 5} more ... | | | | |`);
+            }
+            lines.push('');
+          }
         }
         
         if (viewport.changes.length > 0) {

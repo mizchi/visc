@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility-based Visual Group Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    /* ナビゲーションエリア */
+    .navigation {
+      background: #f0f0f0;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .navigation.shifted {
+      transform: translateX(50px);
+    }
+
+    .nav-list {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* メインコンテンツエリア */
+    .main-container {
+      display: flex;
+      gap: 30px;
+    }
+
+    .main-container.rearranged {
+      flex-direction: row-reverse;
+    }
+
+    /* サイドバー */
+    .sidebar {
+      width: 200px;
+      background: #e8e8e8;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .sidebar.moved {
+      transform: translateY(100px);
+    }
+
+    /* メインコンテンツ */
+    .main-content {
+      flex: 1;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .main-content.shifted {
+      transform: translate(30px, 20px);
+    }
+
+    /* カード要素 */
+    .card {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .card.highlight {
+      transform: scale(1.05) translateX(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* ボタングループ */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .button-group.reordered {
+      flex-direction: row-reverse;
+      transform: translateX(20px);
+    }
+
+    .button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* フォーム要素 */
+    .form-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+
+    .form-section.displaced {
+      transform: translate(-40px, 30px);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    /* モーダル */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
+    .modal.visible {
+      display: block;
+    }
+
+    .modal.offset {
+      transform: translate(-30%, -40%);
+    }
+
+    /* フッター */
+    .footer {
+      margin-top: 50px;
+      padding: 20px;
+      background: #333;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    .footer.lifted {
+      transform: translateY(-20px);
+    }
+  </style>
+</head>
+<body>
+  <!-- ナビゲーション with aria-label -->
+  <nav class="navigation" aria-label="メインナビゲーション" role="navigation">
+    <ul class="nav-list">
+      <li><a href="#home" aria-label="ホームへ移動">ホーム</a></li>
+      <li><a href="#about" aria-label="会社概要へ移動">会社概要</a></li>
+      <li><a href="#services" aria-label="サービス一覧へ移動">サービス</a></li>
+      <li><a href="#contact" aria-label="お問い合わせへ移動">お問い合わせ</a></li>
+    </ul>
+  </nav>
+
+  <!-- メインコンテナ -->
+  <div class="main-container">
+    <!-- サイドバー with aria-label -->
+    <aside class="sidebar" aria-label="サイドバーナビゲーション" role="complementary">
+      <h3 id="sidebar-title">カテゴリー</h3>
+      <nav aria-labelledby="sidebar-title">
+        <ul>
+          <li><a href="#tech">テクノロジー</a></li>
+          <li><a href="#design">デザイン</a></li>
+          <li><a href="#business">ビジネス</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- メインコンテンツ with aria-label -->
+    <main class="main-content" role="main" aria-label="メインコンテンツエリア">
+      <h1 id="page-title">アクセシビリティテストページ</h1>
+      
+      <!-- カードセクション with aria-labelledby -->
+      <section aria-labelledby="cards-heading">
+        <h2 id="cards-heading">製品カード</h2>
+        
+        <article class="card" aria-label="製品1の詳細">
+          <h3>製品 A</h3>
+          <p>高品質な製品Aの説明文です。</p>
+          <span aria-label="価格: 5000円">¥5,000</span>
+        </article>
+
+        <article class="card highlight" aria-label="製品2の詳細">
+          <h3>製品 B</h3>
+          <p>おすすめの製品Bの説明文です。</p>
+          <span aria-label="価格: 8000円">¥8,000</span>
+          <span role="status" aria-live="polite">人気商品</span>
+        </article>
+      </section>
+
+      <!-- ボタングループ with role -->
+      <div class="button-group" role="group" aria-label="アクションボタン">
+        <button class="button" aria-label="データを保存">保存</button>
+        <button class="button" aria-label="編集をキャンセル">キャンセル</button>
+        <button class="button" aria-label="削除を実行" aria-describedby="delete-warning">削除</button>
+        <span id="delete-warning" hidden>この操作は取り消せません</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- フォームセクション with aria attributes -->
+  <section class="form-section" aria-label="ユーザー登録フォーム">
+    <h2>登録フォーム</h2>
+    <form role="form" aria-describedby="form-description">
+      <p id="form-description">必須項目は*印がついています</p>
+      
+      <div class="form-group">
+        <label for="username">
+          ユーザー名 <span aria-label="必須項目">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="username" 
+          aria-required="true"
+          aria-describedby="username-help"
+        >
+        <small id="username-help">3文字以上で入力してください</small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">
+          メールアドレス <span aria-label="必須項目">*</span>
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          aria-required="true"
+          aria-invalid="false"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="role">役割</label>
+        <select id="role" aria-label="ユーザーの役割を選択">
+          <option value="">選択してください</option>
+          <option value="admin">管理者</option>
+          <option value="editor">編集者</option>
+          <option value="viewer">閲覧者</option>
+        </select>
+      </div>
+
+      <button type="submit" class="button" aria-label="フォームを送信">送信</button>
+    </form>
+  </section>
+
+  <!-- モーダルダイアログ with ARIA -->
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+    <h2 id="modal-title">確認ダイアログ</h2>
+    <p id="modal-desc">本当に削除しますか？この操作は取り消せません。</p>
+    <div role="group" aria-label="ダイアログアクション">
+      <button aria-label="削除を確認">はい</button>
+      <button aria-label="削除をキャンセル">いいえ</button>
+    </div>
+  </div>
+
+  <!-- フッター with role -->
+  <footer class="footer" role="contentinfo" aria-label="ページフッター">
+    <p>&copy; 2024 アクセシビリティテスト. All rights reserved.</p>
+    <nav aria-label="フッターナビゲーション">
+      <a href="#privacy" aria-label="プライバシーポリシー">プライバシー</a> |
+      <a href="#terms" aria-label="利用規約">利用規約</a> |
+      <a href="#sitemap" aria-label="サイトマップ">サイトマップ</a>
+    </nav>
+  </footer>
+
+  <script>
+    // 動的に要素を移動させるスクリプト
+    function applyShifts() {
+      const params = new URLSearchParams(window.location.search);
+      
+      if (params.get('nav-shift') === 'true') {
+        document.querySelector('.navigation').classList.add('shifted');
+      }
+      
+      if (params.get('sidebar-move') === 'true') {
+        document.querySelector('.sidebar').classList.add('moved');
+      }
+      
+      if (params.get('main-shift') === 'true') {
+        document.querySelector('.main-content').classList.add('shifted');
+      }
+      
+      if (params.get('form-displace') === 'true') {
+        document.querySelector('.form-section').classList.add('displaced');
+      }
+      
+      if (params.get('footer-lift') === 'true') {
+        document.querySelector('.footer').classList.add('lifted');
+      }
+      
+      if (params.get('button-reorder') === 'true') {
+        document.querySelector('.button-group').classList.add('reordered');
+      }
+      
+      if (params.get('container-rearrange') === 'true') {
+        document.querySelector('.main-container').classList.add('rearranged');
+      }
+      
+      if (params.get('modal-show') === 'true') {
+        document.querySelector('.modal').classList.add('visible');
+        if (params.get('modal-offset') === 'true') {
+          document.querySelector('.modal').classList.add('offset');
+        }
+      }
+    }
+    
+    applyShifts();
+  </script>
+</body>
+</html>
