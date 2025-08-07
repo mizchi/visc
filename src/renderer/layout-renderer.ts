@@ -58,6 +58,7 @@ function createTextElement(text: string, rect: { x: number; y: number; width: nu
 export interface RenderOptions {
   ignoreElements?: string[];
   showLabels?: boolean;
+  viewportMode?: 'viewportOnly' | 'full' | 'fullScroll'; // SVG rendering range
 }
 
 /**

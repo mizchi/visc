@@ -14,11 +14,12 @@ import type {
 } from "../layout/extractor.js";
 import { escapeXml } from "./layout-renderer.js";
 
-interface DiffRenderOptions {
+export interface DiffRenderOptions {
   showUnchanged?: boolean;
   showLabels?: boolean;
   highlightLevel?: "subtle" | "moderate" | "strong";
-  viewport?: { width: number; height: number };
+  viewport?: { width: number; height: number; scrollX?: number; scrollY?: number };
+  viewportMode?: 'viewportOnly' | 'full' | 'fullScroll'; // SVG rendering range
 }
 
 /**

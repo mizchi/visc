@@ -12,6 +12,7 @@ export interface MovementRenderOptions {
   showSelectors?: boolean;
   highlightThreshold?: number; // Highlight movements above this distance
   colorScheme?: 'default' | 'severity' | 'direction';
+  viewportMode?: 'viewportOnly' | 'full' | 'fullScroll'; // SVG rendering range
 }
 
 /**
@@ -19,7 +20,7 @@ export interface MovementRenderOptions {
  */
 export function renderMovementToSvg(
   correspondences: GroupCorrespondence[],
-  viewport: { width: number; height: number },
+  viewport: { width: number; height: number; scrollX?: number; scrollY?: number },
   options: MovementRenderOptions = {}
 ): string {
   const {
@@ -27,13 +28,21 @@ export function renderMovementToSvg(
     showDistances = true,
     showSelectors = false,
     highlightThreshold = 50,
-    colorScheme = 'severity'
+    colorScheme = 'severity',
+    viewportMode = 'viewportOnly'
   } = options;
 
+  // Calculate SVG dimensions based on viewport mode
+  const svgDimensions = calculateSvgDimensions(correspondences, viewport, viewportMode);
   const svgElements: string[] = [];
   
-  // SVG header
-  svgElements.push(`<svg width="${viewport.width}" height="${viewport.height}" xmlns="http://www.w3.org/2000/svg">`);
+  // SVG header with calculated dimensions
+  svgElements.push(`<svg width="${svgDimensions.width}" height="${svgDimensions.height}" xmlns="http://www.w3.org/2000/svg">`);
+  
+  // Add viewBox if needed for full or fullScroll modes
+  if (viewportMode !== 'viewportOnly') {
+    svgElements.push(`  <!-- viewBox for ${viewportMode} mode -->`);
+  }
   
   // Add definitions for arrow markers and filters
   svgElements.push(`
@@ -64,7 +73,7 @@ export function renderMovementToSvg(
   `);
 
   // Background layer for context
-  svgElements.push(`<rect width="${viewport.width}" height="${viewport.height}" fill="white" opacity="0.95"/>`);
+  svgElements.push(`<rect width="${svgDimensions.width}" height="${svgDimensions.height}" fill="white" opacity="0.95"/>`);
 
   // Render each correspondence
   correspondences.forEach((correspondence, index) => {
@@ -190,11 +199,79 @@ export function renderMovementToSvg(
   });
   
   // Add legend
-  svgElements.push(renderLegend(viewport, colorScheme));
+  svgElements.push(renderLegend(svgDimensions, colorScheme));
   
   svgElements.push(`</svg>`);
   
   return svgElements.join('\n');
+}
+
+/**
+ * Calculate SVG dimensions based on viewport mode
+ */
+function calculateSvgDimensions(
+  correspondences: GroupCorrespondence[],
+  viewport: { width: number; height: number; scrollX?: number; scrollY?: number },
+  mode: 'viewportOnly' | 'full' | 'fullScroll'
+): { width: number; height: number } {
+  switch (mode) {
+    case 'viewportOnly':
+      // Use only the viewport dimensions
+      return { width: viewport.width, height: viewport.height };
+      
+    case 'full':
+      // Calculate the bounding box of all elements
+      if (correspondences.length === 0) {
+        return { width: viewport.width, height: viewport.height };
+      }
+      
+      let maxX = viewport.width;
+      let maxY = viewport.height;
+      
+      correspondences.forEach(corr => {
+        // Check both original and new positions
+        const x1 = corr.group1.bounds.x + corr.group1.bounds.width;
+        const y1 = corr.group1.bounds.y + corr.group1.bounds.height;
+        const x2 = corr.group2.bounds.x + corr.group2.bounds.width;
+        const y2 = corr.group2.bounds.y + corr.group2.bounds.height;
+        
+        maxX = Math.max(maxX, x1, x2);
+        maxY = Math.max(maxY, y1, y2);
+      });
+      
+      // Add some padding
+      return { 
+        width: Math.ceil(maxX + 50), 
+        height: Math.ceil(maxY + 50) 
+      };
+      
+    case 'fullScroll':
+      // Include scroll dimensions if available
+      const scrollWidth = viewport.scrollX || 0;
+      const scrollHeight = viewport.scrollY || 0;
+      
+      // Calculate max dimensions including scroll
+      let maxScrollX = viewport.width + scrollWidth;
+      let maxScrollY = viewport.height + scrollHeight;
+      
+      correspondences.forEach(corr => {
+        const x1 = corr.group1.bounds.x + corr.group1.bounds.width;
+        const y1 = corr.group1.bounds.y + corr.group1.bounds.height;
+        const x2 = corr.group2.bounds.x + corr.group2.bounds.width;
+        const y2 = corr.group2.bounds.y + corr.group2.bounds.height;
+        
+        maxScrollX = Math.max(maxScrollX, x1, x2);
+        maxScrollY = Math.max(maxScrollY, y1, y2);
+      });
+      
+      return {
+        width: Math.ceil(maxScrollX + 50),
+        height: Math.ceil(maxScrollY + 50)
+      };
+      
+    default:
+      return { width: viewport.width, height: viewport.height };
+  }
 }
 
 /**
