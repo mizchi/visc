@@ -328,7 +328,8 @@ program
         parallelConcurrency,
         interval,
         retry: options.retry ? parseInt(options.retry, 10) : 0,
-        tui: options.tui
+        tui: options.tui,
+        calibrate: options.calibrate
       });
     } catch (error) {
       console.error(chalk.red("Check failed:"), error);

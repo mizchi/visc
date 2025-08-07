@@ -5,6 +5,7 @@
 import {
   // Types
   type VisualTreeAnalysis,
+  type ValidationResult,
   
   // Core functions
   fetchRawLayoutData,
