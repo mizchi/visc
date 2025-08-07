@@ -235,10 +235,24 @@ export function compareVisualNodeGroups(
   };
   
   // 類似度を計算（グループレベル）
+  // ベースラインと現在の両方のグループ総数を考慮
+  const maxGroups = Math.max(baselineMap.size, currentMap.size);
   const totalChanges = summary.totalChanged + summary.totalAdded + summary.totalRemoved;
-  const similarity = summary.totalGroups > 0
-    ? Math.max(0, (1 - totalChanges / summary.totalGroups)) * 100
+  
+  // 変更の影響を重み付けして計算
+  // - modified: 0.5の重み（部分的な変更）
+  // - added/removed: 1.0の重み（完全な変更）
+  const weightedChanges = (summary.totalChanged * 0.5) + summary.totalAdded + summary.totalRemoved;
+  
+  const similarity = maxGroups > 0
+    ? Math.max(0, Math.min(100, (1 - weightedChanges / maxGroups) * 100))
     : 100;
+  
+  // Debug logging
+  if (process.env.DEBUG_SIMILARITY) {
+    console.log(`[Visual Comparator] maxGroups: ${maxGroups}, weightedChanges: ${weightedChanges}, similarity: ${similarity}`);
+    console.log(`[Visual Comparator] summary:`, summary);
+  }
   
   return {
     differences,

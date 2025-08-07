@@ -206,7 +206,11 @@ export async function* compareLayouts(
 
         // Evaluate against thresholds if configured
         let thresholdEvaluation;
-        let hasIssues = comparison.similarity < opts.similarityThreshold;
+        // Convert similarity threshold to percentage if needed (0-1 to 0-100)
+        const similarityThresholdPercent = opts.similarityThreshold <= 1 
+          ? opts.similarityThreshold * 100 
+          : opts.similarityThreshold;
+        let hasIssues = comparison.similarity < similarityThresholdPercent;
         
         if (opts.thresholdConfig) {
           // Convert comparison differences to VisualDifference format for evaluation
@@ -432,7 +436,7 @@ export async function captureLayout(
   try {
     const rawData = await fetchRawLayoutData(page);
     const layout = await extractLayoutTree(rawData, {
-      viewportOnly: true,
+      viewportOnly: !options.captureFullPage, // Use fullPage option to control viewport
       groupingThreshold: 20,
       importanceThreshold: 10,
     });
@@ -526,7 +530,7 @@ export async function captureLayoutMatrix(
     for (const [key, rawData] of rawDataMap.entries()) {
       try {
         const layout = await extractLayoutTree(rawData, {
-          viewportOnly: true,
+          viewportOnly: !options.captureFullPage, // Use fullPage option to control viewport
           groupingThreshold: 20,
           importanceThreshold: 10,
         });
