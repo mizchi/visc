@@ -87,8 +87,8 @@ async function basicExample() {
     
     // 7. Validate against calibrated settings
     const validation = validateWithSettings(layout, layout2, calibration.settings);
-    console.log(`Valid: ${validation.isValid}`);
-    console.log(`Violations: ${validation.violations.length}`);
+    console.log(`Valid: ${validation.passed}`);
+    console.log(`Violations: ${validation.violations?.length || 0}`);
     
     // 8. Visual node group analysis
     if (layout.visualNodeGroups) {

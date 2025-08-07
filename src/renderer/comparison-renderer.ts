@@ -284,8 +284,8 @@ function renderElementDiff(
 
   // 変更がある場合、矢印で移動を表示
   if (diff && (diff.type === "position" || diff.type === "both")) {
-    const oldX = element.rect.x - (diff.changes.rect?.x || 0);
-    const oldY = element.rect.y - (diff.changes.rect?.y || 0);
+    const oldX = element.rect.x - (diff.changes?.rect?.x || 0);
+    const oldY = element.rect.y - (diff.changes?.rect?.y || 0);
     elements.push(`
       <line x1="${oldX + element.rect.width / 2}" y1="${
       oldY + element.rect.height / 2

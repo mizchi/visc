@@ -17,3 +17,5 @@ output/
 .visc-test/
 tests/fixtures/test-output/
 tests/fixtures/matrix-output/
+.lsmcp/cache
+.serena

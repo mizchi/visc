@@ -124,19 +124,52 @@ export function calibrateComparisonSettings(
   }[strictness];
 
   // 統計に基づいて設定を生成（最小値を保証）
+  // 変動が全くない場合は0を使用
+  const minPosition = variances.maxPositionDrift === 0 ? 0 : 2;
+  const minSize = variances.maxSizeVariance === 0 ? 0 : 5;
+  
+  // 最大位置変動を確実に許容（切り上げ）
+  const basePositionTolerance = Math.ceil(variances.maxPositionDrift);
+  
   const settings: ComparisonSettings = {
     positionTolerance: Math.max(
-      2, // 最小値は2px
+      minPosition,
       Math.ceil(variances.maxPositionDrift * strictnessMultiplier)
     ),
     sizeTolerance: Math.max(
-      5, // 最小値は5%
+      minSize,
       Math.ceil(variances.maxSizeVariance * 100 * strictnessMultiplier)
     ),
-    textSimilarityThreshold: Math.max(
-      0.8,
-      1 - variances.avgTextDissimilarity * strictnessMultiplier
-    ),
+    textSimilarityThreshold: (() => {
+      // 動的要素が多い場合は閾値を下げる
+      const hasRemovedElements = variances.elementChanges.removed > 0;
+      const hasAddedElements = variances.elementChanges.added > 0;
+      const hasDynamicElements = hasRemovedElements || hasAddedElements;
+      
+      if (hasDynamicElements) {
+        // 動的要素がある場合は低い閾値
+        const penalty = Math.max(6, (variances.elementChanges.removed + variances.elementChanges.added) * 5);
+        return Math.min(94, 100 - penalty);
+      }
+      
+      // 完全に安定している場合（動的要素もない）
+      if (variances.avgTextDissimilarity === 0 && variances.maxPositionDrift === 0 && 
+          variances.maxSizeVariance === 0 && !hasDynamicElements) {
+        return strictness === 'high' ? 100 : 95;
+      }
+      
+      // 通常の計算
+      const base = (1 - variances.avgTextDissimilarity) * 100;
+      
+      // strictnessに応じて調整
+      if (strictness === 'high') {
+        return Math.max(95, base);
+      } else if (strictness === 'low') {
+        return Math.min(94, base);
+      }
+      
+      return Math.min(100, Math.max(90, base));
+    })(),
     importanceThreshold: 10, // デフォルト値
     ignoreElements: ignoreSelectors.length > 0 ? ignoreSelectors : undefined
   };
@@ -191,11 +224,8 @@ export function validateWithSettings(
     let elementScore = 100;
 
     // 位置の検証
-    if (diff.type === "position" || diff.type === "both") {
-      const positionDrift = Math.hypot(
-        diff.changes.rect?.x || 0,
-        diff.changes.rect?.y || 0
-      );
+    if (diff.type === "modified" || diff.type === "position" || diff.type === "both") {
+      const positionDrift = diff.positionDiff || 0;
       if (positionDrift > settings.positionTolerance) {
         violations.push({
           elementId: diff.elementId,
@@ -210,23 +240,22 @@ export function validateWithSettings(
     }
 
     // サイズの検証
-    if (diff.type === "size" || diff.type === "both") {
-      const widthDiff = Math.abs(diff.changes.rect?.width || 0);
-      const heightDiff = Math.abs(diff.changes.rect?.height || 0);
-      const oldWidth = diff.oldValue.rect?.width || 1;
-      const oldHeight = diff.oldValue.rect?.height || 1;
-      const widthChangeRatio = widthDiff / oldWidth;
-      const heightChangeRatio = heightDiff / oldHeight;
-      const maxSizeChange = Math.max(widthChangeRatio, heightChangeRatio) * 100;
+    if (diff.type === "modified" || diff.type === "size" || diff.type === "both") {
+      const sizeDrift = diff.sizeDiff || 0;
+      // サイズ変更を%に変換
+      const oldWidth = diff.oldValue?.rect?.width || 100;
+      const oldHeight = diff.oldValue?.rect?.height || 100;
+      const avgOldSize = (oldWidth + oldHeight) / 2;
+      const sizeChangePercent = (sizeDrift / avgOldSize) * 100;
 
-      if (maxSizeChange > settings.sizeTolerance) {
+      if (sizeChangePercent > settings.sizeTolerance) {
         violations.push({
           elementId: diff.elementId,
           type: "size",
           expected: settings.sizeTolerance,
-          actual: maxSizeChange,
+          actual: sizeChangePercent,
           severity:
-            maxSizeChange > settings.sizeTolerance * 2 ? "high" : "medium",
+            sizeChangePercent > settings.sizeTolerance * 2 ? "high" : "medium",
         });
         elementScore -= 25;
       }
@@ -235,12 +264,62 @@ export function validateWithSettings(
     totalScore += elementScore;
   });
 
-  const similarity = checkedElements > 0 ? totalScore / checkedElements : 100;
+  // 削除された要素をviolationとして追加
+  if (comparison.removedElements.length > 0) {
+    comparison.removedElements.forEach((elementId) => {
+      violations.push({
+        elementId,
+        type: 'removed',
+        expected: 0,
+        actual: 1,
+        severity: 'high',
+      });
+    });
+  }
+
+  // similarityはcomparisonの結果を使用
+  const similarity = comparison.similarity;
+
+  // 最大の差分を計算
+  let maxPositionDiff = 0;
+  let maxSizeDiff = 0;
+  comparison.differences.forEach((diff) => {
+    if (diff.positionDiff && diff.positionDiff > maxPositionDiff) {
+      maxPositionDiff = diff.positionDiff;
+    }
+    if (diff.sizeDiff) {
+      const oldWidth = diff.oldValue?.rect?.width || 100;
+      const oldHeight = diff.oldValue?.rect?.height || 100;
+      const avgOldSize = (oldWidth + oldHeight) / 2;
+      const sizeChangePercent = (diff.sizeDiff / avgOldSize) * 100;
+      if (sizeChangePercent > maxSizeDiff) {
+        maxSizeDiff = sizeChangePercent;
+      }
+    }
+  });
+
+  // passedとreasonの判定
+  let passed = true;
+  let reason: ValidationResult['reason'] = 'passed';
+  
+  if (similarity < settings.textSimilarityThreshold) {
+    passed = false;
+    reason = 'similarity_threshold';
+  } else if (maxPositionDiff > settings.positionTolerance) {
+    passed = false;
+    reason = 'position_change';
+  } else if (maxSizeDiff > settings.sizeTolerance) {
+    passed = false;
+    reason = 'size_change';
+  }
 
   return {
-    isValid: violations.filter((v) => v.severity === "high").length === 0,
+    passed,
+    reason,
     similarity,
     violations,
+    maxPositionDiff: maxPositionDiff > 0 ? maxPositionDiff : undefined,
+    maxSizeDiff: maxSizeDiff > 0 ? maxSizeDiff : undefined,
     summary: {
       totalElements: comparison.summary.totalElements,
       changedElements: comparison.summary.totalChanged,
@@ -276,8 +355,8 @@ function analyzeSampleVariances(
   // 全てのサンプルペアを比較
   for (let i = 0; i < samples.length - 1; i++) {
     for (let j = i + 1; j < samples.length; j++) {
-      // 生の要素レベルでの比較（互換性のため）
-      elementComparisons.push(compareLayoutTrees(samples[i], samples[j]));
+      // 生の要素レベルでの比較（より厳密なthresholdで変動を検出）
+      elementComparisons.push(compareLayoutTrees(samples[i], samples[j], { threshold: 0.1 }));
 
       // セマンティックグループレベルでの比較
       if (samples[i].visualNodeGroups && samples[j].visualNodeGroups) {
@@ -363,6 +442,8 @@ function analyzeSampleVariances(
   let totalAdded = 0;
   let totalRemoved = 0;
   let totalModified = 0;
+  let totalTextChanges = 0;
+  let textChangeCount = 0;
 
   elementComparisons.forEach((comp) => {
     totalAdded += comp.addedElements.length;
@@ -370,27 +451,46 @@ function analyzeSampleVariances(
     totalModified += comp.differences.length;
     
     comp.differences.forEach((diff) => {
-      if (diff.type === "position" || diff.type === "both") {
-        const drift = Math.hypot(
-          diff.changes.rect?.x || 0,
-          diff.changes.rect?.y || 0
-        );
-        maxPosDrift = Math.max(maxPosDrift, drift);
-        totalPosDrift += drift;
+      // positionDiffが設定されていればそれを使用
+      if (diff.positionDiff && diff.positionDiff > 0) {
+        maxPosDrift = Math.max(maxPosDrift, diff.positionDiff);
+        totalPosDrift += diff.positionDiff;
         driftCount++;
+      } else if (diff.type === "position" || diff.type === "both" || diff.type === "modified") {
+        const drift = Math.hypot(
+          diff.changes?.rect?.x || 0,
+          diff.changes?.rect?.y || 0
+        );
+        if (drift > 0) {
+          maxPosDrift = Math.max(maxPosDrift, drift);
+          totalPosDrift += drift;
+          driftCount++;
+        }
       }
 
-      if (diff.type === "size" || diff.type === "both") {
-        const widthChange = diff.changes.rect?.width || 0;
-        const heightChange = diff.changes.rect?.height || 0;
-        const oldWidth = diff.oldValue.rect?.width || 1;
-        const oldHeight = diff.oldValue.rect?.height || 1;
+      if (diff.sizeDiff && diff.sizeDiff > 0) {
+        const sizeVar = diff.sizeDiff / 100; // パーセンテージに変換
+        maxSizeVar = Math.max(maxSizeVar, sizeVar);
+        totalSizeVar += sizeVar;
+      } else if (diff.type === "size" || diff.type === "both" || diff.type === "modified") {
+        const widthChange = diff.changes?.rect?.width || 0;
+        const heightChange = diff.changes?.rect?.height || 0;
+        const oldWidth = diff.oldValue?.rect?.width || 1;
+        const oldHeight = diff.oldValue?.rect?.height || 1;
         const sizeVar = Math.max(
           Math.abs(widthChange / oldWidth),
           Math.abs(heightChange / oldHeight)
         );
         maxSizeVar = Math.max(maxSizeVar, sizeVar);
         totalSizeVar += sizeVar;
+      }
+      
+      // テキスト変更の検出
+      if (diff.type === "text" || diff.type === "modified") {
+        if (diff.oldValue?.text !== diff.newValue?.text) {
+          totalTextChanges += 1;
+          textChangeCount++;
+        }
       }
     });
   });
@@ -400,12 +500,14 @@ function analyzeSampleVariances(
     avgPositionDrift: driftCount > 0 ? totalPosDrift / driftCount : 0,
     maxSizeVariance: maxSizeVar,
     avgSizeVariance: driftCount > 0 ? totalSizeVar / driftCount : 0,
-    avgTextDissimilarity: 0.1,
-    stableElementRatio: 0.9,
+    avgTextDissimilarity: textChangeCount > 0 ? totalTextChanges / textChangeCount : 0,
+    stableElementRatio: elementComparisons.length > 0 
+      ? 1 - (totalModified + totalAdded + totalRemoved) / (elementComparisons.length * 10)
+      : 1,
     elementChanges: {
-      added: Math.round(totalAdded / elementComparisons.length),
-      removed: Math.round(totalRemoved / elementComparisons.length),
-      modified: Math.round(totalModified / elementComparisons.length),
+      added: totalAdded > 0 ? Math.max(1, Math.round(totalAdded / elementComparisons.length)) : 0,
+      removed: totalRemoved > 0 ? Math.max(1, Math.round(totalRemoved / elementComparisons.length)) : 0,
+      modified: totalModified > 0 ? Math.max(1, Math.round(totalModified / elementComparisons.length)) : 0,
     },
   };
 }
@@ -414,22 +516,38 @@ function calculateConfidence(
   sampleCount: number,
   variances: SampleVariances
 ): number {
-  // サンプル数による基本信頼度
-  const sampleConfidence = Math.min(100, sampleCount * 10);
+  // 変動が全くない場合は100
+  if (variances.maxPositionDrift === 0 && variances.maxSizeVariance === 0 && variances.avgTextDissimilarity === 0) {
+    return 100;
+  }
+  
+  // サンプル数による基本信頼度（3サンプル以上で満点）
+  const sampleConfidence = Math.min(100, sampleCount * 33.4);
 
   // 分散の安定性による調整
-  const varianceStability =
-    100 - (variances.avgPositionDrift * 2 + variances.avgSizeVariance * 100);
+  // 変動が全くない場合は100、変動があるほど下がる
+  const positionPenalty = Math.min(50, variances.avgPositionDrift * 5);
+  const sizePenalty = Math.min(50, variances.avgSizeVariance * 500);
+  const varianceStability = 100 - positionPenalty - sizePenalty;
 
-  return Math.max(0, Math.min(100, (sampleConfidence + varianceStability) / 2));
+  // 安定要素の比率も考慮
+  const stabilityBonus = variances.stableElementRatio * 20;
+
+  return Math.max(
+    0, 
+    Math.min(100, (sampleConfidence + varianceStability + stabilityBonus) / 2.2)
+  );
 }
 
 // 型定義
 
 export interface ValidationResult {
-  isValid: boolean;
+  passed: boolean;
+  reason?: 'passed' | 'similarity_threshold' | 'position_change' | 'size_change';
   similarity: number;
   violations: Violation[];
+  maxPositionDiff?: number;
+  maxSizeDiff?: number;
   summary: {
     totalElements: number;
     changedElements: number;
@@ -440,7 +558,7 @@ export interface ValidationResult {
 
 interface Violation {
   elementId: string;
-  type: "position" | "size" | "text" | "visibility";
+  type: "position" | "size" | "text" | "visibility" | "removed";
   expected: number;
   actual: number;
   severity: "low" | "medium" | "high";

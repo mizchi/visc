@@ -6,8 +6,9 @@ import type { VisualTreeAnalysis, VisualNode } from './extractor.js';
 
 export interface VisualDifference {
   elementId: string;
-  type: 'position' | 'size' | 'both' | 'text' | 'visibility';
-  changes: {
+  type: 'position' | 'size' | 'both' | 'text' | 'visibility' | 'added' | 'removed' | 'modified';
+  element?: VisualNode;
+  changes?: {
     rect?: {
       x?: number;
       y?: number;
@@ -17,8 +18,10 @@ export interface VisualDifference {
     text?: string;
     visibility?: boolean;
   };
-  oldValue: VisualNode;
-  newValue: VisualNode;
+  oldValue?: VisualNode;
+  newValue?: VisualNode;
+  positionDiff?: number;
+  sizeDiff?: number;
 }
 
 export interface VisualComparisonResult {
@@ -37,13 +40,20 @@ export interface VisualComparisonResult {
 /**
  * 要素のIDを生成
  */
-export function generateElementId(element: VisualNode): string {
+export function generateElementId(element: VisualNode, index?: number): string {
   // tagName, className, id の組み合わせで一意のIDを生成
   const tag = element.tagName || 'unknown';
   const className = element.className || 'no-class';
   const id = element.id || 'no-id';
-  const index = element.rect ? `${Math.round(element.rect.x)}-${Math.round(element.rect.y)}` : '0-0';
-  return `${tag}-${className}-${id}-${index}`;
+  
+  // インデックスが提供されている場合はそれを使用
+  // 同じ位置順序の要素は同じIDになる
+  if (index !== undefined) {
+    return `${tag}-${className}-${id}-${index}`;
+  }
+  
+  // それ以外の場合は基本情報のみ
+  return `${tag}-${className}-${id}`;
 }
 
 /**
@@ -92,8 +102,8 @@ function shouldIgnoreElement(element: VisualNode, ignoreSelectors: string[]): bo
  */
 function createElementMap(elements: VisualNode[]): Map<string, VisualNode> {
   const map = new Map<string, VisualNode>();
-  elements.forEach(element => {
-    const id = generateElementId(element);
+  elements.forEach((element, index) => {
+    const id = generateElementId(element, index);
     map.set(id, element);
   });
   return map;
@@ -106,27 +116,39 @@ function detectRectChanges(
   rect1: VisualNode['rect'],
   rect2: VisualNode['rect'],
   threshold: number = 2
-): { hasChange: boolean; type: 'position' | 'size' | 'both' | null; changes: any } {
+): { hasChange: boolean; type: 'position' | 'size' | 'both' | null; changes: any; positionDiff: number; sizeDiff: number } {
   const changes: any = {};
   let hasPositionChange = false;
   let hasSizeChange = false;
+  let positionDiff = 0;
+  let sizeDiff = 0;
 
-  if (Math.abs(rect1.x - rect2.x) > threshold) {
+  const xDiff = Math.abs(rect1.x - rect2.x);
+  const yDiff = Math.abs(rect1.y - rect2.y);
+  const widthDiff = Math.abs(rect1.width - rect2.width);
+  const heightDiff = Math.abs(rect1.height - rect2.height);
+
+  if (xDiff > threshold) {
     changes.x = rect2.x - rect1.x;
     hasPositionChange = true;
   }
-  if (Math.abs(rect1.y - rect2.y) > threshold) {
+  if (yDiff > threshold) {
     changes.y = rect2.y - rect1.y;
     hasPositionChange = true;
   }
-  if (Math.abs(rect1.width - rect2.width) > threshold) {
+  if (widthDiff > threshold) {
     changes.width = rect2.width - rect1.width;
     hasSizeChange = true;
   }
-  if (Math.abs(rect1.height - rect2.height) > threshold) {
+  if (heightDiff > threshold) {
     changes.height = rect2.height - rect1.height;
     hasSizeChange = true;
   }
+
+  // 位置の変化量を計算（ユークリッド距離）
+  positionDiff = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+  // サイズの変化量を計算
+  sizeDiff = Math.sqrt(widthDiff * widthDiff + heightDiff * heightDiff);
 
   const hasChange = hasPositionChange || hasSizeChange;
   let type: 'position' | 'size' | 'both' | null = null;
@@ -134,7 +156,7 @@ function detectRectChanges(
   else if (hasPositionChange) type = 'position';
   else if (hasSizeChange) type = 'size';
 
-  return { hasChange, type, changes };
+  return { hasChange, type, changes, positionDiff, sizeDiff };
 }
 
 /**
@@ -173,6 +195,12 @@ export function compareLayoutTrees(
     if (!currentElement) {
       // 要素が削除された
       removedElements.push(elementId);
+      differences.push({
+        elementId,
+        type: 'removed',
+        element: baselineElement,
+        oldValue: baselineElement
+      });
     } else {
       // 無視要素はスキップ
       if (shouldIgnoreElement(currentElement, ignoreElements)) {
@@ -186,16 +214,19 @@ export function compareLayoutTrees(
       if (rectResult.hasChange || textChanged) {
         const diff: VisualDifference = {
           elementId,
-          type: textChanged && rectResult.type ? 'both' : (rectResult.type || 'text'),
+          type: rectResult.hasChange || textChanged ? 'modified' : 'text',
+          element: currentElement,
           changes: {},
           oldValue: baselineElement,
-          newValue: currentElement
+          newValue: currentElement,
+          positionDiff: rectResult.positionDiff,
+          sizeDiff: rectResult.sizeDiff
         };
         
-        if (rectResult.hasChange) {
+        if (rectResult.hasChange && diff.changes) {
           diff.changes.rect = rectResult.changes;
         }
-        if (textChanged) {
+        if (textChanged && diff.changes) {
           diff.changes.text = currentElement.text;
         }
         
@@ -210,6 +241,12 @@ export function compareLayoutTrees(
       // 無視要素はスキップ
       if (!shouldIgnoreElement(currentElement, ignoreElements)) {
         addedElements.push(elementId);
+        differences.push({
+          elementId,
+          type: 'added',
+          element: currentElement,
+          newValue: currentElement
+        });
       }
     }
   });
@@ -223,9 +260,22 @@ export function compareLayoutTrees(
   };
 
   // 類似度を計算
-  const totalChanges = summary.totalChanged + summary.totalAdded + summary.totalRemoved;
-  const similarity = summary.totalElements > 0
-    ? Math.max(0, (1 - totalChanges / summary.totalElements)) * 100
+  // 差分の程度に基づいて重みを計算
+  let totalImpact = 0;
+  differences.forEach(diff => {
+    if (diff.type === 'added' || diff.type === 'removed') {
+      totalImpact += 1.0; // 要素の追加・削除は重い
+    } else if (diff.type === 'modified') {
+      // 変更の程度に応じて重みを調整
+      const positionImpact = diff.positionDiff ? Math.min(diff.positionDiff / 200, 0.3) : 0;
+      const sizeImpact = diff.sizeDiff ? Math.min(diff.sizeDiff / 200, 0.3) : 0;
+      totalImpact += Math.max(positionImpact, sizeImpact, 0.05);
+    }
+  });
+  
+  const maxElements = Math.max(baselineMap.size, currentMap.size);
+  const similarity = maxElements > 0
+    ? Math.max(0, 100 - (totalImpact / maxElements) * 100)
     : 100;
 
   return {

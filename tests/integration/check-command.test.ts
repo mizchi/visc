@@ -26,7 +26,8 @@ describe("Check Command Integration Tests", { timeout: 30000 }, () => {
     );
 
     // First run - create baseline
-    await check(configPath, {
+    await check({
+      config: configPath,
       update: true,
     });
 
@@ -89,7 +90,7 @@ describe("Check Command Integration Tests", { timeout: 30000 }, () => {
 
     try {
       // Run check
-      await check(configPath, { update: true });
+      await check({ config: configPath, update: true });
 
       // Verify it ran without errors
       const cacheExists = await fs

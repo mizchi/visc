@@ -129,8 +129,8 @@ export function detectFlakiness(
   } = {}
 ): FlakinessAnalysis {
   const {
-    positionThreshold = 5,
-    sizeThreshold = 5,
+    positionThreshold = 1,  // より厳密なデフォルト値で小さな変化も検出
+    sizeThreshold = 1,      // より厳密なデフォルト値で小さな変化も検出
     flakinessThreshold = 0.2,
     ignoreText = false,
     ignoreStyle = false,
@@ -354,17 +354,21 @@ function updateTrackerWithDifference(
   index1: number,
   index2: number
 ): void {
+  // oldValueまたはelementから要素情報を取得
+  const element = diff.oldValue || diff.element;
+  if (!element) return;
+  
   // 新しいVisualDifferenceインターフェースではelementIdを使用
   const tracker = Array.from(trackers.values()).find(
     (t) =>
-      t.identifier.tagName === diff.oldValue.tagName &&
-      t.identifier.id === diff.oldValue.id &&
-      t.identifier.className === diff.oldValue.className
+      t.identifier.tagName === element.tagName &&
+      t.identifier.id === element.id &&
+      t.identifier.className === element.className
   );
   if (!tracker) return;
 
   // 変更の詳細を記録
-  if (diff.changes.rect) {
+  if (diff.changes?.rect && diff.oldValue?.rect) {
     if (diff.changes.rect.x !== undefined) {
       recordProperty(tracker, "x", diff.oldValue.rect.x);
       recordProperty(tracker, "x", diff.oldValue.rect.x + diff.changes.rect.x);
@@ -390,9 +394,9 @@ function updateTrackerWithDifference(
       );
     }
   }
-  if (diff.changes.text !== undefined) {
-    recordProperty(tracker, "text", diff.oldValue.text);
-    recordProperty(tracker, "text", diff.changes.text);
+  if (diff.changes?.text !== undefined && diff.oldValue) {
+    recordProperty(tracker, "text", diff.oldValue?.text || "");
+    recordProperty(tracker, "text", diff.changes.text || "");
   }
 }
 

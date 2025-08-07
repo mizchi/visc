@@ -55,8 +55,10 @@
     "access": "public"
   },
   "devDependencies": {
+    "@mizchi/lsmcp": "^0.9.3",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
+    "@typescript/native-preview": "7.0.0-dev.20250807.1",
     "@vitest/ui": "^1.6.1",
     "happy-dom": "^18.0.1",
     "jsdom": "^23.2.0",
