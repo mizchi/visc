@@ -280,6 +280,9 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
 function generateSelector(node: any): string | undefined {
   if (!node) return undefined;
   
+  // Check if node is an object (not a string)
+  if (typeof node !== 'object') return undefined;
+  
   // For VisualNode
   if ('tagName' in node || 'id' in node || 'className' in node) {
     const parts: string[] = [];
