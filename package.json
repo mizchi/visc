@@ -1,6 +1,6 @@
 {
   "name": "@mizchi/visc",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Visual regression testing CLI tool",
   "repository": {
     "type": "git",
