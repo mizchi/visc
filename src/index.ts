@@ -129,3 +129,11 @@ export {
   type AccessibilityMatch,
   type GroupCorrespondence,
 } from "./layout/accessibility-matcher.js";
+
+// Element Diff Analysis APIs
+export {
+  analyzeElementDiff,
+  analyzeGroupDiffs,
+  generateElementDiffSummary,
+  type ElementDiff,
+} from "./analysis/element-diff-analyzer.js";

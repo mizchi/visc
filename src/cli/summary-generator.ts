@@ -17,6 +17,11 @@ import {
   type GroupCorrespondence 
 } from '../layout/accessibility-matcher.js';
 import { generateMovementSummary } from '../renderer/movement-renderer.js';
+import {
+  analyzeGroupDiffs,
+  generateElementDiffSummary,
+  type ElementDiff
+} from '../analysis/element-diff-analyzer.js';
 
 interface SummaryData {
   timestamp: string;
@@ -48,6 +53,7 @@ interface ViewportSummary {
     correspondences: GroupCorrespondence[];
     summary: ReturnType<typeof generateMovementSummary>;
   };
+  elementDiffs?: ElementDiff[];
 }
 
 interface ChangeDescription {
@@ -131,6 +137,32 @@ function prepareSummaryData(testResults: TestResult[]): SummaryData {
         }
       }
       
+      // Perform element-level diff analysis
+      let elementDiffs: ElementDiff[] = [];
+      if (comp.currentLayout && comp.previousLayout) {
+        // Analyze differences for each group correspondence
+        if (movementAnalysis && movementAnalysis.correspondences) {
+          movementAnalysis.correspondences.forEach(corr => {
+            const groupDiffs = analyzeGroupDiffs(corr.group1, corr.group2);
+            elementDiffs.push(...groupDiffs);
+          });
+        }
+        
+        // Also analyze added/removed groups
+        if (comp.comparison.raw.addedGroups) {
+          comp.comparison.raw.addedGroups.forEach((group: VisualNodeGroup) => {
+            const groupDiffs = analyzeGroupDiffs(undefined, group);
+            elementDiffs.push(...groupDiffs);
+          });
+        }
+        if (comp.comparison.raw.removedGroups) {
+          comp.comparison.raw.removedGroups.forEach((group: VisualNodeGroup) => {
+            const groupDiffs = analyzeGroupDiffs(group, undefined);
+            elementDiffs.push(...groupDiffs);
+          });
+        }
+      }
+      
       return {
         name: comp.viewport.name || `${comp.viewport.width}x${comp.viewport.height}`,
         width: comp.viewport.width,
@@ -139,7 +171,8 @@ function prepareSummaryData(testResults: TestResult[]): SummaryData {
         status: comp.comparison.hasIssues ? 'failed' : 'passed',
         changes,
         semanticAnalysis,
-        movementAnalysis
+        movementAnalysis,
+        elementDiffs: elementDiffs.length > 0 ? elementDiffs : undefined
       };
     });
 
@@ -457,6 +490,15 @@ function renderMarkdown(data: SummaryData): string {
               lines.push(`| ... and ${summary.movements.length - 5} more ... | | | | |`);
             }
             lines.push('');
+          }
+        }
+        
+        // Add element-level differences
+        if (viewport.elementDiffs && viewport.elementDiffs.length > 0) {
+          const elementDiffSummary = generateElementDiffSummary(viewport.elementDiffs);
+          if (elementDiffSummary) {
+            lines.push('');
+            lines.push(elementDiffSummary);
           }
         }
         
