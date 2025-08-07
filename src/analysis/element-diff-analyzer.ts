@@ -126,18 +126,16 @@ export function analyzeElementDiff(
       }
     }
     
-    // Analyze semantic changes
+    // Analyze semantic changes (always include)
     const semanticInfo = analyzeSemanticChanges(previousNode, currentNode);
-    if (semanticInfo) {
-      diff.semanticInfo = semanticInfo;
-      if (semanticInfo.previousText !== semanticInfo.currentText) {
-        diff.changeType = 'content';
-        diff.severity = 'medium';
-      }
+    diff.semanticInfo = semanticInfo;
+    if (semanticInfo.previousText !== semanticInfo.currentText) {
+      diff.changeType = 'content';
+      diff.severity = 'medium';
     }
     
     // Analyze CSS class changes
-    const classChanges = analyzeClassChanges(previousNode, currentNode);
+    const classChanges = analyzeClassChanges(previousNode, currentNode, true);
     if (classChanges) {
       diff.classChanges = classChanges;
       if (classChanges.added.length > 0 || classChanges.removed.length > 0) {
@@ -261,22 +259,29 @@ function analyzeStyleChanges(prev: VisualNode, curr: VisualNode): Array<{
     const prevStyle = (prev as any).computedStyle || {};
     const currStyle = (curr as any).computedStyle || {};
     
-    // Important style properties to track
+    // Important style properties to track (using camelCase for JS properties)
     const importantProps = [
-      'display', 'position', 'flex-direction', 'justify-content', 'align-items',
-      'grid-template-columns', 'grid-template-rows', 'float', 'clear',
-      'margin', 'padding', 'background-color', 'color', 'font-size',
-      'font-weight', 'text-align', 'line-height', 'z-index', 'opacity',
-      'transform', 'transition', 'overflow', 'visibility'
+      'display', 'position', 'flexDirection', 'justifyContent', 'alignItems',
+      'gridTemplateColumns', 'gridTemplateRows', 'float', 'clear',
+      'margin', 'padding', 'backgroundColor', 'color', 'fontSize',
+      'fontWeight', 'textAlign', 'lineHeight', 'zIndex', 'opacity',
+      'transform', 'transition', 'overflow', 'visibility', 'gap',
+      'width', 'height', 'boxShadow', 'borderRadius', 'flexWrap'
     ];
     
-    for (const prop of importantProps) {
-      if (prevStyle[prop] !== currStyle[prop] && currStyle[prop] !== undefined) {
-        changes.push({
-          property: prop,
-          previousValue: prevStyle[prop] || 'none',
-          currentValue: currStyle[prop],
-        });
+    // Check all properties from both prev and curr styles
+    const allProps = new Set([...Object.keys(prevStyle), ...Object.keys(currStyle)]);
+    
+    for (const prop of allProps) {
+      // Check if this is an important property
+      if (importantProps.includes(prop) || prevStyle[prop] !== currStyle[prop]) {
+        if (prevStyle[prop] !== currStyle[prop]) {
+          changes.push({
+            property: prop,
+            previousValue: prevStyle[prop] !== undefined ? prevStyle[prop] : 'none',
+            currentValue: currStyle[prop] !== undefined ? currStyle[prop] : 'none',
+          });
+        }
       }
     }
   }
@@ -297,17 +302,11 @@ function analyzeStyleChanges(prev: VisualNode, curr: VisualNode): Array<{
  * Analyze semantic changes
  */
 function analyzeSemanticChanges(prev: VisualNode, curr: VisualNode) {
-  const hasChanges = 
-    prev.text !== curr.text ||
-    prev.ariaLabel !== curr.ariaLabel ||
-    prev.role !== curr.role;
-  
-  if (!hasChanges) return null;
-  
   // Try to identify component name from classes
   let componentName: string | undefined;
-  if (curr.className && typeof curr.className === 'string') {
-    const classes = curr.className.split(' ');
+  const className = curr.className || prev.className;
+  if (className && typeof className === 'string') {
+    const classes = className.split(' ');
     // Look for BEM-style component names
     const componentClass = classes.find(c => 
       /^[A-Z]/.test(c) || // PascalCase
@@ -315,6 +314,7 @@ function analyzeSemanticChanges(prev: VisualNode, curr: VisualNode) {
       c.includes('--')    // BEM modifier
     );
     if (componentClass) {
+      // Extract base component name from BEM notation
       componentName = componentClass.split('__')[0].split('--')[0];
     }
   }
@@ -333,9 +333,7 @@ function analyzeSemanticChanges(prev: VisualNode, curr: VisualNode) {
 /**
  * Analyze CSS class changes
  */
-function analyzeClassChanges(prev: VisualNode, curr: VisualNode) {
-  if (!prev.className && !curr.className) return null;
-  
+function analyzeClassChanges(prev: VisualNode, curr: VisualNode, returnNullIfUnchanged = false) {
   const prevClasses = typeof prev.className === 'string' 
     ? prev.className.split(' ').filter(c => c)
     : [];
@@ -350,7 +348,13 @@ function analyzeClassChanges(prev: VisualNode, curr: VisualNode) {
   const removed = prevClasses.filter(c => !currSet.has(c));
   const unchanged = currClasses.filter(c => prevSet.has(c));
   
-  if (added.length === 0 && removed.length === 0) return null;
+  // Option to return null if no changes
+  if (returnNullIfUnchanged && added.length === 0 && removed.length === 0) {
+    // Check if they are the same
+    if (prevClasses.length === currClasses.length && prevClasses.length === unchanged.length) {
+      return null;
+    }
+  }
   
   return { added, removed, unchanged };
 }
