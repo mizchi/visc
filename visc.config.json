@@ -15,6 +15,12 @@
       "deviceScaleFactor": 1
     }
   },
+  "screenshotOptions": {
+    "fullPage": false,
+    "format": "jpeg",
+    "quality": 70,
+    "cacheDir": ".visc/cache/screenshots"
+  },
   "captureOptions": {
     "waitUntil": "networkidle2",
     "waitForLCP": true,

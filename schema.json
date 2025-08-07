@@ -68,6 +68,37 @@
           "description": "Viewport configurations keyed by viewport ID",
           "markdownDescription": "Viewport configurations keyed by viewport ID"
         },
+        "screenshotOptions": {
+          "type": "object",
+          "properties": {
+            "fullPage": {
+              "type": "boolean",
+              "description": "Capture full page or viewport only (default: false)",
+              "markdownDescription": "Capture full page or viewport only (default: false)"
+            },
+            "format": {
+              "type": "string",
+              "enum": ["png", "jpeg"],
+              "description": "Screenshot format (default: jpeg)",
+              "markdownDescription": "Screenshot format (default: jpeg)"
+            },
+            "quality": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "JPEG quality 0-100 (default: 70)",
+              "markdownDescription": "JPEG quality 0-100 (default: 70)"
+            },
+            "cacheDir": {
+              "type": "string",
+              "description": "Screenshot cache directory (default: .visc/cache/screenshots)",
+              "markdownDescription": "Screenshot cache directory (default: .visc/cache/screenshots)"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Screenshot options for Playwright",
+          "markdownDescription": "Screenshot options for Playwright"
+        },
         "testCases": {
           "type": "array",
           "items": {
