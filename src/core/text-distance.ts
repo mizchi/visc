@@ -1,11 +1,41 @@
 /**
  * Text distance and similarity calculation functions
  * Pure functions for calculating text-based distances
+ * 
+ * This module provides string comparison algorithms for:
+ * - Text content changes (button labels, headings)
+ * - Identifier matching (classes, IDs, data attributes)
+ * - Fuzzy string matching for element correlation
+ * - Natural language content comparison
+ * 
+ * Choose the right algorithm:
+ * - Exact changes: Levenshtein (edit operations)
+ * - Typos/similar text: Jaro-Winkler (transpositions)
+ * - Token-based: Dice coefficient (word similarity)
+ * - Fuzzy matching: Combined metrics
  */
 
 /**
  * Calculate Levenshtein distance (edit distance) between two strings
  * Returns the minimum number of single-character edits required
+ * 
+ * Use cases:
+ * - Detecting typos in UI text
+ * - Measuring text content changes
+ * - Finding closest matching strings
+ * - Spell-check suggestions
+ * 
+ * Operations counted:
+ * - Insertion: "cat" → "cats" (distance: 1)
+ * - Deletion: "cats" → "cat" (distance: 1)
+ * - Substitution: "cat" → "bat" (distance: 1)
+ * 
+ * Complexity: O(m×n) where m,n are string lengths
+ * 
+ * @example
+ * // Typo detection
+ * levenshteinDistance("button", "buton") // 1 (one deletion)
+ * levenshteinDistance("receive", "recieve") // 2 (transposition)
  */
 export function levenshteinDistance(str1: string, str2: string): number {
   const len1 = str1.length;
@@ -41,6 +71,20 @@ export function levenshteinDistance(str1: string, str2: string): number {
 
 /**
  * Calculate normalized Levenshtein distance (0 to 1)
+ * 
+ * Use cases:
+ * - Threshold-based text similarity checks
+ * - Percentage of change calculations
+ * - Cross-length string comparison
+ * 
+ * Range: [0, 1]
+ * - 0: Identical strings
+ * - 0.2: Minor changes (usually acceptable)
+ * - 0.5: Significant changes
+ * - 1.0: Completely different
+ * 
+ * @example
+ * normalizedLevenshteinDistance("hello", "helo") // 0.2 (80% similar)
  */
 export function normalizedLevenshteinDistance(
   str1: string,
@@ -73,6 +117,22 @@ export function hammingDistance(str1: string, str2: string): number {
 /**
  * Calculate Jaro similarity between two strings
  * Returns a value between 0 (no similarity) and 1 (identical)
+ * 
+ * Use cases:
+ * - Short string matching (names, labels)
+ * - Typo-tolerant matching
+ * - Record linkage/deduplication
+ * 
+ * Characteristics:
+ * - Considers character transpositions
+ * - Better for short strings than Levenshtein
+ * - Position-sensitive (order matters)
+ * 
+ * Matching window: floor(max(len1, len2) / 2) - 1
+ * 
+ * @example
+ * jaroSimilarity("martha", "marhta") // ≈ 0.944 (transposition)
+ * jaroSimilarity("DIXON", "DICKSONX") // ≈ 0.767
  */
 export function jaroSimilarity(str1: string, str2: string): number {
   if (str1 === str2) return 1;
@@ -124,6 +184,26 @@ export function jaroSimilarity(str1: string, str2: string): number {
 /**
  * Calculate Jaro-Winkler similarity
  * Enhanced version of Jaro that gives more weight to strings with common prefixes
+ * 
+ * Use cases:
+ * - Name matching (people, companies)
+ * - URL/path similarity
+ * - Identifier matching (where prefixes matter)
+ * - Autocomplete suggestions
+ * 
+ * Prefix bonus:
+ * - Up to 4 characters of common prefix
+ * - Default scaling factor: 0.1
+ * - Boosts score for matching beginnings
+ * 
+ * Best for:
+ * - Strings that commonly differ at the end
+ * - Hierarchical identifiers
+ * - Human names (firstname.lastname)
+ * 
+ * @example
+ * jaroWinklerSimilarity("prefixed", "prefix") // Higher than plain Jaro
+ * jaroWinklerSimilarity("className", "classNames") // ≈ 0.97
  */
 export function jaroWinklerSimilarity(
   str1: string,
@@ -147,7 +227,27 @@ export function jaroWinklerSimilarity(
 
 /**
  * Calculate Dice coefficient (Sørensen–Dice coefficient)
- * Based on bigram similarity
+ * Based on bigram (2-character) similarity
+ * 
+ * Use cases:
+ * - Fuzzy string matching
+ * - Similar word detection
+ * - OCR error correction
+ * - DNA sequence comparison
+ * 
+ * How it works:
+ * - Splits strings into bigrams ("hello" → ["he", "el", "ll", "lo"])
+ * - Compares bigram sets
+ * - Formula: 2 × |intersection| / (|set1| + |set2|)
+ * 
+ * Characteristics:
+ * - Order-independent within bigrams
+ * - Good for detecting rearranged text
+ * - Less sensitive to string length differences
+ * 
+ * @example
+ * diceCoefficient("night", "nacht") // ≈ 0.25
+ * diceCoefficient("hello world", "world hello") // Different bigrams
  */
 export function diceCoefficient(str1: string, str2: string): number {
   if (str1 === str2) return 1;
@@ -171,6 +271,22 @@ export function diceCoefficient(str1: string, str2: string): number {
 
 /**
  * Calculate longest common subsequence length
+ * 
+ * Use cases:
+ * - Diff algorithms (like git diff)
+ * - DNA/protein sequence alignment
+ * - Plagiarism detection
+ * - Version comparison
+ * 
+ * Note: Characters don't need to be consecutive
+ * "ABCDGH" vs "AEDFHR" → LCS = "ADH" (length: 3)
+ * 
+ * Complexity: O(m×n) time and space
+ * 
+ * @example
+ * // Code similarity
+ * longestCommonSubsequence("function foo()", "function bar()") 
+ * // Returns length of "function ()"
  */
 export function longestCommonSubsequence(str1: string, str2: string): number {
   const m = str1.length;
@@ -194,6 +310,22 @@ export function longestCommonSubsequence(str1: string, str2: string): number {
 
 /**
  * Calculate longest common substring length
+ * 
+ * Use cases:
+ * - Finding shared code segments
+ * - URL path similarity
+ * - Detecting copy-pasted content
+ * - File path comparison
+ * 
+ * Note: Characters must be consecutive (unlike subsequence)
+ * "ABABC" vs "BABCA" → Longest substring = "BABC" (length: 4)
+ * 
+ * @example
+ * // Shared URL paths
+ * longestCommonSubstring(
+ *   "/api/v1/users/123",
+ *   "/api/v1/users/456"
+ * ) // 14 ("/api/v1/users/")
  */
 export function longestCommonSubstring(str1: string, str2: string): number {
   const m = str1.length;
@@ -217,6 +349,24 @@ export function longestCommonSubstring(str1: string, str2: string): number {
 
 /**
  * Calculate token-based similarity (for word-level comparison)
+ * 
+ * Use cases:
+ * - Comparing sentences/paragraphs
+ * - Class name similarity (space-separated)
+ * - Tag/keyword matching
+ * - Search relevance scoring
+ * 
+ * Formula: |intersection| / |union| (Jaccard for tokens)
+ * 
+ * Characteristics:
+ * - Order-independent
+ * - Good for multi-word content
+ * - Customizable separator (space, comma, etc.)
+ * 
+ * @example
+ * // Class name changes
+ * tokenSimilarity("btn btn-primary large", "btn-primary btn disabled")
+ * // Common tokens: "btn", "btn-primary" → 0.5
  */
 export function tokenSimilarity(
   text1: string,
@@ -238,6 +388,29 @@ export function tokenSimilarity(
 /**
  * Calculate fuzzy string matching score
  * Combines multiple distance metrics for robust comparison
+ * 
+ * Use cases:
+ * - Element matching across page versions
+ * - Smart search/autocomplete
+ * - Duplicate detection with variations
+ * - Content correlation in A/B tests
+ * 
+ * Default weight distribution:
+ * - 30% Levenshtein (exact character changes)
+ * - 30% Jaro-Winkler (transpositions, prefixes)
+ * - 20% Dice (bigram similarity)
+ * - 20% Token (word-level matching)
+ * 
+ * Customization guidelines:
+ * - Short strings: Increase Jaro weight
+ * - Long text: Increase token weight
+ * - Typo detection: Increase Levenshtein
+ * - Rearranged text: Increase Dice
+ * 
+ * @example
+ * // Adaptive matching
+ * fuzzyStringMatch("Sign In", "Sign in") // ≈ 0.95
+ * fuzzyStringMatch("Login", "Sign In") // ≈ 0.3
  */
 export function fuzzyStringMatch(
   str1: string,
@@ -268,6 +441,30 @@ export function fuzzyStringMatch(
 
 /**
  * Check if strings are similar based on threshold
+ * 
+ * Use cases:
+ * - Binary decision for element matching
+ * - Validation of text changes
+ * - Deduplication filters
+ * - Content verification
+ * 
+ * Recommended thresholds by use case:
+ * - Exact match required: 0.95+
+ * - Same element detection: 0.8-0.9
+ * - Similar content: 0.6-0.8
+ * - Related content: 0.4-0.6
+ * 
+ * Metric selection:
+ * - 'levenshtein': Character-level precision
+ * - 'jaro': Short strings, typos
+ * - 'dice': Rearranged content
+ * - 'fuzzy': Balanced comparison (default)
+ * 
+ * @example
+ * // Element text validation
+ * if (areStringsSimilar(oldText, newText, 0.9)) {
+ *   console.log('Minor text change detected');
+ * }
  */
 export function areStringsSimilar(
   str1: string,

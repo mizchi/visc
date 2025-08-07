@@ -1,11 +1,47 @@
 /**
  * Set operations and distance calculations
- * Pure functions for set-based calculations (e.g., accessibility attributes)
+ * Pure functions for set-based calculations
+ * 
+ * This module provides set-theoretic operations for:
+ * - Accessibility attribute comparison (ARIA roles, labels)
+ * - CSS class list comparison
+ * - Feature/capability matching
+ * - Tag/category similarity
+ * 
+ * Algorithm selection guide:
+ * - Jaccard: Standard set similarity (size-sensitive)
+ * - Dice: Emphasizes common elements (good for small sets)
+ * - Overlap: Subset relationships (one contains the other)
+ * - Cosine: Weighted/frequency-based comparison
  */
 
 /**
- * Calculate Jaccard similarity coefficient between two sets
+ * Calculate Jaccard similarity coefficient (Jaccard index)
  * Returns a value between 0 (no overlap) and 1 (identical sets)
+ * 
+ * Use cases:
+ * - CSS class similarity between elements
+ * - Feature set comparison
+ * - Tag/category matching
+ * - Accessibility attribute comparison
+ * 
+ * Formula: |A ∩ B| / |A ∪ B|
+ * 
+ * Characteristics:
+ * - Symmetric: J(A,B) = J(B,A)
+ * - Size-sensitive (penalizes different set sizes)
+ * - Empty set handling: J(∅,∅) = 1
+ * 
+ * Thresholds:
+ * - > 0.8: Very similar
+ * - 0.5-0.8: Moderately similar
+ * - < 0.3: Different
+ * 
+ * @example
+ * // CSS class comparison
+ * const classes1 = new Set(['btn', 'btn-primary', 'large']);
+ * const classes2 = new Set(['btn', 'btn-primary', 'disabled']);
+ * jaccardSimilarity(classes1, classes2) // 0.5 (2 common, 4 total)
  */
 export function jaccardSimilarity<T>(set1: Set<T>, set2: Set<T>): number {
   if (set1.size === 0 && set2.size === 0) return 1;
@@ -97,7 +133,27 @@ export function areDisjoint<T>(set1: Set<T>, set2: Set<T>): boolean {
 }
 
 /**
- * Calculate Dice coefficient for sets
+ * Calculate Dice coefficient for sets (Sørensen–Dice index)
+ * 
+ * Use cases:
+ * - Small set comparison (< 10 elements)
+ * - Presence/absence features
+ * - Binary attribute matching
+ * - Quick similarity checks
+ * 
+ * Formula: 2 × |A ∩ B| / (|A| + |B|)
+ * 
+ * Characteristics:
+ * - Emphasizes shared elements more than Jaccard
+ * - Less sensitive to set size differences
+ * - Range: [0, 1] where 1 = identical
+ * - Better for imbalanced sets
+ * 
+ * @example
+ * // Feature comparison
+ * const features1 = new Set(['responsive', 'dark-mode']);
+ * const features2 = new Set(['responsive', 'dark-mode', 'rtl']);
+ * diceSimilarity(features1, features2) // 0.8 (emphasizes common)
  */
 export function diceSimilarity<T>(set1: Set<T>, set2: Set<T>): number {
   if (set1.size === 0 && set2.size === 0) return 1;
@@ -108,6 +164,25 @@ export function diceSimilarity<T>(set1: Set<T>, set2: Set<T>): number {
 
 /**
  * Calculate overlap coefficient (Szymkiewicz–Simpson coefficient)
+ * 
+ * Use cases:
+ * - Detecting subset relationships
+ * - Finding if one element contains another's features
+ * - Hierarchical classification matching
+ * - Permission/capability checking
+ * 
+ * Formula: |A ∩ B| / min(|A|, |B|)
+ * 
+ * Characteristics:
+ * - Returns 1 if smaller set is subset of larger
+ * - Not symmetric for different-sized sets
+ * - Good for "contains all features of" checks
+ * 
+ * @example
+ * // Check if element has all required attributes
+ * const required = new Set(['role', 'aria-label']);
+ * const actual = new Set(['role', 'aria-label', 'tabindex', 'id']);
+ * overlapCoefficient(required, actual) // 1.0 (all required present)
  */
 export function overlapCoefficient<T>(set1: Set<T>, set2: Set<T>): number {
   if (set1.size === 0 || set2.size === 0) return 0;
@@ -118,6 +193,25 @@ export function overlapCoefficient<T>(set1: Set<T>, set2: Set<T>): number {
 
 /**
  * Calculate cosine similarity for sets (treating as binary vectors)
+ * 
+ * Use cases:
+ * - Document/content similarity
+ * - Feature vector comparison
+ * - Normalized set similarity
+ * - High-dimensional sparse data
+ * 
+ * Formula: |A ∩ B| / √(|A| × |B|)
+ * 
+ * Characteristics:
+ * - Geometric interpretation (angle between vectors)
+ * - Size-normalized (good for different magnitudes)
+ * - Range: [0, 1] where 1 = same direction
+ * 
+ * @example
+ * // Tag similarity
+ * const tags1 = new Set(['javascript', 'react', 'frontend']);
+ * const tags2 = new Set(['javascript', 'vue', 'frontend']);
+ * cosineSimilarity(tags1, tags2) // ≈ 0.67
  */
 export function cosineSimilarity<T>(set1: Set<T>, set2: Set<T>): number {
   if (set1.size === 0 || set2.size === 0) return 0;
@@ -139,6 +233,20 @@ export function objectToSet(obj: Record<string, any>): Set<string> {
 
 /**
  * Calculate similarity between two objects based on their properties
+ * 
+ * Use cases:
+ * - Configuration comparison
+ * - Style object similarity
+ * - Data attribute matching
+ * - Settings validation
+ * 
+ * Converts objects to key=value sets for comparison
+ * 
+ * @example
+ * // Style comparison
+ * const style1 = { color: 'red', size: 'large' };
+ * const style2 = { color: 'red', size: 'medium', weight: 'bold' };
+ * objectSimilarity(style1, style2, 'jaccard') // 0.25 (1 match, 4 total)
  */
 export function objectSimilarity(
   obj1: Record<string, any>,
@@ -159,8 +267,22 @@ export function objectSimilarity(
 }
 
 /**
- * Calculate weighted set similarity
- * Each element has an associated weight
+ * Calculate weighted set similarity (cosine similarity with weights)
+ * Each element has an associated weight/frequency
+ * 
+ * Use cases:
+ * - Term frequency comparison (TF-IDF)
+ * - Weighted feature matching
+ * - Importance-based similarity
+ * - Score/confidence-based matching
+ * 
+ * Formula: Σ(w1ᵢ × w2ᵢ) / (√Σw1ᵢ² × √Σw2ᵢ²)
+ * 
+ * @example
+ * // Weighted feature importance
+ * const features1 = new Map([['responsive', 1.0], ['a11y', 0.8]]);
+ * const features2 = new Map([['responsive', 0.9], ['a11y', 1.0]]);
+ * weightedSetSimilarity(features1, features2) // High similarity
  */
 export function weightedSetSimilarity<T>(
   set1: Map<T, number>,
@@ -189,6 +311,30 @@ export function weightedSetSimilarity<T>(
 /**
  * Calculate accessibility attributes similarity
  * Specialized function for comparing ARIA attributes
+ * 
+ * Use cases:
+ * - Finding corresponding elements across versions
+ * - Accessibility compliance checking
+ * - ARIA attribute migration validation
+ * - Screen reader compatibility testing
+ * 
+ * Important attributes (weighted 2x):
+ * - role: Defines element purpose
+ * - aria-label: Primary accessible name
+ * - aria-labelledby: Label references
+ * - aria-describedby: Description references
+ * 
+ * Returns detailed breakdown:
+ * - similarity: Weighted score [0, 1]
+ * - matchedAttributes: Common attributes with same values
+ * - uniqueToFirst/Second: Differential attributes
+ * 
+ * @example
+ * // Button accessibility comparison
+ * const btn1 = { role: 'button', 'aria-label': 'Submit' };
+ * const btn2 = { role: 'button', 'aria-label': 'Submit', 'aria-disabled': 'true' };
+ * const result = accessibilitySimilarity(btn1, btn2);
+ * // result.similarity > 0.8 (core attributes match)
  */
 export function accessibilitySimilarity(
   attrs1: Record<string, string>,
@@ -248,6 +394,24 @@ export function accessibilitySimilarity(
 
 /**
  * Calculate set edit distance (minimum operations to transform one set to another)
+ * 
+ * Use cases:
+ * - Measuring UI state changes
+ * - Class list modifications
+ * - Feature flag changes
+ * - Permission updates
+ * 
+ * Operations counted:
+ * - Add element: cost = 1 per element
+ * - Remove element: cost = 1 per element
+ * 
+ * Total cost = |A − B| + |B − A|
+ * 
+ * @example
+ * // Class list changes
+ * const before = new Set(['btn', 'primary', 'large']);
+ * const after = new Set(['btn', 'secondary', 'large', 'disabled']);
+ * setEditDistance(before, after) // 3 (remove 'primary', add 'secondary', 'disabled')
  */
 export function setEditDistance<T>(set1: Set<T>, set2: Set<T>): number {
   const toAdd = setDifference(set2, set1).size;    // Elements to add
@@ -257,6 +421,24 @@ export function setEditDistance<T>(set1: Set<T>, set2: Set<T>): number {
 
 /**
  * Calculate normalized set edit distance
+ * 
+ * Use cases:
+ * - Percentage of change calculations
+ * - Threshold-based change detection
+ * - Cross-size set comparison
+ * - Change impact assessment
+ * 
+ * Formula: editDistance / (2 × max(|A|, |B|))
+ * Range: [0, 1]
+ * - 0: Identical sets
+ * - 0.5: Half the elements changed
+ * - 1.0: Completely disjoint sets
+ * 
+ * @example
+ * // Measure percentage of features changed
+ * const v1 = new Set(['feat1', 'feat2', 'feat3']);
+ * const v2 = new Set(['feat2', 'feat3', 'feat4']);
+ * normalizedSetEditDistance(v1, v2) // 0.33 (33% change)
  */
 export function normalizedSetEditDistance<T>(set1: Set<T>, set2: Set<T>): number {
   const maxSize = Math.max(set1.size, set2.size);
