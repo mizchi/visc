@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
   compareLayoutTrees,
-  validateWithSettings,
 } from '../../src/layout/comparator';
-import type { VisualTreeAnalysis, VisualNode, ComparisonSettings } from '../../src/types';
+import {
+  validateWithSettings,
+  type ComparisonSettings,
+} from '../../src/layout/calibrator';
+import type { VisualTreeAnalysis, VisualNode } from '../../src/types';
 
 describe('comparator', () => {
   describe('compareLayoutTrees', () => {
@@ -109,7 +112,10 @@ describe('comparator', () => {
       expect(result.similarity).toBeLessThan(100);
       expect(result.differences).toHaveLength(1);
       expect(result.differences[0].type).toBe('modified');
-      const textChange = result.differences[0].changes?.find(c => c.property === 'text');
+      const diff = result.differences[0];
+      const textChange = diff.type === 'text' || diff.type === 'modified' 
+        ? { property: 'text', before: diff.oldValue?.text, after: diff.newValue?.text }
+        : undefined;
       expect(textChange).toBeDefined();
       expect(textChange?.before).toBe('Hello');
       expect(textChange?.after).toBe('World');
@@ -161,11 +167,11 @@ describe('comparator', () => {
       const settings: ComparisonSettings = {
         positionTolerance: 5,
         sizeTolerance: 10,
-        similarityThreshold: 90,
-        ignoreText: false,
+        textSimilarityThreshold: 90,
+        importanceThreshold: 0.5,
       };
 
-      const result = validateWithSettings(layout1, layout2, settings);
+      const result = validateWithSettings(layout2, layout1, settings);
       
       expect(result.passed).toBe(true);
       expect(result.reason).toBe('passed');
@@ -186,11 +192,11 @@ describe('comparator', () => {
       const settings: ComparisonSettings = {
         positionTolerance: 5,
         sizeTolerance: 10,
-        similarityThreshold: 90,
-        ignoreText: false,
+        textSimilarityThreshold: 90,
+        importanceThreshold: 0.5,
       };
 
-      const result = validateWithSettings(layout1, layout2, settings);
+      const result = validateWithSettings(layout2, layout1, settings);
       
       expect(result.passed).toBe(false);
       expect(result.reason).toBe('similarity_threshold');
@@ -208,11 +214,11 @@ describe('comparator', () => {
       const settings: ComparisonSettings = {
         positionTolerance: 5,
         sizeTolerance: 10,
-        similarityThreshold: 80,
-        ignoreText: false,
+        textSimilarityThreshold: 80,
+        importanceThreshold: 0.5,
       };
 
-      const result = validateWithSettings(layout1, layout2, settings);
+      const result = validateWithSettings(layout2, layout1, settings);
       
       expect(result.passed).toBe(false);
       expect(result.reason).toBe('position_change');
@@ -230,11 +236,11 @@ describe('comparator', () => {
       const settings: ComparisonSettings = {
         positionTolerance: 5,
         sizeTolerance: 10,  // 10% tolerance
-        similarityThreshold: 80,
-        ignoreText: false,
+        textSimilarityThreshold: 80,
+        importanceThreshold: 0.5,
       };
 
-      const result = validateWithSettings(layout1, layout2, settings);
+      const result = validateWithSettings(layout2, layout1, settings);
       
       expect(result.passed).toBe(false);
       expect(result.reason).toBe('size_change');
