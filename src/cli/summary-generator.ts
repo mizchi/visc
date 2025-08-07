@@ -238,19 +238,31 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
   // Fallback to element-level changes if no group changes
   if (changes.length === 0) {
     if (comparison.addedElements && comparison.addedElements.length > 0) {
-      changes.push({
-        type: 'added',
-        description: `${comparison.addedElements.length} new elements`,
-        severity: comparison.addedElements.length > 10 ? 'high' : 'medium'
-      });
+      // Group added elements by type/class for better reporting
+      const elementGroups = groupElementsByType(comparison.addedElements);
+      for (const [key, elements] of Object.entries(elementGroups)) {
+        changes.push({
+          type: 'added',
+          description: `${elements.length} new ${key} elements`,
+          severity: elements.length > 10 ? 'high' : 'medium',
+          details: elements.slice(0, 3).map((el: any) => generateSelector(el)).filter(Boolean).join(', '),
+          selector: elements.length === 1 ? generateSelector(elements[0]) : undefined
+        });
+      }
     }
 
     if (comparison.removedElements && comparison.removedElements.length > 0) {
-      changes.push({
-        type: 'removed',
-        description: `${comparison.removedElements.length} elements removed`,
-        severity: comparison.removedElements.length > 10 ? 'high' : 'medium'
-      });
+      // Group removed elements by type/class for better reporting
+      const elementGroups = groupElementsByType(comparison.removedElements);
+      for (const [key, elements] of Object.entries(elementGroups)) {
+        changes.push({
+          type: 'removed',
+          description: `${elements.length} ${key} elements removed`,
+          severity: elements.length > 10 ? 'high' : 'medium',
+          details: elements.slice(0, 3).map((el: any) => generateSelector(el)).filter(Boolean).join(', '),
+          selector: elements.length === 1 ? generateSelector(elements[0]) : undefined
+        });
+      }
     }
 
     if (comparison.differences && comparison.differences.length > 0) {
@@ -259,11 +271,21 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
       );
       
       if (significantChanges.length > 0) {
-        changes.push({
-          type: 'modified',
-          description: `${significantChanges.length} elements changed`,
-          severity: significantChanges.length > 5 ? 'high' : 'medium'
-        });
+        // Group by change type for better reporting
+        const grouped = groupDifferencesByType(significantChanges);
+        for (const [changeType, diffs] of Object.entries(grouped)) {
+          changes.push({
+            type: 'modified',
+            description: `${diffs.length} elements with ${changeType} changes`,
+            severity: diffs.length > 5 ? 'high' : 'medium',
+            details: diffs.slice(0, 3).map((d: any) => {
+              const selector = generateSelector(d.element || d.previousElement);
+              const changeDetail = describeElementChange(d);
+              return selector ? `${selector}: ${changeDetail}` : changeDetail;
+            }).join('; '),
+            selector: diffs.length === 1 ? generateSelector(diffs[0].element || diffs[0].previousElement) : undefined
+          });
+        }
       }
     }
   }
@@ -399,6 +421,95 @@ function analyzeGroupDifference(diff: any): ChangeDescription | null {
   }
   
   return null;
+}
+
+/**
+ * Group elements by their type and class for better reporting
+ */
+function groupElementsByType(elements: any[]): Record<string, any[]> {
+  const groups: Record<string, any[]> = {};
+  
+  for (const element of elements) {
+    let key = element.tagName || 'unknown';
+    if (element.className) {
+      const mainClass = element.className.split(' ')[0];
+      if (mainClass) {
+        key = `${key}.${mainClass}`;
+      }
+    }
+    
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+    groups[key].push(element);
+  }
+  
+  return groups;
+}
+
+/**
+ * Group differences by their change type
+ */
+function groupDifferencesByType(differences: any[]): Record<string, any[]> {
+  const groups: Record<string, any[]> = {};
+  
+  for (const diff of differences) {
+    let changeType = 'general';
+    
+    if (diff.positionDiff && diff.positionDiff > 10) {
+      changeType = 'position';
+    } else if (diff.sizeDiff && diff.sizeDiff > 10) {
+      changeType = 'size';
+    } else if (diff.changes && diff.changes.length > 0) {
+      // Check what properties changed
+      const changedProps = diff.changes.map((c: any) => c.property);
+      if (changedProps.includes('display') || changedProps.includes('visibility')) {
+        changeType = 'visibility';
+      } else if (changedProps.includes('color') || changedProps.includes('backgroundColor')) {
+        changeType = 'style';
+      } else if (changedProps.includes('fontSize') || changedProps.includes('fontWeight')) {
+        changeType = 'typography';
+      }
+    }
+    
+    if (!groups[changeType]) {
+      groups[changeType] = [];
+    }
+    groups[changeType].push(diff);
+  }
+  
+  return groups;
+}
+
+/**
+ * Describe element change details
+ */
+function describeElementChange(diff: any): string {
+  const details: string[] = [];
+  
+  if (diff.positionDiff && diff.positionDiff > 0) {
+    details.push(`moved ${diff.positionDiff.toFixed(0)}px`);
+  }
+  
+  if (diff.sizeDiff && diff.sizeDiff > 0) {
+    details.push(`resized ${diff.sizeDiff.toFixed(0)}px`);
+  }
+  
+  if (diff.changes && diff.changes.length > 0) {
+    const importantProps = diff.changes
+      .filter((c: any) => ['display', 'visibility', 'opacity', 'color', 'backgroundColor'].includes(c.property))
+      .map((c: any) => `${c.property}: ${c.before} → ${c.after}`);
+    
+    if (importantProps.length > 0) {
+      details.push(importantProps.slice(0, 2).join(', '));
+    }
+  }
+  
+  if (diff.similarity !== undefined && diff.similarity < 90) {
+    details.push(`${diff.similarity.toFixed(0)}% similar`);
+  }
+  
+  return details.length > 0 ? details.join(', ') : 'changed';
 }
 
 /**
