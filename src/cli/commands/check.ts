@@ -317,6 +317,8 @@ async function loadConfig(configPath: string): Promise<ViscConfig> {
     const mergedConfig = {
       ...DEFAULT_CONFIG,
       ...validatedConfig,
+      outputDir: validatedConfig.outputDir || DEFAULT_CONFIG.outputDir,
+      cacheDir: validatedConfig.cacheDir || DEFAULT_CONFIG.cacheDir,
       captureOptions: {
         ...DEFAULT_CONFIG.captureOptions,
         ...validatedConfig.captureOptions,

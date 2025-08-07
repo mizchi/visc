@@ -1,0 +1,28 @@
+{
+  "$schema": "./schema.json",
+  "version": "1.0",
+  "viewports": {
+    "mobile": {
+      "name": "Mobile",
+      "width": 375,
+      "height": 667,
+      "deviceScaleFactor": 2
+    }
+  },
+  "screenshotOptions": {
+    "fullPage": false,
+    "format": "jpeg",
+    "quality": 70
+  },
+  "captureOptions": {
+    "waitUntil": "networkidle2",
+    "waitForLCP": false,
+    "timeout": 10000
+  },
+  "testCases": [
+    {
+      "id": "example-test",
+      "url": "https://example.com"
+    }
+  ]
+}
