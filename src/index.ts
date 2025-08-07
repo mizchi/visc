@@ -173,3 +173,6 @@ export {
   type SlideDetectionResult,
   type SlideViolation,
 } from "./analysis/slide-detector.js";
+
+// Core Calculation APIs - Pure functions for distance and similarity
+export * from "./core/index.js";
