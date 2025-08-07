@@ -36,12 +36,13 @@ export function renderMovementToSvg(
   const svgDimensions = calculateSvgDimensions(correspondences, viewport, viewportMode);
   const svgElements: string[] = [];
   
-  // SVG header with calculated dimensions
-  svgElements.push(`<svg width="${svgDimensions.width}" height="${svgDimensions.height}" xmlns="http://www.w3.org/2000/svg">`);
-  
-  // Add viewBox if needed for full or fullScroll modes
-  if (viewportMode !== 'viewportOnly') {
-    svgElements.push(`  <!-- viewBox for ${viewportMode} mode -->`);
+  // SVG header with calculated dimensions and viewBox for clipping
+  if (viewportMode === 'viewportOnly') {
+    // Use viewBox to clip content outside viewport
+    svgElements.push(`<svg width="${viewport.width}" height="${viewport.height}" viewBox="0 0 ${viewport.width} ${viewport.height}" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden;">`);
+  } else {
+    // For full and fullScroll modes, show everything
+    svgElements.push(`<svg width="${svgDimensions.width}" height="${svgDimensions.height}" xmlns="http://www.w3.org/2000/svg">`);
   }
   
   // Add definitions for arrow markers and filters
@@ -78,6 +79,17 @@ export function renderMovementToSvg(
   // Render each correspondence
   correspondences.forEach((correspondence, index) => {
     const { group1, group2, match } = correspondence;
+    
+    // For viewportOnly mode, skip elements completely outside viewport
+    if (viewportMode === 'viewportOnly') {
+      const isGroup1Visible = isInViewport(group1.bounds, viewport);
+      const isGroup2Visible = isInViewport(group2.bounds, viewport);
+      
+      // Skip if both positions are completely outside viewport
+      if (!isGroup1Visible && !isGroup2Visible) {
+        return;
+      }
+    }
     
     // Calculate movement vector
     const movement = calculateMovementVector(group1.bounds, group2.bounds);
@@ -204,6 +216,23 @@ export function renderMovementToSvg(
   svgElements.push(`</svg>`);
   
   return svgElements.join('\n');
+}
+
+/**
+ * Check if bounds are at least partially visible in viewport
+ */
+function isInViewport(
+  bounds: { x: number; y: number; width: number; height: number },
+  viewport: { width: number; height: number }
+): boolean {
+  // Check if element is completely outside viewport
+  if (bounds.x >= viewport.width || bounds.y >= viewport.height) {
+    return false;
+  }
+  if (bounds.x + bounds.width <= 0 || bounds.y + bounds.height <= 0) {
+    return false;
+  }
+  return true;
 }
 
 /**

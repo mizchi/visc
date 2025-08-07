@@ -55,9 +55,32 @@ describe('Viewport Modes in SVG Rendering', () => {
         viewportMode: 'viewportOnly'
       });
       
-      // Should use viewport dimensions
+      // Should use viewport dimensions with viewBox
       expect(svg).toContain('width="1024"');
       expect(svg).toContain('height="768"');
+      expect(svg).toContain('viewBox="0 0 1024 768"');
+      expect(svg).toContain('overflow: hidden');
+    });
+    
+    it('should skip elements outside viewport in viewportOnly mode', () => {
+      const correspondences = [
+        // Element completely outside viewport
+        createMockCorrespondence(2000, 2000, 100, 50, 2100, 2100, 100, 50, 'outside'),
+        // Element partially in viewport
+        createMockCorrespondence(900, 700, 200, 100, 950, 750, 200, 100, 'partial'),
+      ];
+      
+      const svg = renderMovementToSvg(correspondences, viewport, {
+        viewportMode: 'viewportOnly'
+      });
+      
+      // Should not contain elements completely outside viewport
+      expect(svg).not.toContain('x="2000"');
+      expect(svg).not.toContain('x="2100"');
+      
+      // Should contain elements partially in viewport
+      expect(svg).toContain('x="900"');
+      expect(svg).toContain('x="950"');
     });
 
     it('should render with full mode', () => {
