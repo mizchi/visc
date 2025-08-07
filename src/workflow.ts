@@ -11,6 +11,8 @@ import {
   compareLayoutTrees,
 } from "./index.js";
 import { compareVisualNodeGroups } from "./layout/visual-comparator.js";
+import type { ThresholdConfig } from "./types.js";
+import { evaluateThresholds } from "./threshold-evaluator.js";
 
 // Types
 export type Viewport = {
@@ -43,7 +45,10 @@ export type ComparisonResult = {
     removedElements: number;
     hasIssues: boolean;
     raw: any;
+    thresholdEvaluation?: ReturnType<typeof evaluateThresholds>; // New: threshold evaluation results
   };
+  currentLayout?: VisualTreeAnalysis; // For semantic detection
+  previousLayout?: VisualTreeAnalysis; // For semantic detection
 };
 
 export type TestResult = {
@@ -80,6 +85,7 @@ export type CompareOptions = {
   threshold?: number;
   similarityThreshold?: number;
   useVisualGroups?: boolean;
+  thresholdConfig?: ThresholdConfig; // New: absolute threshold configuration
 };
 
 // Default options
@@ -88,6 +94,7 @@ const DEFAULT_COMPARE_OPTIONS: Required<CompareOptions> = {
   threshold: 5,
   similarityThreshold: 98,
   useVisualGroups: true,
+  thresholdConfig: undefined as any, // Will be set when used
 };
 
 // Capture layouts for all test cases
@@ -197,7 +204,51 @@ export async function* compareLayouts(
           removedElements = comparison.removedElements.length;
         }
 
-        const hasIssues = comparison.similarity < opts.similarityThreshold;
+        // Evaluate against thresholds if configured
+        let thresholdEvaluation;
+        let hasIssues = comparison.similarity < opts.similarityThreshold;
+        
+        if (opts.thresholdConfig) {
+          // Convert comparison differences to VisualDifference format for evaluation
+          const visualDifferences: any[] = [];
+          
+          // Check if it's a group comparison result
+          const groupComparison = comparison as any;
+          if (groupComparison.addedGroups) {
+            groupComparison.addedGroups.forEach((group: any) => {
+              visualDifferences.push({ type: 'added' as const, path: '', element: group });
+            });
+          }
+          if (groupComparison.removedGroups) {
+            groupComparison.removedGroups.forEach((group: any) => {
+              visualDifferences.push({ type: 'removed' as const, path: '', previousElement: group });
+            });
+          }
+          if (groupComparison.differences) {
+            groupComparison.differences.forEach((diff: any) => {
+              visualDifferences.push({
+                type: (diff.type || 'modified') as any,
+                path: '',
+                element: diff.group || diff.element,
+                positionDiff: diff.positionDiff,
+                sizeDiff: diff.sizeDiff,
+                similarity: diff.similarity
+              });
+            });
+          }
+          
+          thresholdEvaluation = evaluateThresholds(
+            opts.thresholdConfig,
+            visualDifferences,
+            comparison.similarity,
+            currentLayout,
+            previousLayout
+          );
+          
+          // Override hasIssues based on threshold evaluation
+          hasIssues = hasIssues || !thresholdEvaluation.passed;
+        }
+        
         const comparisonResult: ComparisonResult = {
           testCase,
           viewport,
@@ -208,7 +259,10 @@ export async function* compareLayouts(
             removedElements,
             hasIssues,
             raw: comparison,
+            thresholdEvaluation,
           },
+          currentLayout,
+          previousLayout,
         };
         
         comparisons.push(comparisonResult);

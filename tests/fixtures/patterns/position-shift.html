@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Shift Patterns</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: #212529;
+    }
+    
+    /* Subtle position shifts */
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .card {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    
+    /* Intentional 1px shift */
+    .card.shifted-1px {
+      transform: translateX(1px);
+    }
+    
+    /* Intentional 3px shift */
+    .card.shifted-3px {
+      transform: translateY(3px);
+    }
+    
+    /* Intentional 5px shift */
+    .card.shifted-5px {
+      transform: translate(5px, 5px);
+    }
+    
+    /* Float layout with clear issues */
+    .float-container {
+      margin-bottom: 3rem;
+      border: 2px solid #007bff;
+      padding: 1rem;
+    }
+    
+    .float-left {
+      float: left;
+      width: 48%;
+      margin-right: 2%;
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    
+    .float-right {
+      float: right;
+      width: 48%;
+      background: #e9ecef;
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    
+    /* Missing clearfix intentionally */
+    .no-clearfix {
+      /* Intentionally not clearing floats */
+    }
+    
+    .clearfix::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    
+    /* Absolute positioning with shifts */
+    .relative-container {
+      position: relative;
+      height: 300px;
+      background: #f8f9fa;
+      border: 2px solid #28a745;
+      margin-bottom: 3rem;
+    }
+    
+    .absolute-box {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: #007bff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+    
+    .absolute-box.top-left {
+      top: 10px;
+      left: 10px;
+    }
+    
+    .absolute-box.top-right {
+      top: 10px;
+      right: 10px;
+    }
+    
+    .absolute-box.bottom-left {
+      bottom: 10px;
+      left: 10px;
+    }
+    
+    .absolute-box.bottom-right {
+      bottom: 10px;
+      right: 10px;
+    }
+    
+    .absolute-box.center {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    /* Off by 1px intentionally */
+    .absolute-box.center-shifted {
+      top: calc(50% + 1px);
+      left: calc(50% - 1px);
+      transform: translate(-50%, -50%);
+      background: #dc3545;
+    }
+    
+    /* Flexbox alignment issues */
+    .flex-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8f9fa;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      border: 2px solid #6c757d;
+    }
+    
+    .flex-item {
+      background: white;
+      padding: 1rem;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      min-width: 150px;
+      text-align: center;
+    }
+    
+    /* Intentional alignment issue */
+    .flex-item.misaligned {
+      align-self: flex-start;
+      margin-top: 2px;
+    }
+    
+    /* Z-index layering */
+    .layer-container {
+      position: relative;
+      height: 200px;
+      margin-bottom: 3rem;
+    }
+    
+    .layer {
+      position: absolute;
+      padding: 1rem;
+      border-radius: 4px;
+      width: 200px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .layer-1 {
+      background: rgba(0, 123, 255, 0.8);
+      color: white;
+      top: 20px;
+      left: 20px;
+      z-index: 1;
+    }
+    
+    .layer-2 {
+      background: rgba(40, 167, 69, 0.8);
+      color: white;
+      top: 40px;
+      left: 40px;
+      z-index: 2;
+    }
+    
+    .layer-3 {
+      background: rgba(220, 53, 69, 0.8);
+      color: white;
+      top: 60px;
+      left: 60px;
+      z-index: 3;
+    }
+    
+    /* Margin collapse issues */
+    .margin-test {
+      background: #f8f9fa;
+      border: 2px solid #17a2b8;
+      margin-bottom: 3rem;
+    }
+    
+    .margin-top {
+      margin-top: 20px;
+      padding: 1rem;
+      background: white;
+    }
+    
+    .margin-bottom {
+      margin-bottom: 20px;
+      padding: 1rem;
+      background: white;
+    }
+    
+    /* Adjacent margins that might collapse */
+    .adjacent-1 {
+      margin-bottom: 30px;
+      padding: 1rem;
+      background: #ffc107;
+    }
+    
+    .adjacent-2 {
+      margin-top: 30px;
+      padding: 1rem;
+      background: #fd7e14;
+    }
+    
+    /* Line-height differences */
+    .text-container {
+      margin-bottom: 3rem;
+    }
+    
+    .normal-line-height {
+      line-height: 1.6;
+      padding: 1rem;
+      background: #f8f9fa;
+      margin-bottom: 1rem;
+    }
+    
+    .tight-line-height {
+      line-height: 1.2;
+      padding: 1rem;
+      background: #e9ecef;
+      margin-bottom: 1rem;
+    }
+    
+    .loose-line-height {
+      line-height: 2;
+      padding: 1rem;
+      background: #dee2e6;
+    }
+    
+    /* Inline-block alignment */
+    .inline-container {
+      font-size: 0;
+      margin-bottom: 3rem;
+    }
+    
+    .inline-item {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      background: #6f42c1;
+      margin: 5px;
+      vertical-align: top;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+      line-height: 100px;
+    }
+    
+    .inline-item.baseline {
+      vertical-align: baseline;
+      background: #e83e8c;
+    }
+    
+    .inline-item.middle {
+      vertical-align: middle;
+      background: #20c997;
+    }
+    
+    /* Subpixel rendering issues */
+    .subpixel-container {
+      display: flex;
+      gap: 0.3px;
+      margin-bottom: 3rem;
+    }
+    
+    .subpixel-item {
+      flex: 1;
+      padding: 1rem;
+      background: linear-gradient(to right, #007bff, #6610f2);
+      color: white;
+      text-align: center;
+      border-radius: 3.5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Position Shift Test Patterns</h1>
+  
+  <section>
+    <h2>Subtle Position Shifts</h2>
+    <div class="card-container">
+      <div class="card">
+        <h3>Normal Card</h3>
+        <p>This card has no position shift.</p>
+      </div>
+      <div class="card shifted-1px">
+        <h3>1px Shift</h3>
+        <p>This card is shifted 1px to the right.</p>
+      </div>
+      <div class="card shifted-3px">
+        <h3>3px Shift</h3>
+        <p>This card is shifted 3px down.</p>
+      </div>
+      <div class="card shifted-5px">
+        <h3>5px Shift</h3>
+        <p>This card is shifted 5px right and down.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Float Layout Issues</h2>
+    <div class="float-container clearfix">
+      <div class="float-left">
+        <h3>Float Left</h3>
+        <p>This element floats to the left.</p>
+      </div>
+      <div class="float-right">
+        <h3>Float Right</h3>
+        <p>This element floats to the right.</p>
+      </div>
+    </div>
+    
+    <div class="float-container no-clearfix">
+      <div class="float-left">
+        <h3>No Clearfix</h3>
+        <p>Parent doesn't clear floats.</p>
+      </div>
+      <div class="float-right">
+        <h3>Collapse Issue</h3>
+        <p>Height might collapse.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Absolute Positioning</h2>
+    <div class="relative-container">
+      <div class="absolute-box top-left">TL</div>
+      <div class="absolute-box top-right">TR</div>
+      <div class="absolute-box bottom-left">BL</div>
+      <div class="absolute-box bottom-right">BR</div>
+      <div class="absolute-box center">Center</div>
+      <div class="absolute-box center-shifted">Off 1px</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Flexbox Alignment</h2>
+    <div class="flex-container">
+      <div class="flex-item">Aligned</div>
+      <div class="flex-item misaligned">Misaligned</div>
+      <div class="flex-item">Aligned</div>
+      <div class="flex-item">Aligned</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Z-Index Layering</h2>
+    <div class="layer-container">
+      <div class="layer layer-1">Layer 1 (z: 1)</div>
+      <div class="layer layer-2">Layer 2 (z: 2)</div>
+      <div class="layer layer-3">Layer 3 (z: 3)</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Margin Collapse</h2>
+    <div class="margin-test">
+      <div class="margin-top">Top margin 20px</div>
+      <div class="margin-bottom">Bottom margin 20px</div>
+    </div>
+    
+    <div class="adjacent-1">Bottom margin 30px</div>
+    <div class="adjacent-2">Top margin 30px (might collapse)</div>
+  </section>
+  
+  <section>
+    <h2>Line Height Variations</h2>
+    <div class="text-container">
+      <div class="normal-line-height">
+        Normal line height (1.6). Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <div class="tight-line-height">
+        Tight line height (1.2). Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+      <div class="loose-line-height">
+        Loose line height (2.0). Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Inline-block Alignment</h2>
+    <div class="inline-container">
+      <div class="inline-item">Top</div>
+      <div class="inline-item baseline">Base</div>
+      <div class="inline-item middle">Mid</div>
+      <div class="inline-item">Top</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Subpixel Rendering</h2>
+    <div class="subpixel-container">
+      <div class="subpixel-item">0.3px gap</div>
+      <div class="subpixel-item">Subpixel</div>
+      <div class="subpixel-item">Rendering</div>
+    </div>
+  </section>
+</body>
+</html>

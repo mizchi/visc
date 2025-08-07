@@ -4,7 +4,13 @@
  */
 
 import type { TestResult } from '../workflow.js';
-import type { VisualNodeGroup } from '../types.js';
+import type { VisualNodeGroup, VisualDifference } from '../types.js';
+import { 
+  detectSemanticDifferences, 
+  generateSemanticMessage,
+  calculatePositionDiff,
+  calculateSizeDiff 
+} from '../semantic-detector.js';
 
 interface SummaryData {
   timestamp: string;
@@ -28,6 +34,10 @@ interface ViewportSummary {
   similarity: number;
   status: 'passed' | 'failed';
   changes: ChangeDescription[];
+  semanticAnalysis?: {
+    detection: ReturnType<typeof detectSemanticDifferences>;
+    message: ReturnType<typeof generateSemanticMessage>;
+  };
 }
 
 interface ChangeDescription {
@@ -59,13 +69,53 @@ function prepareSummaryData(testResults: TestResult[]): SummaryData {
     const viewportSummaries: ViewportSummary[] = result.comparisons.map((comp: any) => {
       const changes = analyzeChanges(comp.comparison.raw);
       
+      // Create VisualDifference array for semantic detection
+      const differences: VisualDifference[] = [];
+      
+      // Convert raw comparison data to VisualDifference format
+      if (comp.comparison.raw.addedGroups) {
+        comp.comparison.raw.addedGroups.forEach((group: any) => {
+          differences.push({ type: 'added', path: '', element: group });
+        });
+      }
+      if (comp.comparison.raw.removedGroups) {
+        comp.comparison.raw.removedGroups.forEach((group: any) => {
+          differences.push({ type: 'removed', path: '', previousElement: group });
+        });
+      }
+      if (comp.comparison.raw.differences) {
+        comp.comparison.raw.differences.forEach((diff: any) => {
+          differences.push({
+            type: diff.type || 'modified',
+            path: '',
+            element: diff.group,
+            positionDiff: diff.positionDiff,
+            sizeDiff: diff.sizeDiff,
+            similarity: diff.similarity
+          });
+        });
+      }
+      
+      // Perform semantic detection if there are differences
+      let semanticAnalysis;
+      if (differences.length > 0 && comp.currentLayout && comp.previousLayout) {
+        const detection = detectSemanticDifferences(
+          differences,
+          comp.currentLayout,
+          comp.previousLayout
+        );
+        const message = generateSemanticMessage(detection, comp.comparison.similarity);
+        semanticAnalysis = { detection, message };
+      }
+      
       return {
         name: comp.viewport.name || `${comp.viewport.width}x${comp.viewport.height}`,
         width: comp.viewport.width,
         height: comp.viewport.height,
         similarity: comp.comparison.similarity,
         status: comp.comparison.hasIssues ? 'failed' : 'passed',
-        changes
+        changes,
+        semanticAnalysis
       };
     });
 
@@ -335,6 +385,25 @@ function renderMarkdown(data: SummaryData): string {
         lines.push('');
         lines.push(`**Similarity:** ${viewport.similarity.toFixed(1)}%`);
         lines.push('');
+        
+        // Add semantic analysis if available
+        if (viewport.semanticAnalysis) {
+          lines.push('**意味的差分検出:**');
+          lines.push('');
+          const { message } = viewport.semanticAnalysis;
+          lines.push(`- Severity: ${message.severity.toUpperCase()}`);
+          for (const msg of message.messages) {
+            lines.push(`- ${msg}`);
+          }
+          if (message.patterns.length > 0) {
+            lines.push('');
+            lines.push('**検出パターン:**');
+            for (const pattern of message.patterns) {
+              lines.push(`  • ${pattern}`);
+            }
+          }
+          lines.push('');
+        }
         
         if (viewport.changes.length > 0) {
           lines.push('**Changes detected:**');

@@ -56,6 +56,45 @@ const TEST_CASES = [
       'Additional navigation items',
     ]
   },
+  {
+    name: 'Position Shifts',
+    baseline: 'patterns/position-shift.html',
+    changed: 'patterns/position-shift.html', // Same file to test shift detection
+    description: 'Tests detection of subtle position shifts and alignment issues',
+    expectedChanges: [
+      '1px, 3px, and 5px position shifts',
+      'Float layout collapse issues',
+      'Flexbox alignment problems',
+      'Margin collapse detection',
+      'Subpixel rendering differences',
+    ]
+  },
+  {
+    name: 'Z-Index Changes',
+    baseline: 'patterns/z-index-changes.html',
+    changed: 'patterns/z-index-changes.html', // Same file to test stacking order
+    description: 'Tests detection of z-index and stacking context changes',
+    expectedChanges: [
+      'Stacking order changes',
+      'Modal visibility changes',
+      'Nested stacking context issues',
+      'Transform/opacity stacking contexts',
+      'Negative z-index patterns',
+    ]
+  },
+  {
+    name: 'Overflow Patterns',
+    baseline: 'patterns/overflow-scroll.html',
+    changed: 'patterns/overflow-scroll.html', // Same file for overflow analysis
+    description: 'Tests detection of overflow and scroll behaviors',
+    expectedChanges: [
+      'Vertical scroll containers',
+      'Horizontal scroll detection',
+      'Hidden overflow clipping',
+      'Fixed vs responsive dimensions',
+      'Table scroll patterns',
+    ]
+  },
 ];
 
 const VIEWPORTS: Record<string, WorkflowViewport> = {
@@ -313,6 +352,114 @@ function assessSeverity(comparison: any): string {
   return 'Critical';
 }
 
+// Visual difference detection assertions
+function detectVisualDifferences(result: TestResult): {
+  hasPositionShifts: boolean;
+  hasZIndexChanges: boolean;
+  hasOverflowIssues: boolean;
+  hasLayoutShifts: boolean;
+  detectedPatterns: string[];
+} {
+  const patterns: string[] = [];
+  
+  // Detect position shifts (even 1px matters)
+  const hasPositionShifts = result.insights.some(insight => 
+    insight.includes('moved') || 
+    insight.includes('shift') ||
+    insight.includes('position')
+  );
+  
+  if (hasPositionShifts) {
+    // Analyze shift magnitude
+    const shiftMagnitudes = result.insights
+      .filter(i => i.match(/[0-9]+px/))
+      .map(i => {
+        const match = i.match(/([0-9]+)px/);
+        return match ? parseInt(match[1]) : 0;
+      });
+    
+    if (shiftMagnitudes.some(m => m === 1)) patterns.push('1px微細シフト検出');
+    if (shiftMagnitudes.some(m => m > 1 && m <= 5)) patterns.push('小規模位置ずれ(2-5px)');
+    if (shiftMagnitudes.some(m => m > 5)) patterns.push('大規模位置ずれ(>5px)');
+  }
+  
+  // Detect z-index/stacking changes
+  const hasZIndexChanges = result.insights.some(insight =>
+    insight.includes('layer') ||
+    insight.includes('z-index') ||
+    insight.includes('stacking') ||
+    insight.includes('overlap')
+  );
+  
+  if (hasZIndexChanges) {
+    patterns.push('重なり順序の変更');
+  }
+  
+  // Detect overflow issues
+  const hasOverflowIssues = result.overflowAnalysis ? 
+    result.overflowAnalysis.scrollableElements > 0 ||
+    result.insights.some(i => i.includes('scroll') || i.includes('overflow')) : false;
+  
+  if (hasOverflowIssues && result.overflowAnalysis) {
+    if (result.overflowAnalysis.scrollableElements > 0) {
+      patterns.push(`スクロール要素検出(${result.overflowAnalysis.scrollableElements}個)`);
+    }
+    if (result.overflowAnalysis.fixedDimensions > 0) {
+      patterns.push('固定サイズ要素による潜在的オーバーフロー');
+    }
+  }
+  
+  // Detect layout shifts
+  const hasLayoutShifts = 
+    result.summary.addedGroups > 0 ||
+    result.summary.removedGroups > 0 ||
+    result.summary.modifiedGroups > 3; // More than 3 modifications indicates layout shift
+  
+  if (hasLayoutShifts) {
+    if (result.summary.addedGroups > 0) patterns.push(`要素追加(${result.summary.addedGroups}グループ)`);
+    if (result.summary.removedGroups > 0) patterns.push(`要素削除(${result.summary.removedGroups}グループ)`);
+    if (result.summary.modifiedGroups > 3) patterns.push('大規模レイアウト変更');
+  }
+  
+  return {
+    hasPositionShifts,
+    hasZIndexChanges,
+    hasOverflowIssues,
+    hasLayoutShifts,
+    detectedPatterns: patterns
+  };
+}
+
+// Semantic difference message generator
+function generateSemanticMessage(detection: ReturnType<typeof detectVisualDifferences>): string {
+  const messages: string[] = [];
+  
+  if (detection.hasPositionShifts) {
+    messages.push('⚠️ 位置ずれを検出しました');
+  }
+  
+  if (detection.hasZIndexChanges) {
+    messages.push('🔄 要素の重なり順序が変更されています');
+  }
+  
+  if (detection.hasOverflowIssues) {
+    messages.push('📜 スクロール/オーバーフロー問題の可能性');
+  }
+  
+  if (detection.hasLayoutShifts) {
+    messages.push('🏗️ レイアウト構造に変更があります');
+  }
+  
+  if (detection.detectedPatterns.length > 0) {
+    messages.push('\n検出パターン:');
+    detection.detectedPatterns.forEach(p => {
+      messages.push(`  • ${p}`);
+    });
+  }
+  
+  return messages.length > 0 ? messages.join('\n') : '✅ 重要な視覚的変更は検出されませんでした';
+}
+
 async function generateReport(results: TestResult[]): Promise<string> {
   const report: string[] = [];
   
@@ -354,6 +501,13 @@ async function generateReport(results: TestResult[]): Promise<string> {
       report.push('');
       report.push(`- **Similarity:** ${result.summary.similarity.toFixed(1)}%`);
       report.push(`- **Has Issues:** ${result.summary.hasIssues ? 'Yes' : 'No'}`);
+      report.push('');
+      
+      // Add semantic difference detection
+      const detection = detectVisualDifferences(result);
+      const semanticMessage = generateSemanticMessage(detection);
+      report.push('**意味的差分検出:**');
+      report.push(semanticMessage);
       report.push('');
       
       if (result.summary.addedGroups > 0 || result.summary.removedGroups > 0 || result.summary.modifiedGroups > 0) {

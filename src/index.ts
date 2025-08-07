@@ -54,6 +54,7 @@ export {
   type ComparisonSettings,
   type CalibrationResult,
   type ValidationResult,
+  type DynamicElementInfo,
 } from "./layout/calibrator.js";
 
 // Rendering APIs - 可視化
@@ -87,3 +88,29 @@ export {
 
 // Storage APIs
 export { CacheStorage } from "./cli/cache-storage.js";
+
+// Semantic Detection APIs
+export {
+  detectSemanticDifferences,
+  generateSemanticMessage,
+  calculatePositionDiff,
+  calculateSizeDiff,
+  analyzeSubtleDifferences,
+} from "./semantic-detector.js";
+export type {
+  SemanticDifferenceDetection,
+  SemanticDifferenceMessage,
+  ThresholdConfig,
+} from "./types.js";
+
+// Threshold Evaluation APIs
+export {
+  evaluateThresholds,
+  createDefaultThresholds,
+  createStrictThresholds,
+  createRelaxedThresholds,
+  mergeThresholds,
+  type ThresholdEvaluation,
+  type ThresholdFailure,
+  type ThresholdWarning,
+} from "./threshold-evaluator.js";

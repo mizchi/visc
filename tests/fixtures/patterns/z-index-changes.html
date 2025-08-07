@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z-Index and Stacking Context Changes</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      padding: 2rem;
+      background: #f8f9fa;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: #212529;
+    }
+    
+    h2 {
+      margin: 2rem 0 1rem;
+      color: #495057;
+    }
+    
+    /* Basic stacking context */
+    .stacking-basic {
+      position: relative;
+      height: 300px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+    }
+    
+    .box {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Original stacking order */
+    .box-1 {
+      background: rgba(0, 123, 255, 0.9);
+      top: 30px;
+      left: 30px;
+      z-index: 1;
+    }
+    
+    .box-2 {
+      background: rgba(40, 167, 69, 0.9);
+      top: 60px;
+      left: 60px;
+      z-index: 2;
+    }
+    
+    .box-3 {
+      background: rgba(220, 53, 69, 0.9);
+      top: 90px;
+      left: 90px;
+      z-index: 3;
+    }
+    
+    /* Changed stacking order - simulate dynamic z-index change */
+    .stacking-changed .box-1 {
+      z-index: 3; /* Was 1 */
+    }
+    
+    .stacking-changed .box-2 {
+      z-index: 1; /* Was 2 */
+    }
+    
+    .stacking-changed .box-3 {
+      z-index: 2; /* Was 3 */
+    }
+    
+    /* Modal/Overlay patterns */
+    .modal-container {
+      position: relative;
+      height: 400px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    
+    .content {
+      padding: 2rem;
+    }
+    
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    
+    .modal {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 400px;
+      z-index: 101;
+    }
+    
+    /* Hidden modal (display: none simulation) */
+    .modal-hidden .modal-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    /* Fixed position elements */
+    .fixed-elements-container {
+      position: relative;
+      height: 400px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+      overflow: auto;
+    }
+    
+    .fixed-header {
+      position: sticky;
+      top: 0;
+      background: #007bff;
+      color: white;
+      padding: 1rem;
+      z-index: 10;
+    }
+    
+    .fixed-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    
+    /* Nested stacking contexts */
+    .nested-container {
+      position: relative;
+      z-index: 1;
+      background: white;
+      border: 2px solid #dee2e6;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .nested-parent {
+      position: relative;
+      z-index: 1;
+      background: #f8f9fa;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .nested-child {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #ffc107;
+      padding: 0.5rem;
+      border-radius: 4px;
+      z-index: 999; /* High z-index but trapped in parent context */
+    }
+    
+    /* Transform creates new stacking context */
+    .transform-container {
+      margin-bottom: 2rem;
+    }
+    
+    .transform-box {
+      position: relative;
+      background: white;
+      border: 2px solid #dee2e6;
+      padding: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .transform-applied {
+      transform: translateZ(0); /* Creates stacking context */
+    }
+    
+    .popup {
+      position: absolute;
+      top: -20px;
+      right: 20px;
+      background: #dc3545;
+      color: white;
+      padding: 1rem;
+      border-radius: 4px;
+      z-index: 100;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    
+    /* Opacity stacking context */
+    .opacity-container {
+      position: relative;
+      height: 300px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+    }
+    
+    .opacity-parent {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      width: 200px;
+      height: 200px;
+      background: #6f42c1;
+      opacity: 0.9; /* Creates stacking context */
+    }
+    
+    .opacity-child {
+      position: absolute;
+      top: -25px;
+      left: -25px;
+      width: 100px;
+      height: 100px;
+      background: #e83e8c;
+      z-index: 1000; /* Won't escape parent */
+    }
+    
+    /* Filter effects */
+    .filter-container {
+      position: relative;
+      height: 300px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-box {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .filter-1 {
+      background: #17a2b8;
+      top: 40px;
+      left: 40px;
+      z-index: 2;
+      filter: blur(0.5px); /* Creates stacking context */
+    }
+    
+    .filter-2 {
+      background: #20c997;
+      top: 70px;
+      left: 70px;
+      z-index: 1;
+    }
+    
+    /* Isolation property */
+    .isolation-container {
+      position: relative;
+      height: 300px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+    }
+    
+    .isolation-group {
+      isolation: isolate; /* Creates stacking context */
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      width: 250px;
+      height: 200px;
+    }
+    
+    .blend-box {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+    }
+    
+    .blend-1 {
+      background: #ff6b6b;
+      top: 0;
+      left: 0;
+      mix-blend-mode: multiply;
+    }
+    
+    .blend-2 {
+      background: #4ecdc4;
+      top: 30px;
+      left: 60px;
+      mix-blend-mode: multiply;
+    }
+    
+    .blend-3 {
+      background: #ffe66d;
+      top: 60px;
+      left: 30px;
+      mix-blend-mode: multiply;
+    }
+    
+    /* Negative z-index */
+    .negative-container {
+      position: relative;
+      background: white;
+      border: 2px solid #dee2e6;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .negative-background {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      z-index: -1;
+      border-radius: 4px;
+    }
+    
+    .negative-content {
+      position: relative;
+      background: white;
+      padding: 2rem;
+      border-radius: 4px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Auto z-index (no z-index specified) */
+    .auto-container {
+      position: relative;
+      height: 250px;
+      background: white;
+      border: 2px solid #dee2e6;
+      margin-bottom: 2rem;
+    }
+    
+    .auto-box {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+    
+    .auto-1 {
+      background: #fd7e14;
+      top: 30px;
+      left: 30px;
+      /* No z-index */
+    }
+    
+    .auto-2 {
+      background: #6610f2;
+      top: 50px;
+      left: 50px;
+      z-index: 1;
+    }
+    
+    .auto-3 {
+      background: #e83e8c;
+      top: 70px;
+      left: 70px;
+      /* No z-index */
+    }
+  </style>
+</head>
+<body>
+  <h1>Z-Index and Stacking Context Test Patterns</h1>
+  
+  <section>
+    <h2>Basic Stacking Order</h2>
+    <div class="stacking-basic">
+      <div class="box box-1">Z-Index: 1</div>
+      <div class="box box-2">Z-Index: 2</div>
+      <div class="box box-3">Z-Index: 3</div>
+    </div>
+    
+    <h2>Changed Stacking Order</h2>
+    <div class="stacking-basic stacking-changed">
+      <div class="box box-1">Now Z: 3</div>
+      <div class="box box-2">Now Z: 1</div>
+      <div class="box box-3">Now Z: 2</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Modal Overlay (Visible)</h2>
+    <div class="modal-container">
+      <div class="content">
+        <h3>Page Content</h3>
+        <p>This content is behind the modal overlay.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+      <div class="modal-overlay">
+        <div class="modal">
+          <h3>Modal Dialog</h3>
+          <p>This modal appears on top of the content.</p>
+        </div>
+      </div>
+    </div>
+    
+    <h2>Modal Overlay (Hidden)</h2>
+    <div class="modal-container modal-hidden">
+      <div class="content">
+        <h3>Page Content</h3>
+        <p>The modal is hidden in this version.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+      <div class="modal-overlay">
+        <div class="modal">
+          <h3>Hidden Modal</h3>
+          <p>This modal is not visible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Nested Stacking Contexts</h2>
+    <div class="nested-container">
+      <h3>Container (z-index: 1)</h3>
+      <div class="nested-parent">
+        Parent Element (z-index: 1)
+        <div class="nested-child">Child (z: 999)</div>
+      </div>
+      <p>The child element has z-index: 999 but can't escape its parent's stacking context.</p>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Transform Stacking Context</h2>
+    <div class="transform-container">
+      <div class="transform-box">
+        <h3>Normal Box</h3>
+        <div class="popup">Popup Z: 100</div>
+        <p>No transform applied.</p>
+      </div>
+      
+      <div class="transform-box transform-applied">
+        <h3>Transform Applied</h3>
+        <div class="popup">Trapped Z: 100</div>
+        <p>Transform creates new stacking context.</p>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Opacity Stacking Context</h2>
+    <div class="opacity-container">
+      <div class="opacity-parent">
+        <div class="opacity-child"></div>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Filter Effects</h2>
+    <div class="filter-container">
+      <div class="filter-box filter-1">Blur + Z:2</div>
+      <div class="filter-box filter-2">Normal Z:1</div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Isolation and Blend Modes</h2>
+    <div class="isolation-container">
+      <div class="isolation-group">
+        <div class="blend-box blend-1"></div>
+        <div class="blend-box blend-2"></div>
+        <div class="blend-box blend-3"></div>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Negative Z-Index</h2>
+    <div class="negative-container">
+      <div class="negative-background"></div>
+      <div class="negative-content">
+        <h3>Content Above Background</h3>
+        <p>The gradient background has z-index: -1</p>
+      </div>
+    </div>
+  </section>
+  
+  <section>
+    <h2>Auto vs Explicit Z-Index</h2>
+    <div class="auto-container">
+      <div class="auto-box auto-1">Auto</div>
+      <div class="auto-box auto-2">Z: 1</div>
+      <div class="auto-box auto-3">Auto</div>
+    </div>
+  </section>
+  
+  <div class="fixed-button">Fixed Button</div>
+</body>
+</html>

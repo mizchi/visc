@@ -98,4 +98,60 @@ export interface VisualDifference {
     before: unknown;
     after: unknown;
   }[];
+  // Semantic detection fields
+  positionDiff?: number;
+  sizeDiff?: number;
+  similarity?: number;
+}
+
+export interface SemanticDifferenceDetection {
+  hasPositionShifts: boolean;
+  hasZIndexChanges: boolean;
+  hasOverflowIssues: boolean;
+  hasLayoutShifts: boolean;
+  detectedPatterns: string[];
+}
+
+export interface SemanticDifferenceMessage {
+  severity: 'minimal' | 'low' | 'medium' | 'high' | 'critical';
+  messages: string[];
+  patterns: string[];
+}
+
+// Threshold configuration for comparisons
+export interface ThresholdConfig {
+  // Percentage-based thresholds (0-100)
+  similarityThreshold?: number;
+  
+  // Absolute pixel thresholds
+  positionThreshold?: {
+    enabled: boolean;
+    value: number; // pixels
+    strict?: boolean; // If true, any difference above value fails
+  };
+  
+  sizeThreshold?: {
+    enabled: boolean;
+    value: number; // pixels
+    percentage?: number; // Optional: also check percentage change
+  };
+  
+  // Element count thresholds
+  elementCountThreshold?: {
+    added?: number; // Max allowed added elements
+    removed?: number; // Max allowed removed elements
+    modified?: number; // Max allowed modified elements
+  };
+  
+  // Specific pattern thresholds
+  scrollThreshold?: {
+    enabled: boolean;
+    maxScrollableElements?: number;
+  };
+  
+  // Z-index change tolerance
+  zIndexThreshold?: {
+    enabled: boolean;
+    allowChanges: boolean;
+  };
 }

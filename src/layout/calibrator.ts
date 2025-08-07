@@ -3,6 +3,7 @@
  */
 
 import type { VisualTreeAnalysis } from "./extractor.js";
+import type { ThresholdConfig, VisualDifference } from "../types.js";
 import { compareLayoutTrees } from "./comparator.js";
 import { compareVisualNodeGroups } from "./visual-comparator.js";
 import { detectFlakiness, type FlakyElement } from "./flakiness-detector.js";
@@ -17,12 +18,20 @@ export interface ComparisonSettings {
 
 export interface CalibrationResult {
   settings: ComparisonSettings;
+  thresholdConfig?: ThresholdConfig; // 推論された閾値設定
   confidence: number;
   sampleStats: {
     avgPositionVariance: number;
     avgSizeVariance: number;
     avgTextSimilarity: number;
     stableElementRatio: number;
+    maxPositionShift: number; // 最大位置変化
+    maxSizeChange: number; // 最大サイズ変化
+    elementChanges: { // 要素の変更統計
+      added: number;
+      removed: number;
+      modified: number;
+    };
   };
   dynamicElements?: DynamicElementInfo[];
 }
@@ -45,13 +54,15 @@ export function calibrateComparisonSettings(
     strictness?: "low" | "medium" | "high"; // 厳密さのレベル
     detectDynamicElements?: boolean; // 動的要素を検出するか
     dynamicThreshold?: number; // 動的とみなすフレーキーネススコアの閾値
+    inferThresholds?: boolean; // 閾値設定を推論するか
   } = {}
 ): CalibrationResult {
   const { 
     targetStability = 95, 
     strictness = "medium",
     detectDynamicElements = true,
-    dynamicThreshold = 50
+    dynamicThreshold = 50,
+    inferThresholds = true
   } = options;
 
   if (samples.length < 2) {
@@ -133,14 +144,24 @@ export function calibrateComparisonSettings(
   // 信頼度を計算（サンプル数と分散の安定性に基づく）
   const confidence = calculateConfidence(samples.length, variances);
 
+  // 閾値設定を推論
+  let thresholdConfig: ThresholdConfig | undefined;
+  if (inferThresholds) {
+    thresholdConfig = inferThresholdConfig(variances, strictness, dynamicElements);
+  }
+
   const result = {
     settings,
+    thresholdConfig,
     confidence,
     sampleStats: {
       avgPositionVariance: variances.avgPositionDrift,
       avgSizeVariance: variances.avgSizeVariance * 100,
       avgTextSimilarity: 1 - variances.avgTextDissimilarity,
       stableElementRatio: variances.stableElementRatio,
+      maxPositionShift: variances.maxPositionDrift,
+      maxSizeChange: variances.maxSizeVariance * 100,
+      elementChanges: variances.elementChanges,
     },
     dynamicElements: dynamicElements.length > 0 ? dynamicElements : undefined
   };
@@ -239,6 +260,11 @@ interface SampleVariances {
   avgSizeVariance: number;
   avgTextDissimilarity: number;
   stableElementRatio: number;
+  elementChanges: {
+    added: number;
+    removed: number;
+    modified: number;
+  };
 }
 
 function analyzeSampleVariances(
@@ -267,9 +293,17 @@ function analyzeSampleVariances(
     let maxSizeVar = 0;
     let totalSizeVar = 0;
     let changeCount = 0;
+    let totalAdded = 0;
+    let totalRemoved = 0;
+    let totalModified = 0;
 
     groupComparisons.forEach((comp) => {
+      totalAdded += comp.addedGroups.length;
+      totalRemoved += comp.removedGroups.length;
+      
       comp.differences.forEach((diff) => {
+        totalModified++;
+        
         if (diff.type === "moved" || diff.type === "modified") {
           const xChange = Math.abs(
             (diff.changes?.bounds?.x || 0) - (diff.oldGroup?.bounds.x || 0)
@@ -312,6 +346,11 @@ function analyzeSampleVariances(
       avgSizeVariance: changeCount > 0 ? totalSizeVar / changeCount : 0,
       avgTextDissimilarity: 0.05, // グループレベルではテキストの変動は少ない
       stableElementRatio: avgSimilarity / 100,
+      elementChanges: {
+        added: Math.round(totalAdded / groupComparisons.length),
+        removed: Math.round(totalRemoved / groupComparisons.length),
+        modified: Math.round(totalModified / groupComparisons.length),
+      },
     };
   }
 
@@ -321,8 +360,15 @@ function analyzeSampleVariances(
   let maxSizeVar = 0;
   let totalSizeVar = 0;
   let driftCount = 0;
+  let totalAdded = 0;
+  let totalRemoved = 0;
+  let totalModified = 0;
 
   elementComparisons.forEach((comp) => {
+    totalAdded += comp.addedElements.length;
+    totalRemoved += comp.removedElements.length;
+    totalModified += comp.differences.length;
+    
     comp.differences.forEach((diff) => {
       if (diff.type === "position" || diff.type === "both") {
         const drift = Math.hypot(
@@ -356,6 +402,11 @@ function analyzeSampleVariances(
     avgSizeVariance: driftCount > 0 ? totalSizeVar / driftCount : 0,
     avgTextDissimilarity: 0.1,
     stableElementRatio: 0.9,
+    elementChanges: {
+      added: Math.round(totalAdded / elementComparisons.length),
+      removed: Math.round(totalRemoved / elementComparisons.length),
+      modified: Math.round(totalModified / elementComparisons.length),
+    },
   };
 }
 
@@ -393,6 +444,90 @@ interface Violation {
   expected: number;
   actual: number;
   severity: "low" | "medium" | "high";
+}
+
+/**
+ * 測定値から閾値設定を推論
+ */
+function inferThresholdConfig(
+  variances: SampleVariances,
+  strictness: "low" | "medium" | "high",
+  dynamicElements: DynamicElementInfo[]
+): ThresholdConfig {
+  // 厳密さに基づく調整係数
+  const strictnessFactors = {
+    low: { position: 2.0, size: 2.0, elements: 2.0, similarity: 0.85 },
+    medium: { position: 1.5, size: 1.5, elements: 1.5, similarity: 0.92 },
+    high: { position: 1.2, size: 1.2, elements: 1.2, similarity: 0.97 },
+  }[strictness];
+
+  // 位置の閾値を推論（最大値に余裕を持たせる）
+  const positionThreshold = Math.ceil(
+    Math.max(
+      3, // 最小3px
+      variances.maxPositionDrift * strictnessFactors.position
+    )
+  );
+
+  // サイズの閾値を推論
+  const sizeThresholdPixels = Math.ceil(
+    Math.max(
+      5, // 最小5px
+      variances.maxSizeVariance * 100 * strictnessFactors.size
+    )
+  );
+  
+  // 要素数の閾値を推論（平均値に余裕を持たせる）
+  const elementCountThresholds = {
+    added: Math.max(
+      1,
+      Math.ceil(variances.elementChanges.added * strictnessFactors.elements)
+    ),
+    removed: Math.max(
+      1,
+      Math.ceil(variances.elementChanges.removed * strictnessFactors.elements)
+    ),
+    modified: Math.max(
+      3,
+      Math.ceil(variances.elementChanges.modified * strictnessFactors.elements)
+    ),
+  };
+
+  // 類似度の閾値を計算
+  const similarityThreshold = Math.round(
+    Math.max(
+      80,
+      Math.min(99, variances.stableElementRatio * 100 * strictnessFactors.similarity)
+    )
+  );
+
+  // 動的要素の数に基づいてz-index変更の許可を決定
+  const hasHighlyDynamicElements = dynamicElements.some(e => e.flakinessScore > 80);
+  
+  const config: ThresholdConfig = {
+    similarityThreshold,
+    positionThreshold: {
+      enabled: true,
+      value: positionThreshold,
+      strict: strictness === "high",
+    },
+    sizeThreshold: {
+      enabled: true,
+      value: sizeThresholdPixels,
+      percentage: Math.round(variances.maxSizeVariance * 100 * strictnessFactors.size),
+    },
+    elementCountThreshold: elementCountThresholds,
+    scrollThreshold: {
+      enabled: strictness !== "low",
+      maxScrollableElements: strictness === "high" ? 0 : (strictness === "medium" ? 3 : 5),
+    },
+    zIndexThreshold: {
+      enabled: strictness === "high" || hasHighlyDynamicElements,
+      allowChanges: strictness === "low" || !hasHighlyDynamicElements,
+    },
+  };
+
+  return config;
 }
 
 /**
