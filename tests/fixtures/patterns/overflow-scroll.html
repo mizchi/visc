@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overflow and Scroll Patterns</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      padding: 2rem;
+    }
+    
+    h1 {
+      margin-bottom: 2rem;
+      color: #212529;
+    }
+    
+    .test-section {
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+    
+    .test-section h2 {
+      margin-bottom: 1rem;
+      color: #495057;
+    }
+    
+    /* Fixed height with scroll */
+    .scroll-container-vertical {
+      height: 200px;
+      overflow-y: auto;
+      border: 2px solid #007bff;
+      padding: 1rem;
+      background: #f8f9fa;
+      margin-bottom: 1rem;
+    }
+    
+    /* Fixed width with horizontal scroll */
+    .scroll-container-horizontal {
+      width: 100%;
+      overflow-x: auto;
+      border: 2px solid #28a745;
+      padding: 1rem;
+      background: #f8f9fa;
+      margin-bottom: 1rem;
+      white-space: nowrap;
+    }
+    
+    /* Both directions scroll */
+    .scroll-container-both {
+      width: 100%;
+      height: 250px;
+      overflow: auto;
+      border: 2px solid #dc3545;
+      padding: 1rem;
+      background: #f8f9fa;
+      margin-bottom: 1rem;
+    }
+    
+    .wide-content {
+      width: 150%;
+      background: linear-gradient(to right, #e9ecef, #ced4da);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    
+    /* Hidden overflow */
+    .overflow-hidden {
+      height: 150px;
+      overflow: hidden;
+      border: 2px solid #ffc107;
+      padding: 1rem;
+      background: #fff3cd;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .overflow-hidden::after {
+      content: '...';
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      color: #856404;
+    }
+    
+    /* Overflow visible (default) */
+    .overflow-visible {
+      height: 100px;
+      overflow: visible;
+      border: 2px solid #17a2b8;
+      padding: 1rem;
+      background: #d1ecf1;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    
+    .overflow-content {
+      background: white;
+      padding: 1rem;
+      border: 1px solid #bee5eb;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Fixed dimensions test */
+    .fixed-dimensions {
+      width: 400px;
+      height: 300px;
+      border: 2px solid #6c757d;
+      padding: 1rem;
+      background: #e9ecef;
+      margin-bottom: 1rem;
+      overflow: auto;
+    }
+    
+    /* Responsive dimensions */
+    .responsive-dimensions {
+      width: 100%;
+      max-width: 600px;
+      min-height: 200px;
+      border: 2px solid #6f42c1;
+      padding: 1rem;
+      background: #f8f5ff;
+      margin-bottom: 1rem;
+      overflow: auto;
+    }
+    
+    .item-list {
+      list-style: none;
+    }
+    
+    .item-list li {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+    }
+    
+    .horizontal-items {
+      display: inline-flex;
+      gap: 1rem;
+    }
+    
+    .horizontal-items .item {
+      min-width: 150px;
+      padding: 1rem;
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      text-align: center;
+    }
+    
+    .table-container {
+      overflow: auto;
+      max-height: 300px;
+      border: 1px solid #dee2e6;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+    }
+    
+    th {
+      background: #f8f9fa;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .code-block {
+      background: #212529;
+      color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <h1>Overflow and Scroll Test Patterns</h1>
+  
+  <div class="test-section">
+    <h2>Vertical Scroll Container</h2>
+    <div class="scroll-container-vertical">
+      <p>This container has a fixed height with vertical scroll.</p>
+      <ul class="item-list">
+        <li>Item 1: Lorem ipsum dolor sit amet</li>
+        <li>Item 2: Consectetur adipiscing elit</li>
+        <li>Item 3: Sed do eiusmod tempor incididunt</li>
+        <li>Item 4: Ut labore et dolore magna aliqua</li>
+        <li>Item 5: Ut enim ad minim veniam</li>
+        <li>Item 6: Quis nostrud exercitation ullamco</li>
+        <li>Item 7: Laboris nisi ut aliquip ex ea</li>
+        <li>Item 8: Commodo consequat duis aute irure</li>
+        <li>Item 9: Dolor in reprehenderit in voluptate</li>
+        <li>Item 10: Velit esse cillum dolore eu fugiat</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Horizontal Scroll Container</h2>
+    <div class="scroll-container-horizontal">
+      <div class="horizontal-items">
+        <div class="item">Card 1</div>
+        <div class="item">Card 2</div>
+        <div class="item">Card 3</div>
+        <div class="item">Card 4</div>
+        <div class="item">Card 5</div>
+        <div class="item">Card 6</div>
+        <div class="item">Card 7</div>
+        <div class="item">Card 8</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Both Directions Scroll</h2>
+    <div class="scroll-container-both">
+      <div class="wide-content">
+        <h3>Wide and Tall Content</h3>
+        <p>This content is wider than the container and also has significant height.</p>
+        <div class="code-block">
+function visualRegressionTest() {
+  const elements = document.querySelectorAll('*');
+  const results = [];
+  
+  for (const element of elements) {
+    const rect = element.getBoundingClientRect();
+    const styles = window.getComputedStyle(element);
+    
+    results.push({
+      tagName: element.tagName,
+      position: { x: rect.x, y: rect.y },
+      dimensions: { width: rect.width, height: rect.height },
+      overflow: styles.overflow,
+      display: styles.display
+    });
+  }
+  
+  return results;
+}</div>
+        <p>More content below the code block...</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Hidden Overflow</h2>
+    <div class="overflow-hidden">
+      <p>This container has hidden overflow. Content that exceeds the container height will be clipped.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p>This text might be partially or completely hidden depending on the container height.</p>
+      <p>Additional content that will definitely be hidden.</p>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Visible Overflow</h2>
+    <div class="overflow-visible">
+      <div class="overflow-content">
+        <p>This content overflows the container boundaries but remains visible.</p>
+        <p>It extends beyond the border of its parent element.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Fixed vs Responsive Dimensions</h2>
+    <div class="fixed-dimensions">
+      <h3>Fixed Width and Height</h3>
+      <p>Width: 400px, Height: 300px</p>
+      <p>This container has fixed dimensions regardless of viewport size.</p>
+    </div>
+    
+    <div class="responsive-dimensions">
+      <h3>Responsive Width</h3>
+      <p>Width: 100% (max 600px), Min-height: 200px</p>
+      <p>This container adapts to the viewport width but has constraints.</p>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Table with Scroll</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>001</td>
+            <td>Test Item 1</td>
+            <td>Description for the first test item</td>
+            <td>Active</td>
+            <td>2024-01-01</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>002</td>
+            <td>Test Item 2</td>
+            <td>Description for the second test item</td>
+            <td>Pending</td>
+            <td>2024-01-02</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>003</td>
+            <td>Test Item 3</td>
+            <td>Description for the third test item</td>
+            <td>Active</td>
+            <td>2024-01-03</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>004</td>
+            <td>Test Item 4</td>
+            <td>Description for the fourth test item</td>
+            <td>Inactive</td>
+            <td>2024-01-04</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>005</td>
+            <td>Test Item 5</td>
+            <td>Description for the fifth test item</td>
+            <td>Active</td>
+            <td>2024-01-05</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>006</td>
+            <td>Test Item 6</td>
+            <td>Description for the sixth test item</td>
+            <td>Pending</td>
+            <td>2024-01-06</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>007</td>
+            <td>Test Item 7</td>
+            <td>Description for the seventh test item</td>
+            <td>Active</td>
+            <td>2024-01-07</td>
+            <td><button>Edit</button></td>
+          </tr>
+          <tr>
+            <td>008</td>
+            <td>Test Item 8</td>
+            <td>Description for the eighth test item</td>
+            <td>Active</td>
+            <td>2024-01-08</td>
+            <td><button>Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

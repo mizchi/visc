@@ -16,8 +16,16 @@ export class CacheStorage {
     viewport: Viewport,
     type: "baseline" | "current" = "baseline"
   ): string {
-    const filename = `${type}-${viewport.width}x${viewport.height}.json`;
-    return path.join(this.cacheDir, testId, filename);
+    if (type === "current") {
+      // Store current snapshots in .visc/current/<id>/
+      const currentDir = path.join(path.dirname(this.cacheDir), "current");
+      const filename = `${viewport.width}x${viewport.height}.json`;
+      return path.join(currentDir, testId, filename);
+    } else {
+      // Store baseline snapshots in .visc/cache/<id>/
+      const filename = `baseline-${viewport.width}x${viewport.height}.json`;
+      return path.join(this.cacheDir, testId, filename);
+    }
   }
 
 
@@ -221,6 +229,14 @@ export class CacheStorage {
   async clearCache(): Promise<void> {
     try {
       await fs.rm(this.cacheDir, { recursive: true, force: true });
+    } catch {
+      // Ignore errors if directory doesn't exist
+    }
+    
+    // Also clear current directory
+    try {
+      const currentDir = path.join(path.dirname(this.cacheDir), "current");
+      await fs.rm(currentDir, { recursive: true, force: true });
     } catch {
       // Ignore errors if directory doesn't exist
     }

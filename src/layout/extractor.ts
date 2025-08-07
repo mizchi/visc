@@ -73,6 +73,31 @@ export function getExtractLayoutScript(): string {
       
       const computedStyle = window.getComputedStyle(element);
       
+      // Check for overflow
+      const hasOverflow = computedStyle.overflow !== 'visible' && computedStyle.overflow !== '';
+      const isScrollable = element.scrollHeight > element.clientHeight || 
+                          element.scrollWidth > element.clientWidth;
+      
+      // Get CSS box model information
+      const boxModel = {
+        width: computedStyle.width,
+        height: computedStyle.height,
+        minWidth: computedStyle.minWidth,
+        minHeight: computedStyle.minHeight,
+        maxWidth: computedStyle.maxWidth,
+        maxHeight: computedStyle.maxHeight,
+        padding: computedStyle.padding,
+        margin: computedStyle.margin,
+        border: computedStyle.border,
+        boxSizing: computedStyle.boxSizing
+      };
+      
+      // Determine if element has fixed dimensions
+      const hasFixedWidth = computedStyle.width !== 'auto' && 
+                           !computedStyle.width.includes('%');
+      const hasFixedHeight = computedStyle.height !== 'auto' && 
+                            !computedStyle.height.includes('%');
+      
       elements.push({
         tagName: element.tagName,
         className: element.className,
@@ -97,6 +122,19 @@ export function getExtractLayoutScript(): string {
         hasParentWithSameSize: parentRect && 
                               Math.abs(rect.width - parentRect.width) < 1 && 
                               Math.abs(rect.height - parentRect.height) < 1,
+        hasOverflow: hasOverflow,
+        isScrollable: isScrollable,
+        scrollDimensions: isScrollable ? {
+          scrollWidth: element.scrollWidth,
+          scrollHeight: element.scrollHeight,
+          clientWidth: element.clientWidth,
+          clientHeight: element.clientHeight
+        } : undefined,
+        boxModel: boxModel,
+        hasFixedDimensions: {
+          width: hasFixedWidth,
+          height: hasFixedHeight
+        },
         computedStyle: {
           display: computedStyle.display,
           position: computedStyle.position,
@@ -104,7 +142,10 @@ export function getExtractLayoutScript(): string {
           backgroundColor: computedStyle.backgroundColor,
           color: computedStyle.color,
           fontSize: computedStyle.fontSize,
-          fontWeight: computedStyle.fontWeight
+          fontWeight: computedStyle.fontWeight,
+          overflow: computedStyle.overflow,
+          overflowX: computedStyle.overflowX,
+          overflowY: computedStyle.overflowY
         },
         nodeType: getNodeType(element),
         importance: calculateImportance(element, rect),

@@ -34,8 +34,8 @@ export const CaptureOptionsSchema = z.object({
 // Compare options schema
 export const CompareOptionsSchema = z.object({
   ignoreText: z.boolean().optional().describe('Ignore text differences'),
-  threshold: z.number().min(0).max(1).optional().describe('Similarity threshold (0-1)'),
-  similarityThreshold: z.number().min(0).max(1).optional().describe('Element similarity threshold (0-1)'),
+  threshold: z.number().min(0).optional().describe('Similarity threshold (0-1 or 1-100 for percentage)'),
+  similarityThreshold: z.number().min(0).optional().describe('Element similarity threshold (0-1 or 1-100 for percentage)'),
   overrides: z.record(z.string()).optional().describe('CSS selector overrides for comparison'),
   networkBlocks: z.array(z.string()).optional().describe('URLs or patterns to block during comparison'),
   useVisualGroups: z.boolean().optional().describe('Use visual group comparison instead of element-level'),
@@ -105,9 +105,59 @@ export type CalibrationOptions = z.infer<typeof CalibrationOptionsSchema>;
 export type BrowserOptions = z.infer<typeof BrowserOptionsSchema>;
 export type OutputOptions = z.infer<typeof OutputOptionsSchema>;
 
-// Validation function
+// Helper function to normalize threshold values
+function normalizeThreshold(value: number | undefined, fieldName: string): number | undefined {
+  if (value === undefined) return undefined;
+  
+  // If value is between 0 and 1, use as-is
+  if (value >= 0 && value <= 1) {
+    return value;
+  }
+  
+  // If value is between 1 and 100, treat as percentage and normalize
+  if (value > 1 && value <= 100) {
+    console.warn(`⚠️  ${fieldName} value ${value} appears to be a percentage. Normalizing to ${value / 100}`);
+    return value / 100;
+  }
+  
+  // If value is over 100, throw error
+  throw new Error(`${fieldName} value ${value} is out of range. Must be between 0-1 (ratio) or 1-100 (percentage)`);
+}
+
+// Validation function with normalization
 export function validateConfig(config: unknown): ViscConfig {
-  return ViscConfigSchema.parse(config);
+  // First parse the config
+  const parsed = ViscConfigSchema.parse(config);
+  
+  // Normalize threshold values in global compareOptions
+  if (parsed.compareOptions) {
+    parsed.compareOptions.threshold = normalizeThreshold(
+      parsed.compareOptions.threshold,
+      'compareOptions.threshold'
+    );
+    parsed.compareOptions.similarityThreshold = normalizeThreshold(
+      parsed.compareOptions.similarityThreshold,
+      'compareOptions.similarityThreshold'
+    );
+  }
+  
+  // Normalize threshold values in test case specific compareOptions
+  if (parsed.testCases) {
+    for (const testCase of parsed.testCases) {
+      if (testCase.compareOptions) {
+        testCase.compareOptions.threshold = normalizeThreshold(
+          testCase.compareOptions.threshold,
+          `testCase[${testCase.id}].compareOptions.threshold`
+        );
+        testCase.compareOptions.similarityThreshold = normalizeThreshold(
+          testCase.compareOptions.similarityThreshold,
+          `testCase[${testCase.id}].compareOptions.similarityThreshold`
+        );
+      }
+    }
+  }
+  
+  return parsed;
 }
 
 // Safe validation function

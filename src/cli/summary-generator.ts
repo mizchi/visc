@@ -35,6 +35,7 @@ interface ChangeDescription {
   description: string;
   severity: 'low' | 'medium' | 'high';
   details?: string;
+  selector?: string; // CSS selector for the changed element
 }
 
 /**
@@ -98,7 +99,8 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
         type: 'added',
         description: describeGroup(group),
         severity: assessSeverity(group),
-        details: `New ${group.type || 'element'} group with ${group.children?.length || 0} elements`
+        details: `New ${group.type || 'element'} group with ${group.children?.length || 0} elements`,
+        selector: generateSelector(group)
       });
     }
   }
@@ -110,7 +112,8 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
         type: 'removed',
         description: describeGroup(group),
         severity: assessSeverity(group),
-        details: `Removed ${group.type || 'element'} group with ${group.children?.length || 0} elements`
+        details: `Removed ${group.type || 'element'} group with ${group.children?.length || 0} elements`,
+        selector: generateSelector(group)
       });
     }
   }
@@ -162,6 +165,41 @@ function analyzeChanges(comparison: any): ChangeDescription[] {
     const severityOrder = { high: 0, medium: 1, low: 2 };
     return severityOrder[a.severity] - severityOrder[b.severity];
   });
+}
+
+/**
+ * Generate CSS selector for a visual node or group
+ */
+function generateSelector(node: any): string | undefined {
+  if (!node) return undefined;
+  
+  // For VisualNode
+  if ('tagName' in node || 'id' in node || 'className' in node) {
+    const parts: string[] = [];
+    
+    if (node.tagName) {
+      parts.push(node.tagName.toLowerCase());
+    }
+    
+    if (node.id) {
+      parts.push(`#${node.id}`);
+    } else if (node.className && typeof node.className === 'string') {
+      const classes = node.className.split(' ').filter((c: string) => c);
+      if (classes.length > 0) {
+        parts.push(`.${classes[0]}`);
+      }
+    }
+    
+    return parts.length > 0 ? parts.join('') : undefined;
+  }
+  
+  // For VisualNodeGroup
+  if ('children' in node && node.children && node.children.length > 0) {
+    const firstChild = node.children[0];
+    return generateSelector(firstChild);
+  }
+  
+  return undefined;
 }
 
 /**
@@ -220,13 +258,15 @@ function analyzeGroupDifference(diff: any): ChangeDescription | null {
   const group = diff.group;
   const positionChange = diff.positionDiff || 0;
   const sizeChange = diff.sizeDiff || 0;
+  const selector = generateSelector(group);
   
   // Determine the type of change
   if (positionChange > 20 && sizeChange < 5) {
     return {
       type: 'moved',
       description: `${describeGroup(group)} moved by ${Math.round(positionChange)}px`,
-      severity: positionChange > 100 ? 'high' : 'medium'
+      severity: positionChange > 100 ? 'high' : 'medium',
+      selector
     };
   }
   
@@ -234,7 +274,8 @@ function analyzeGroupDifference(diff: any): ChangeDescription | null {
     return {
       type: 'modified',
       description: `${describeGroup(group)} resized by ${Math.round(sizeChange)}%`,
-      severity: sizeChange > 50 ? 'high' : 'medium'
+      severity: sizeChange > 50 ? 'high' : 'medium',
+      selector
     };
   }
   
@@ -242,7 +283,8 @@ function analyzeGroupDifference(diff: any): ChangeDescription | null {
     return {
       type: 'modified',
       description: `${describeGroup(group)} content changed (${Math.round(diff.similarity)}% similar)`,
-      severity: diff.similarity < 50 ? 'high' : 'medium'
+      severity: diff.similarity < 50 ? 'high' : 'medium',
+      selector
     };
   }
   
@@ -304,6 +346,9 @@ function renderMarkdown(data: SummaryData): string {
             lines.push(`- ${icon} ${change.description} ${severityBadge}`);
             if (change.details) {
               lines.push(`  - ${change.details}`);
+            }
+            if (change.selector) {
+              lines.push(`  - Selector: \`${change.selector}\``);
             }
           }
           lines.push('');

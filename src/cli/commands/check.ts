@@ -18,6 +18,7 @@ import {
 import { CacheStorage } from "../cache-storage.js";
 import type { ViscConfig } from "../config.js";
 import { DEFAULT_CONFIG } from "../config.js";
+import { getEffectiveCaptureOptions, getEffectiveCompareOptions, getEffectiveRetryCount, logMergedOptions } from "../../config/merge.js";
 import { calibrateComparisonSettings } from "../../layout/calibrator.js";
 import type { VisualTreeAnalysis } from "../../types.js";
 import { EnhancedProgressDisplay } from "../ui/enhanced-progress.js";
@@ -172,10 +173,13 @@ async function runCalibration(
       calibrationResults[testCase.id] = {};
       
       try {
-        const captureOptions = {
-          ...config.captureOptions,
-          ...testCase.captureOptions,
-        };
+        // Use merged options for calibration
+        const captureOptions = getEffectiveCaptureOptions(
+          testCase,
+          config.captureOptions,
+          config.captureOptions // Same for both phases during calibration
+        );
+        logMergedOptions(testCase.id, captureOptions, 'capture');
         
         // Import the matrix capture function
         const { captureLayoutMatrix } = await import("../../workflow.js");
@@ -423,17 +427,13 @@ async function runCapture(
         const page = await browser.newPage();
 
         try {
-          // Merge global and test-specific options
-          const captureOptions = {
-            ...config.captureOptions,
-            ...testCase.captureOptions,
-            overrides:
-              testCase.captureOptions?.overrides ||
-              config.captureOptions?.overrides,
-            networkBlocks:
-              testCase.captureOptions?.networkBlocks ||
-              config.captureOptions?.networkBlocks,
-          };
+          // Use merged capture options with proper inheritance
+          const captureOptions = getEffectiveCaptureOptions(
+            testCase,
+            config.captureOptions,
+            config.captureOptions // Capture phase uses capture options only
+          );
+          logMergedOptions(testCase.id, captureOptions, 'capture');
 
           const previousLayouts = previousResults.get(testCase.id);
 
@@ -470,8 +470,8 @@ async function runCapture(
           if (Object.keys(viewportsToCapture).length > 0) {
             let layoutMatrix;
             
-            // Determine retry count for this test
-            const retryCount = testCase.retry ?? config.retry ?? options.retry ?? 0;
+            // Use effective retry count with inheritance
+            const retryCount = getEffectiveRetryCount(testCase, config.retry) || options.retry || 0;
             
             try {
               layoutMatrix = await executeWithRetry(
@@ -593,16 +593,13 @@ async function runCapture(
           const page = await browser.newPage();
 
           try {
-            const captureOptions = {
-              ...config.captureOptions,
-              ...testCase.captureOptions,
-              overrides:
-                testCase.captureOptions?.overrides ||
-                config.captureOptions?.overrides,
-              networkBlocks:
-                testCase.captureOptions?.networkBlocks ||
-                config.captureOptions?.networkBlocks,
-            };
+            // Use merged capture options for parallel execution
+            const captureOptions = getEffectiveCaptureOptions(
+              testCase,
+              config.captureOptions,
+              config.captureOptions // Capture phase uses capture options only
+            );
+            logMergedOptions(testCase.id, captureOptions, 'capture');
 
             const previousLayouts = previousResults.get(testCase.id);
 
@@ -619,8 +616,8 @@ async function runCapture(
                 const taskId = `${testCase.id}-${viewportKey}`;
                 let layout;
                 
-                // Determine retry count for this test
-                const retryCount = testCase.retry ?? config.retry ?? options.retry ?? 0;
+                // Use effective retry count with inheritance
+                const retryCount = getEffectiveRetryCount(testCase, config.retry) || options.retry || 0;
                 
                 try {
                   layout = await executeWithRetry(
@@ -760,22 +757,16 @@ async function runCompare(
         const page = await browser.newPage();
 
         try {
+          // Use merged options for compare phase (allows compare-specific overrides)
           const captureOptions = {
-            ...config.captureOptions,
-            ...testCase.captureOptions,
-            forceUpdate: true,
-            // Use compare phase overrides/networkBlocks if specified, otherwise fall back to capture settings
-            overrides:
-              testCase.compareOptions?.overrides ||
-              config.compareOptions?.overrides ||
-              testCase.captureOptions?.overrides ||
-              config.captureOptions?.overrides,
-            networkBlocks:
-              testCase.compareOptions?.networkBlocks ||
-              config.compareOptions?.networkBlocks ||
-              testCase.captureOptions?.networkBlocks ||
-              config.captureOptions?.networkBlocks,
+            ...getEffectiveCaptureOptions(
+              testCase,
+              config.captureOptions,
+              config.compareOptions as any // Compare phase can override capture options
+            ),
+            forceUpdate: true
           };
+          logMergedOptions(testCase.id, captureOptions, 'capture');
 
           for (const [, viewport] of Object.entries(viewports)) {
             currentStep++;
@@ -849,22 +840,16 @@ async function runCompare(
           const page = await browser.newPage();
 
           try {
+            // Use merged options for parallel compare phase
             const captureOptions = {
-              ...config.captureOptions,
-              ...testCase.captureOptions,
-              forceUpdate: true,
-              // Use compare phase overrides/networkBlocks if specified, otherwise fall back to capture settings
-              overrides:
-                testCase.compareOptions?.overrides ||
-                config.compareOptions?.overrides ||
-                testCase.captureOptions?.overrides ||
-                config.captureOptions?.overrides,
-              networkBlocks:
-                testCase.compareOptions?.networkBlocks ||
-                config.compareOptions?.networkBlocks ||
-                testCase.captureOptions?.networkBlocks ||
-                config.captureOptions?.networkBlocks,
+              ...getEffectiveCaptureOptions(
+                testCase,
+                config.captureOptions,
+                config.compareOptions as any // Compare phase can override capture options
+              ),
+              forceUpdate: true
             };
+            logMergedOptions(testCase.id, captureOptions, 'capture');
 
             for (const [, viewport] of Object.entries(viewports)) {
               let layout;
@@ -950,13 +935,16 @@ async function runCompare(
 
   // Process each test case with its own settings
   for (const testCase of config.testCases) {
-    let compareOptions = {
-      ...config.compareOptions,
-      ...testCase.compareOptions,
-    };
+    // Use merged compare options with proper inheritance
+    let compareOptions = getEffectiveCompareOptions(
+      testCase,
+      config.compareOptions,
+      config.compareOptions // Compare phase uses compare options
+    ) || {};
+    logMergedOptions(testCase.id, compareOptions, 'compare');
     
     // Apply calibration settings if available and visual groups are enabled
-    if (calibrationData?.results && compareOptions.useVisualGroups) {
+    if (calibrationData?.results && compareOptions?.useVisualGroups) {
       const testCalibration = calibrationData.results[testCase.id];
       if (testCalibration) {
         // Get the first viewport's calibration as default (could be enhanced to be viewport-specific)

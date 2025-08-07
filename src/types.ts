@@ -28,6 +28,30 @@ export interface VisualNode {
   ariaAttributes?: { [key: string]: string };
   isInteractive?: boolean;
   hasParentWithSameSize?: boolean;
+  hasOverflow?: boolean;
+  isScrollable?: boolean;
+  scrollDimensions?: {
+    scrollWidth: number;
+    scrollHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+  };
+  boxModel?: {
+    width: string;
+    height: string;
+    minWidth: string;
+    minHeight: string;
+    maxWidth: string;
+    maxHeight: string;
+    padding: string;
+    margin: string;
+    border: string;
+    boxSizing: string;
+  };
+  hasFixedDimensions?: {
+    width: boolean;
+    height: boolean;
+  };
   computedStyle?: { [key: string]: string };
   importance?: number;
   nodeType?: string;

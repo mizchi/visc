@@ -22,6 +22,7 @@
     "build": "tsc --emitDeclarationOnly && tsdown && (npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander)",
     "build:cli": "npx esbuild src/cli/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:puppeteer --external:chalk --external:ora --external:commander",
     "build:watch": "tsdown --watch",
+    "test:patterns": "tsx tests/test-patterns.ts",
     "dev": "tsdown --watch",
     "test": "vitest --run",
     "typecheck": "tsc --noEmit",

@@ -436,43 +436,8 @@ export async function captureLayoutMatrix(
     userAgent: viewport.userAgent,
   }));
 
-  // Set up request interception if overrides or networkBlocks are provided
-  const shouldIntercept = 
-    (options.networkBlocks && options.networkBlocks.length > 0) ||
-    (options.requestOverrides && Object.keys(options.requestOverrides).length > 0);
-
-  if (shouldIntercept) {
-    await page.setRequestInterception(true);
-    
-    page.on('request', (request: any) => {
-      const url = request.url();
-      
-      // Check if URL should be blocked
-      if (options.networkBlocks?.some(pattern => {
-        if (pattern.includes('*')) {
-          const regex = new RegExp(pattern.replace(/\*/g, '.*'));
-          return regex.test(url);
-        }
-        return url.includes(pattern);
-      })) {
-        request.abort();
-        return;
-      }
-      
-      // Check for overrides
-      const override = options.requestOverrides?.[url];
-      if (override) {
-        request.respond({
-          status: override.status || 200,
-          headers: override.headers || {},
-          body: override.body || '',
-        });
-        return;
-      }
-      
-      request.continue();
-    });
-  }
+  // Request interception is already handled in captureLayout function
+  // No need to set up additional interception here
 
   // Navigate to URL
   try {
