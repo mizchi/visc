@@ -16,6 +16,7 @@ import path from "path";
 import chalk from "chalk";
 import ora from "ora";
 import { check as checkCommand } from "./commands/check.js";
+import { createCalcCommand } from './commands/calc.js';
 import { 
   takePuppeteerScreenshot, 
   takeMultipleScreenshots,
@@ -765,5 +766,8 @@ program
       process.exit(1);
     }
   });
+
+// Add calc command
+program.addCommand(createCalcCommand());
 
 program.parse();
